@@ -225,7 +225,7 @@ router.post('/signin', async (req,res) => {
         httpOnly: true
         //  ,secure: true
         })
-            res.redirect("/screen/admin");
+            res.redirect("/screen/udmyPanel");
         })
         }
         catch(err){

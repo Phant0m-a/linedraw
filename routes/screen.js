@@ -223,7 +223,7 @@ router.post('/signin', async (req,res) => {
         // maxAge: 60000,
         maxAge: 60*60*6*1000,
         httpOnly: true
-        //  ,secure: true
+         ,secure: true
         })
             res.redirect("/screen/udmyPanel");
         })
@@ -372,7 +372,7 @@ router.get('/writingType/:type',auth,(req,res)=>{
 // udmy app
 
 // udmyPanel
-router.get('/udmyPanel',async(req,res)=>{
+router.get('/udmyPanel',auth,async(req,res)=>{
     // 
     dbs.collection('catagories').get().then((snapshot)=>{
         let courses = snapshot;

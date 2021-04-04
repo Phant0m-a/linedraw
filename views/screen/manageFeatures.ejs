@@ -1,0 +1,50 @@
+<div class="container">
+    <br>
+    <form action="/screen/manageFeatures" enctype="multipart/form-data" method="post">
+        <input type="hidden" name='id' value="<%=id%>">
+        <h3>Manage Feature</h3>
+        <div class="form-group">
+            <label for="">Title</label>
+            <input type="text" class="form-control" name="title" value='' placeholder="Enter title ..." required>
+        </div>
+        <div class="form-group">
+            <label for="">Upload Icon Image </label><br>
+            <input type="file" name="iconImage" >
+        </div>
+        <button type="submit" class="btn btn-success">Upload</button>
+    </form>
+    <br>
+    <!-- <a href="/screen/deleteFeature/<%=id%>" type='button' class="btn btn-danger">Delete</a> -->
+    <a href="/screen/GetCourses" type='button' class="btn btn-dark">Back to courses</a>
+
+<br><br>
+<div class="card w-80" >
+    <ul class="list-group list-group-flush">
+        
+        <% features.forEach((feature)=>{%>
+        <li class="list-group-item">
+            <img src="<%= feature.iconUrl%>" alt="" width="50px" height="50px" >
+            <span class="">
+                
+                <%=feature.title%>
+                <!-- <a href="/screen/deleteFeature/<%=id%>/<%=feature.Key%>"  type="button" class="btn btn-danger float-right">Delete</a> -->
+                <br>
+
+                <form action="/screen/DeleteFeature" method="post">
+                    <input type="hidden" name='key' value="<%=feature.Key%>">
+                    <input type="hidden" name='id' value="<%=id%>">
+                    <input type="hidden" name='url' value="<%=feature.iconUrl%>">
+                    <input type="hidden" name='title' value="<%=feature.title%>">
+                <button type="submit" class="btn btn-warning float-right">Delete</button>
+                </form>
+            </span>
+        </li>
+     <%})%>
+    </ul>
+    <!-- <div class="card-footer">
+      Card footer
+    </div> -->
+  </div>
+
+
+</div>

@@ -1,0 +1,27 @@
+  <div class="container">
+
+        <h2>Get Courses</h2><br>    
+        <a href="/screen/Add_Course" type='button' class='btn btn-primary'>Add New Course</a>
+        <br><br>       
+
+
+       <div class="card w-80" >
+        <ul class="list-group list-group-flush">
+            <% courses.docs.forEach((course)=>{%>
+            <li class="list-group-item"><%=course.data().title%>
+                <span class="float-right">
+               
+                    <a href="/screen/Edit_Course/<%=course.id%>" type="button" class="btn btn-success">Edit</a>
+                    <a href="/screen/DeleteCourse/<%=course.id%>" type="button" class="btn btn-danger">Delete</a>
+                </span>
+            </li>
+        <%})%>
+        </ul>
+        <!-- <div class="card-footer">
+          Card footer
+        </div> -->
+      </div>
+
+    <br><br>
+    <a href="/screen/udmyPanel" class='btn btn-dark' type='button'>Back to Home</a>
+</div>

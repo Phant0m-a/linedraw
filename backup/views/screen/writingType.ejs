@@ -1,0 +1,40 @@
+<div class="container" style="background-color:#a360ca;padding:20px;">
+  
+    <a href="/screen/admin" type="button" class="btn btn-dark">Back</a>
+    <br>  <br>  <br>
+    <form  id="#form"  action="/screen/writingType" method="POST">
+        <br>
+        <div class="form-group">
+            <h2>Writing About</h2>
+            <br>
+            
+            <h3  style="color:white;">Collection name: <span class='text-warning' style="text-transform:uppercase"><%= type%></span></h3>
+            <input type="hidden" value="<%=type%>" name="options">
+            <br>
+            <label  style="color:white;" for="question">Add New Question</label>
+            <div  class="form-group">
+               <input class="form-control"  name="question" type="text" placeholder="Enter the question" minlength='10' maxlength="250" autocomplete="off">
+            </div>
+            <br>
+            <br>
+               <button type="submit" class="btn btn-primary">Add</button>
+           </form>
+
+        <br>
+        <br>
+        <form action="/screen/uploadfile" enctype="multipart/form-data" method="post">
+            <h2>Upload File</h2>
+            <p class="text-light">This will overwrite old collection.</p>
+            
+            <input type="hidden" name="type" value="<%= type%>">  
+            <br>
+            <div class="form-group">
+                <input type="file" name="filename">
+                <p class="text-warning">Please upload only .csv file</p>
+            </div>
+            <br>
+            <input type="submit" value="upload" class="btn btn-primary">
+        </form>
+           
+          
+</div>

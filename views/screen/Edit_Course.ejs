@@ -1,0 +1,60 @@
+<div class="container">
+    <form action="/screen/Edit_Course" enctype="multipart/form-data" method="post">
+    <h3 style="display:inline-block">Edit Course</h3>
+    <a href="/screen/manageFeatures/<%=id%>"style="display:inline-block"  type='button' class='btn btn-primary float-right'>Manage Features</a>  
+    <a href="/screen/manageSections/<%=id%>"style="display:inline-block"  type='button' class='btn btn-primary float-right'>Manage Sections</a>  
+    <br>
+    <br>
+        <div class="form-group">
+            <label for="">Course Title</label>
+            <input type="hidden" name='id' value="<%=id%>">
+            <input type="text" class="form-control" name="title" value='<%=data.title%>' placeholder='<%=data.title%>' >
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="inputGroupSelect01">Course Name</label>
+            </div>
+            <select class="custom-select" name='course_name'  value='<%=data.category%>' id="inputGroupSelect01">
+              
+              <option selected  value='<%=data.category%>'>Select Section ...</option>
+              <%categories.docs.forEach((cate) => { %>
+                <option value="<%=cate.data().title%>"><%=cate.data().title%></option>
+             <%}) %>
+              
+            </select>
+          </div>
+        <div class="form-group">
+            <label for="">Course Description</label>
+            <input type="text" class="form-control" name="description"  value='<%=data.description%>' placeholder="Enter Description">
+        </div>
+        <div class="form-group">
+            <label for="">Course Tag</label>
+            <input type="text" class="form-control" name="tag" value='<%=data.tag%>' placeholder="Enter Tag">
+        </div>
+        <div class="form-group">
+            <label for="">Course Price</label>
+            <input type="text" class="form-control" name="price" value='<%=data.price%>' placeholder="Enter price">
+        </div>
+        <div class="form-group">
+            <label for="">Upload Banner Image </label><br>
+            <input type="file" name="bannerImage" accept="image/gif, image/jpeg, image/png" >
+        </div>
+        <div class="form-group">
+            <label for="">Upload ‎Video Thumbnail</label><br>
+            <input type="file" name="videoThumbnail" id="" accept="image/gif, image/jpeg, image/png" >
+        </div>
+        <div class="form-group">
+            <label for="">Upload Video</label><br>
+            <input type="file" name="video" accept="image/gif, image/jpeg, image/png" >
+        </div>
+        <button type="submit" class="btn btn-success">update</button>
+    </form>
+    <br>
+    <a href="/screen/GetCourses" type="button" class="btn btn-danger">cancel</a>
+</div>
+<!-- add sections and then work on leactures -->
+
+
+<div class="container">
+    <form action="/screen/"></form>
+</div>

@@ -1,0 +1,43 @@
+<div class="container">
+    <br>
+    <form action="/screen/manageSections" enctype="multipart/form-data" method="post">
+        <input type="hidden" name='id' value="<%=id%>">
+        <h3>Manage Sections</h3>
+        <div class="form-group">
+            <label for="">Title</label>
+            <input type="text" class="form-control" name="sections" value='' placeholder="Enter section title ..." required>
+        </div>
+    
+        <button type="submit" class="btn btn-success">Upload</button>
+    </form>
+    <br>
+    <!-- <a href="/screen/deleteFeature/<%=id%>" type='button' class="btn btn-danger">Delete</a> -->
+    <a href="/screen/GetCourses" type='button' class="btn btn-dark">Back to courses</a>
+
+    <br>
+    <br><br>
+<div class="card w-80" >
+    <ul class="list-group list-group-flush">
+        
+        <% sections.forEach((section)=>{%>
+        <li class="list-group-item">
+            <%=section.data().title%>
+            <span class="">
+                
+              
+                <!-- delete isnt working for now! -->
+                <a href="/screen/deleteSection/<%=id%>/<%=section.id%>"style="margin:5px"  type="button" class="btn btn-danger float-right">Delete</a>
+                
+                <a href="/screen/GetSection/<%=id%>/<%=section.id%>/<%=section.data().title%>" style="margin:5px" type="button" class="btn btn-success float-right">Edit</a>
+            </span>
+        </li>
+     <%})%>
+    </ul>
+    <!-- <div class="card-footer">
+      Card footer
+    </div> -->
+  </div>
+
+
+
+</div>

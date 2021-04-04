@@ -1,0 +1,22 @@
+<div class="container" style="background-color: rgb(218, 218, 218);padding:20px;">
+    <form  id="#form" action="/screen/edit/edit" method="POST">
+        <br>
+        
+        <h3>Edit Question Menu</h3>
+        <hr>
+        <br>
+         <div class="form-group">
+            <label for="">Collection Name:</label>
+             <h4 name="col_name" class="text-success" style='text-transform: uppercase;letter-spacing:1px;'><%= col_name %></h4>
+             <p class='text-muted' style='display:none'>Document id:</p>
+            <input style='display:none' class="form-control"  name="tid" type="text" value="<%= d_id %>"  >
+            <!--  -->
+            <br>
+            <label for="question">Type new Question</label>
+            <input class="form-control"  name="question" type="text" placeholder="Enter the question" minlength='10' maxlength="250" autocomplete="off" required>
+         </div>
+            <button name="button" type="submit" class="btn btn-primary" value="<%= col_name %>">Add</button>
+            <a href="/screen/admin" class="btn btn-danger">Cancel</a>
+            <!-- u need to find way to send d_id col_name to other side -->
+        </form>
+</div>

@@ -1,0 +1,53 @@
+<div class="container">
+    <form action="/screen/add_lecture" method="post">
+        <br>
+        <br>
+        <h3>Add Course Title/Price</h3><br>
+    
+    
+        
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default">Title</span>
+          </div>
+          <input type="text" minlength='2' name='title' class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+        </div>
+    
+        <br>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Add Price $</span>
+            </div>
+            <input type="text" min='1' name='price' class="form-control" aria-label="Amount (to the nearest dollar)">
+            <div class="input-group-append">
+              <span class="input-group-text">.00</span>
+            </div>
+          </div>
+        <br>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Add Rating</span>
+            </div>
+            <input type="text" min='1' name='rating' class="form-control">
+           
+          </div>
+    
+        <br>
+        
+        <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Add Description</span>
+        </div>
+        <textarea name='description' class="form-control" aria-label="With textarea" maxlength="120"></textarea>
+        </div>
+        <br>
+    
+        <div class="custom-control custom-switch">
+            <input type="checkbox" name='bestseller'class="custom-control-input" id="customSwitch1">
+            <label class="custom-control-label" for="customSwitch1">Best Seller</label>
+          </div>
+        <br>
+        <br>
+        <button type="submit"  class="btn btn-primary">Add Course</button>
+      </form>
+</div>

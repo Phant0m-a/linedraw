@@ -1,0 +1,10 @@
+.env
+node_modules
+t.txt
+testing.txt
+node-web-app-9a6e2-firebase-adminsdk-67e0c-fa6238225d.json
+signup.ejs
+panel.ejs
+signature.ejs
+customers.ejs
+addProduct.ejs

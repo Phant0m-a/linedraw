@@ -1,0 +1,30 @@
+
+<div class="container">
+    <br><br>
+    <h2>Lectures</h2>
+    <hr style="width:20%" class="float-left">
+    <br><br>
+    <a href="/screen/re/:<%=id%>" type="button" class="btn btn-primary">Add lecture</a>
+    <br>
+    <br>
+<!-- use this for leacture -->
+    <div class="row row-cols-1 row-cols-md-3">
+        <%sections.forEach((section) => {%>
+            <%section.data().leacture.forEach((e)=>{%>
+        <div class="col mb-4">
+          <div class="card h-100">
+           
+            <div class="card-body">
+              <h5 class="card-title"><%= e.title %></h5><br>
+            
+            </div>
+            <!-- functionality yet to implement -->
+            <a href="/screen/leacture/<%=id%>" value="<%=id%>" type="button" class='btn btn-success'>Edit</a>
+            <a href="/screen/leacture/<%=id%>" value="<%=id%>" type="button" class='btn btn-danger'>Delete</a>
+           
+          </div>
+        </div>
+        <%})%>
+        <%})%>
+    </div>
+

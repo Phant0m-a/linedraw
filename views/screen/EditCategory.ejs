@@ -1,0 +1,16 @@
+<div class="container">
+    <br>
+    <br>
+   <label for="">Update Name</label>
+    <form action="/screen/EditCategory" method="post">
+    <input type="hidden" name="id" value="<%=id%>">
+    <div class="form-group">
+        <input type="text" name="title" placeholder="<%=title%>"class="form-control" min="5" required>
+        <br>
+      
+        <button type="submit" class="btn btn-primary">Update</button>
+    </div>
+    </form>
+    <br><br>
+    <a href="/screen/GetCategories" type="button" class="btn btn-danger">cancel</a>
+</div>

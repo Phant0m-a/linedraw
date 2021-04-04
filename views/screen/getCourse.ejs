@@ -1,0 +1,101 @@
+
+
+<div class="container">
+    <br><br>
+    <h2><%=col_name%></h2>
+    <hr style="width:20%" class="float-left">
+    <br><br>
+
+
+    <div class="row row-cols-1 row-cols-md-3">
+        <%sections.docs.forEach((section) => {%>
+        <div class="col mb-4">
+          <div class="card h-100">
+           
+            <div class="card-body">
+              <h5 class="card-title"><%=section.data().title%></h5><br>
+            
+
+              
+            </div>
+            <a href="/screen/leacture/<%=id%>/<%=section.id%>/<%=section.data().title%>" value="<%=id%>" 
+              type="button" class='btn btn-danger'>OPEN</a>
+             
+           
+          </div>
+        </div>
+        <%})%>
+    </div>
+    <br>
+    <br>
+    
+    <!-- add lecture tommrow add  popup -->
+
+<div class="container">
+  <h2 >Add Section</h2>
+  <hr style='width:20%'class="float-left">
+  <br>
+  <br>
+  <form action="/screen/addSection/create" method="post">
+    <label for="">Section Title</label>
+    <input type="hidden" name="col_name" value="<%=col_name%>">
+    <input type="text" min="5" class='form-control' placeholder="Enter Title" name="title">  
+    <!-- <div class="custom-control custom-switch">
+      <input type="checkbox" name='demo'class="custom-control-input" id="customSwitch1">
+      <label class="custom-control-label" for="customSwitch1">Demo</label>
+    </div>     -->
+    <br>
+    <button type="submit" class="btn btn-primary">Add</button>
+  </form>
+
+  <br>
+  <h2 >Add lecture </h2>
+  <hr style='width:20%'class="float-left">
+  <br>
+  <br>
+  <form action="/screen/addLeacture/create" method="post">
+    <input type="hidden" name='col_name' value="<%=col_name%>">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="inputGroupSelect01">Course Name</label>
+      </div>
+      <select class="custom-select" name='course_name' id="inputGroupSelect01">
+        
+        <option selected>Select Section ...</option>
+        <%sections.docs.forEach((section) => {%>
+          <option value="<%=section.data().title%>"><%=section.data().title%></option>
+       <%}) %>
+        
+      </select>
+    </div>
+    <!-- tommrow start here -->
+    
+    <label for="">Leacture Name</label>
+    <input type="text" min="5" class='form-control' placeholder="Enter Title" name="title">  
+    <br>
+    <div class="custom-control custom-switch">
+      <input type="checkbox" name='demo'class="custom-control-input" id="customSwitch1">
+      <label class="custom-control-label" for="customSwitch1">Demo</label>
+    </div>    
+    <!-- <div class="custom-control custom-switch">
+      <input type="checkbox" name='demo'class="custom-control-input" id="customSwitch1">
+      <label class="custom-control-label" for="customSwitch1">Demo</label>
+    </div>     -->
+    <br>
+    <button type="submit" class="btn btn-primary">Add</button>
+  </form>
+
+
+  
+</div>   
+    <!-- tobe used in adding lectures -->
+
+<!-- <form action="/addLecture/create" method="post">
+  <label for="">Title</label>
+  <input type="hidden" name="col_name" value="<%=col_name%>">
+  <input type="text" min="5" class='form-control' placeholder="Enter Title" name="title">  
+  <div class="custom-control custom-switch">
+    <input type="checkbox" name='demo'class="custom-control-input" id="customSwitch1">
+    <label class="custom-control-label" for="customSwitch1">Demo</label>
+  </div>    
+</form> -->

@@ -1,0 +1,32 @@
+
+
+<div class="container">
+    <br><br>
+    <h2><%=col_name%></h2>
+    <hr style="width:20%" class="float-left">
+    <br><br>
+
+
+    <div class="row row-cols-1 row-cols-md-3">
+        <%sections.docs.forEach((section) => {%>
+        <div class="col mb-4">
+          <div class="card h-100">
+           
+            <div class="card-body">
+              <h5 class="card-title"><%=section.data().title%></h5><br>
+            
+
+              
+            </div>
+            <a href="/screen/leacture/<%=id%>" value="<%=id%>" type="button" class='btn btn-danger'>OPEN</a>
+           
+          </div>
+        </div>
+        <%})%>
+    </div>
+    <br>
+    <br>
+    
+    <!-- add lecture tommrow add  popup -->
+   
+    

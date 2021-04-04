@@ -1,0 +1,61 @@
+<div class="container">
+    <br>
+    <form action="/screen/AddLec" enctype="multipart/form-data" method="post">
+        <input type="hidden" name='id' value="<%=id%>">
+        <input type="hidden" name="sectionId" value="<%=sectionId%>">
+        <h3>Add Lecture</h3>
+        <div class="form-group">
+            <label for="">Title</label>
+            <input type="text" class="form-control" name="leacture" value='' placeholder="Enter leacture name ..." required>
+        </div>
+    
+        <button type="submit" class="btn btn-success">Upload</button>
+    </form>
+    <br>
+    <!-- <a href="/screen/deleteFeature/<%=id%>" type='button' class="btn btn-danger">Delete</a> -->
+    <a href="/screen/GetCourses" type='button' class="btn btn-dark">Back to courses</a>
+
+    <br>
+    <br><br>
+<div class="card w-80" >
+    <ul class="list-group list-group-flush">
+        
+        <% sections.forEach((leacture)=>{%>
+        <li class="list-group-item">
+            <%=leacture.data().title%>
+          
+        </li>
+     <%})%>
+    </ul>
+        <div class="row row-cols-1 row-cols-md-3">
+        <% temp.forEach((lec)=>{%>
+        <div class="col mb-4">
+            <div class="card h-100">
+            <img src="<% lec.lectureThumbnail%>" width="100px" height="100px" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title"><%=lec.title%></h5>
+                <a href="<% lec.lectureVideoUrl%>" type='button' class='btn btn-primary'>Play lecture</a>
+                <p class="card-text"><%=lec.desc%></p>
+            </div>
+                <div class="card-footer">
+          <span class="">
+                
+              
+
+                <a href="/screen/Delete_Lecture/<%=id%>/<%=sectionId%>/<%=lec.id%>/" style="margin:5px"  type="button" class="btn btn-danger float-right">Delete</a>
+                
+                <a href="/screen/Edit_Lecture/<%=id%>/<%=sectionId%>/<%=lec.id%>/<%=lec.title%>" style="margin:5px" type="button" class="btn btn-success float-right">Edit</a>
+            </span>
+        </div>
+            </div>
+        </div>
+        <%})%>
+        </div>
+    <!-- <div class="card-footer">
+      Card footer
+    </div> -->
+  </div>
+
+
+
+</div>

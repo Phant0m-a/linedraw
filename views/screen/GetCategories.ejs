@@ -1,0 +1,34 @@
+<div class="container">
+  <h3>Categories</h3>
+  <br><br>
+
+<!-- Create Categories -->
+<form action="/screen/AddCategory" method="post">
+    <div class="input-group mb-3">
+        <span class="input-group-text" id="inputGroup-sizing-default">Add New Category</span>
+        <input type="text" name="title" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="Add New Category" required>
+      </div>
+    <button class="btn btn-primary" type="submit">Add</button>
+</form>
+<br><br>
+
+<!-- categories -->
+    <div class="card w-80" >
+        <ul class="list-group list-group-flush">
+        <%data.docs.forEach((d)=>{%>
+            <li class="list-group-item"><%= d.data().title%>
+            <span class="float-right">
+               
+                <a href="/screen/EditCategory/<%=d.id%>/<%=d.data().title%>" type="button" class="btn btn-success">Edit</a>
+                <a href="/screen/DeleteCategory/<%=d.id%>" type="button" class="btn btn-danger">Delete</a>
+            </span></li>
+        <%})%>
+        </ul>
+        <!-- <div class="card-footer">
+          Card footer
+        </div> -->
+      </div>
+     
+<br><br>
+<a href="/screen/udmyPanel" type="button" class='btn btn-dark bg-dark border-dark'>Back to Home</a>
+</div>

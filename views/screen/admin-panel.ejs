@@ -1,0 +1,69 @@
+
+<div style=" background-color:#a360ca;margin-top: -30px; padding:20px;">
+  <div class="container" >
+    <div style="display:flex; justify-content:space-between;">
+      
+      <h3 style="color:#e7e5e9;">Admin Panel</h3>
+      <a class="btn btn-danger float-right"  type="button" href="/screen/signout/signout">Signout</a>
+    </div>
+        <hr>
+        <br>
+        
+            <label style="color:white" >Writing About</label>
+            <br>
+            <div class="form-group">
+              <h2 style="color:white">Existing Collections</h2>
+              <br> 
+              <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                  <!-- they can be href to new screen with value from selected buttons -->
+                  <label class="btn btn-secondary">
+                    <a style="text-decoration: none; color:white" type="button" class="text-light"name="options" id="option3" value="Spring" href="/screen/writingType/mySelf"> MYSELF
+                  </label></a>
+                  <label class="btn btn-secondary">
+                    <a style="text-decoration: none; color:white" type="button" class="text-light" name="options" id="option1" value="Winter" href="/screen/writingType/himSelf" checked> HIMSELF
+                  </label>
+                  <label class="">
+                    <a style="text-decoration: none; color:white" type="button" class="btn btn-secondary" name="options" id="option2" value="Summer" href="/screen/writingType/herSelf"> HERSELF
+                  </label></a>
+                  
+                </div>
+      
+              
+          </div>
+        </div>
+        
+    </div>
+    
+      <br>  
+      
+    <div class="container">
+      
+        <h3 style="margin-top:20px;">Question List</h3>
+        
+        <br>
+        <form  action="/screen/new-page" method="POST">
+            <select class="custom-select" name="select">
+                <!-- <option selected value="none">Question list</option> -->
+                <option value="none" disabled selected>Select Question list Type</option>
+                <option value="mySelf">Myself</option>
+                <option value="himSelf">Himself</option>
+                <option value="herSelf">Herself</option>
+              </select>
+              <br>
+              <br>
+              <button type="submit" class="btn btn-primary">Get</button>
+        </form>
+        <br>
+        <br>
+        <br>
+      
+    </div>
+    
+    <div class="container">
+    
+    </div>
+    
+    
+    
+    
+</div>

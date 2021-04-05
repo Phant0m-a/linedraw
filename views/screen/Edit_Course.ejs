@@ -1,6 +1,6 @@
 <div class="container">
     <form action="/screen/Edit_Course" enctype="multipart/form-data" method="post">
-    <h3 style="display:inline-block">Edit Course</h3>
+    <h3 style="display:inline-block" class='text-light'>Edit Course</h3>
     <a href="/screen/manageFeatures/<%=id%>"style="display:inline-block"  type='button' class='btn btn-primary float-right'>Manage Features</a>  
     <a href="/screen/manageSections/<%=id%>"style="display:inline-block"  type='button' class='btn btn-primary float-right'>Manage Sections</a>  
     <br>
@@ -33,7 +33,11 @@
         </div>
         <div class="form-group">
             <label for="">Course Price</label>
-            <input type="text" class="form-control" name="price" value='<%=data.price%>' placeholder="Enter price">
+            <input type="text" class="form-control" name="price"value='<%=data.price%>' placeholder="Enter price">
+        </div>
+        <div class="form-group">
+            <label for="">old Price</label>
+            <input type="text" class="form-control" name="oldPrice"  value='<%=data.oldPrice%>' placeholder="Enter price">
         </div>
         <div class="form-group">
             <label for="">Upload Banner Image </label><br>

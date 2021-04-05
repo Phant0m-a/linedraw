@@ -2,7 +2,7 @@
     <br>
     <form action="/screen/manageSections" enctype="multipart/form-data" method="post">
         <input type="hidden" name='id' value="<%=id%>">
-        <h3>Manage Sections</h3>
+        <h3 class='text-light'>Manage Sections</h3>
         <div class="form-group">
             <label for="">Title</label>
             <input type="text" class="form-control" name="sections" value='' placeholder="Enter section title ..." required>
@@ -24,7 +24,7 @@
             <%=section.data().title%>
             <span class="">
                 
-              
+              <br>
                 <!-- delete isnt working for now! -->
                 <a href="/screen/deleteSection/<%=id%>/<%=section.id%>"style="margin:5px"  type="button" class="btn btn-danger float-right">Delete</a>
                 

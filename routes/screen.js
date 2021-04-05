@@ -864,7 +864,9 @@ await dbs.collection('courses').add({
     description:'',
     bannerUrl:'',
     tag:'',
-    price:0.0,
+    oldPrice:'',
+    price:'',
+    demoVideos:[],
     introVideoThumbnail:'',
     introVideoThumbnailKey:'',
     introVideoUrl:'',
@@ -930,17 +932,20 @@ router.post('/Edit_Course', async(req,res)=>{
     let title = req.body.title;
     let category = req.body.course_name;
     let description = req.body.description;
-    let price = req.body.price;
+    let pprice = req.body.price;
+    let oldPPrice = req.body.oldPrice;
     let tag = req.body.tag;
-    
+    let price= pprice.toString();
+    let oldPrice = oldPPrice.toString();
     // console.log(id+' :: '+title+' :: '+category+' :: '+price+' :: '+rating+' :: '+description+' :: '+tag);
     // let bannerUrl=req.body.bannerUrl;
-    let boi= req.body.bannerUrl;
-    let boib= req.body.bannerUrl;
-    let boic= req.body.bannerUrl;
+    let boi= req.body.bannerImage;
+    let boib;
+    let boic;
     console.log(boi);
    
-    if( req.files && req.files.bannerImage !== undefined && req.files.bannerImage.mimetype === 'image/png' ||req.files.bannerImage.mimetype === 'image/jpeg'){
+   if(req.files){
+    if(req.files.bannerImage !== undefined && req.files.bannerImage.mimetype === 'image/png' ||req.files.bannerImage.mimetype === 'image/jpeg'){
 
         var file = req.files.bannerImage;
         var filename= file.name;
@@ -959,9 +964,10 @@ router.post('/Edit_Course', async(req,res)=>{
         
        
     } 
+   }
 
-
-  if(req.files && req.files.videoThumbnail !== undefined && req.files.videoThumbnail.mimetype === 'image/png' || req.files.videoThumbnail.mimetype === 'image/jpeg'){
+   if(req.files.videoThumbnail){
+  if(req.files.videoThumbnail !== undefined && req.files.videoThumbnail.mimetype === 'image/png' || req.files.videoThumbnail.mimetype === 'image/jpeg'){
 
     setTimeout(function b(){
         var fileb = req.files.videoThumbnail;
@@ -981,30 +987,33 @@ router.post('/Edit_Course', async(req,res)=>{
     }, 2000)
     }
 
+}
 
  //   if(req.files.video !== 'null' && req.files.video !== 'undefined'){
-  if(req.files && req.files.video !== undefined && req.files.video.mimetype === 'application/octet-stream'){
-    let ftype= req.files.video.mimetype;
-    console.log('video type is: '+ ftype);
-    setTimeout(function c(){
-        
-    var filec = req.files.video;
-    var filenamec= req.files.video.name;
-    console.log(filec)
-    let loc= UUID();
-    console.log(loc);
-    filec.mv('tmp/'+filenamec,async (err)=>{
-        boic = await uploadf('tmp/'+filenamec,loc);
-        console.log(boic);
-        dbs.collection('courses').doc(id).update({ 
-           
-            introVideoUrl:boic,
-            introVideoThumbnailKey:loc
-        })
-   
-    }) 
-    }, 4000)
-    }
+if(req.files){
+    if( req.files.video !== undefined && req.files.video.mimetype === 'application/octet-stream'){
+        let ftype= req.files.video.mimetype;
+        console.log('video type is: '+ ftype);
+        setTimeout(function c(){
+            
+        var filec = req.files.video;
+        var filenamec= req.files.video.name;
+        console.log(filec)
+        let loc= UUID();
+        console.log(loc);
+        filec.mv('tmp/'+filenamec,async (err)=>{
+            boic = await uploadf('tmp/'+filenamec,loc);
+            console.log(boic);
+            dbs.collection('courses').doc(id).update({ 
+               
+                introVideoUrl:boic,
+                introVideoThumbnailKey:loc
+            })
+       
+        }) 
+        }, 4000)
+        }
+}
 
  
     setTimeout(function u(){
@@ -1014,6 +1023,7 @@ router.post('/Edit_Course', async(req,res)=>{
              category:category,
              description:description,
              price:price,
+             oldPrice:oldPrice,
              tag:tag
          }).then(()=>{
              res.redirect('/screen/GetCourses');
@@ -1437,6 +1447,7 @@ router.get('/Delete_Lecture/:id/:sec_id/:title', (req, res) => {
 // 
 
 })
+
 
 
 module.exports = router

@@ -402,6 +402,7 @@ await  dbs.collection('types').get().then((snapshot)=>{
 
   
 });
+
 router.post('/addCourse',async(req,res)=>{
     // res.send('screen/addCourse successful!');
     // file-upload
@@ -1178,7 +1179,7 @@ router.get('/GetSection/:id/:sectionId/:title', async(req,res)=>{
             // if demo is false then put in lecs
             const Ref = dbs.collection('courses/'+id+'/sections/').doc(sec_id);
                     Ref.update({
-                            lectures: firebase.firestore.FieldValue.arrayUnion(...[{id:u,lectureThumbnail:'../',lectureVideoUrl:'../',title:leacture}])
+                            lectures: firebase.firestore.FieldValue.arrayUnion(...[{id:u,lectureThumbnail:'../',picKey:0,vidKey:0,lectureVideoUrl:'../',title:leacture}])
                     });
                     res.redirect('/screen/GetCourses');
             // 
@@ -1195,22 +1196,14 @@ router.get('/deleteSection/:id/:sec_id', (req,res)=>{
 })
 // the editing of lecture
     router.get('/Edit_Lecture/:id/:sec_id/:lec_id/:lec_title', async(req,res)=>{
-        console.log(req.params);
+        // console.log(req.params);
         let id = req.params.id;
         let sec_id= req.params.sec_id;
         let lec_id =req.params.lec_id;
         let lec_title= req.params.lec_title;
-        let Ref = dbs.collection('courses/'+id+'/sections').get(sec_id);
-        Ref.then((snap)=>{
-            if(!snap){
-                console.log('no doc');
-            }else{
-                snap.docs.forEach((doc)=>{
-                    console.log(doc.data());
-                })
-            }
-        })
-        res.render('screen/Edit_Lecture',{id:id, title:lec_title,sec_id:sec_id})
+
+       
+        res.render('screen/Edit_Lecture',{id:id, title:lec_title,sec_id:sec_id,lec_id:lec_id})
     }) 
 
 
@@ -1219,7 +1212,13 @@ router.post('/Edit_Lecture', async(req,res)=>{
     console.log(req.body);
     let id =req.body.id;
     let sec_id= req.body.sec_id;
-    let title= req.body.sec_id;
+    let title= req.body.title;
+    let old_title= req.body.old_title;
+    let lec_id = req.body.lec_id;
+    // let old_thumbnailUrl = req.body.old_thumbnailUrl;
+    // let old_lectureVideoUrl = req.body.old_lectureVideoUrl;
+
+    
 
     res.send('working')
 
@@ -1234,11 +1233,11 @@ router.post('/Edit_Lecture', async(req,res)=>{
     var filenamec;
     let location;
 
-if(req.files && req.files.thumbnailUrl !== undefined && req.files.thumbnailUrl.mimetype === 'image/png' || req.files.thumbnailUrl.mimetype === 'image/jpeg'){
+if(req.files && req.files.lectureThumbnailUrl !== undefined && req.files.lectureThumbnailUrl.mimetype === 'image/png' || req.files.lectureThumbnailUrl.mimetype === 'image/jpeg'){
 
     setTimeout(function pic(){
-        fileb = req.files.thumbnailUrl;
-        filenameb=  req.files.thumbnailUrl.name;
+        fileb = req.files.lectureThumbnailUrl;
+        filenameb=  req.files.lectureThumbnailUrl.name;
     console.log(fileb)
        loac= UUID();
     console.log(loac);
@@ -1248,8 +1247,8 @@ if(req.files && req.files.thumbnailUrl !== undefined && req.files.thumbnailUrl.m
         dbs.collection('courses/'+id+'/sections/').doc(sec_id).update({
           
             lectures: firebase.firestore.FieldValue.arrayUnion(...[{
-                id:loac,
-                lectureThumbnail:boib,
+                id:lec_id,
+                lectureThumbnailUrl:boib,
                 id:id,
                 title:title,
               //   lectureThumbnail:lectureThumbnail,
@@ -1262,35 +1261,63 @@ if(req.files && req.files.thumbnailUrl !== undefined && req.files.thumbnailUrl.m
     }
 
 
-if(req.files && req.files.lectureVideoUrl !== undefined && 'application/octet-stream'){
+// if(req.files && req.files.lectureVideoUrl !== undefined && 'application/octet-stream'){
 
-    setTimeout(function b(){
+//     setTimeout(function b(){
         
-        filec = req.files.lectureVideoUrl;
-        filenamec=  req.files.lectureVideoUrl.name;
-    console.log(filec)
-    location= UUID();
-    console.log(location);
-    filec.mv('tmp/'+filenamec,async (err)=>{
-        boic = await uploadf('tmp/'+filenamec,location);
-        console.log(boic);
-        dbs.collection('courses/'+id+'/sections/').doc(sec_id).update({
-            lectures: firebase.firestore.FieldValue.arrayUnion(...[{
-                id:id,
-                title:title,
-                lectureVideoKey:location,
-                lectureVideoUrl:boic            
+//         filec = req.files.lectureVideoUrl;
+//         filenamec=  req.files.lectureVideoUrl.name;
+//     console.log(filec)
+//     location= UUID();
+//     console.log(location);
+//     filec.mv('tmp/'+filenamec,async (err)=>{
+//         boic = await uploadf('tmp/'+filenamec,location);
+//         console.log(boic);
+//         dbs.collection('courses/'+id+'/sections/').doc(sec_id).update({
+//             lectures: firebase.firestore.FieldValue.arrayUnion(...[{
+//                 id:id,
+//                 title:title,
+//                 lectureVideoKey:location,
+//                 lectureVideoUrl:boic            
       
-              }]) 
+//               }]) 
          
-        })
+//         })
    
-    }) 
-    },2400)
-    }
+//     }) 
+//     },2400)
+//     }
    
 
 // 
+
+// test zone(*)
+let save;
+        let Ref = dbs.collection('courses/'+id+'/sections').get(sec_id);
+        Ref.then((snap)=>{
+
+            if(!snap){
+                console.log('no doc');
+            }else{
+                snap.docs.forEach((doc)=>{
+                    console.log('we got this data>')
+                    // console.log(doc.data().lectures);
+                    save= doc.data().lectures;
+                })
+                console.log('logging title:');
+                save.forEach((doc)=>{
+                    if(doc.title == old_title){
+                        console.log(doc.title);
+                    }
+                    
+                })
+               
+            }
+        })
+
+// 
+
+
 
 
     // for title change
@@ -1298,7 +1325,7 @@ if(req.files && req.files.lectureVideoUrl !== undefined && 'application/octet-st
     let ref = dbs.collection('courses/'+id+'/sections/').doc(sec_id);
     ref.update({
         lectures: firebase.firestore.FieldValue.arrayUnion(...[{
-          id:id,
+          id:lec_id,
           title:title,
         //   lectureThumbnail:lectureThumbnail,
 

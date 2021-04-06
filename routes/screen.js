@@ -36,7 +36,7 @@ function upload(localFile, remoteFile){
         });
   }
  
-//   video beta-test
+//   video uploader
 function uploadf(localFile, remoteFile){
 
     // let uuid = UUID();
@@ -1230,7 +1230,7 @@ router.post('/Edit_Lecture', async(req,res)=>{
 
     
 
-    res.send('working')
+    // res.send('working')
 
     var fileb;
     var filenameb;
@@ -1242,61 +1242,71 @@ router.post('/Edit_Lecture', async(req,res)=>{
     var filec ;
     var filenamec;
     let location;
+    let the_data;
 
-if(req.files && req.files.lectureThumbnailUrl !== undefined && req.files.lectureThumbnailUrl.mimetype === 'image/png' || req.files.lectureThumbnailUrl.mimetype === 'image/jpeg'){
 
-    setTimeout(function pic(){
-        fileb = req.files.lectureThumbnailUrl;
-        filenameb=  req.files.lectureThumbnailUrl.name;
-    console.log(fileb)
-       loac= UUID();
-    console.log(loac);
-    fileb.mv('tmp/'+filenameb,async (err)=>{
-        boib = await upload('tmp/'+filenameb,loac);
-        console.log(boib);
-        dbs.collection('courses/'+id+'/sections/').doc(sec_id).update({
+// picture
+if(req.files){
+    if(req.files.lectureThumbnail !== undefined && req.files.lectureThumbnail.mimetype === 'image/png' || req.files.lectureThumbnail.mimetype === 'image/jpeg'){
+
+        setTimeout(function pic(){
+            fileb = req.files.lectureThumbnail;
+            filenameb=  req.files.lectureThumbnail.name;
+        console.log(fileb)
+           loac= UUID();
+        console.log(loac);
+        fileb.mv('tmp/'+filenameb,async (err)=>{
+            boib = await upload('tmp/'+filenameb,loac);
+            console.log('lecture Thumbnail updated here is the new value: ===>');
+            console.log(boib);
+            // dbs.collection('courses/'+id+'/sections/').doc(sec_id).update({
+              
+            //     lectures: firebase.firestore.FieldValue.arrayUnion(...[{
+            //         id:lec_id,
+            //         lectureThumbnail:boib,
+            //         id:id,
+            //         title:title,
+            //       //   lectureThumbnail:lectureThumbnail,
           
-            lectures: firebase.firestore.FieldValue.arrayUnion(...[{
-                id:lec_id,
-                lectureThumbnailUrl:boib,
-                id:id,
-                title:title,
-              //   lectureThumbnail:lectureThumbnail,
-      
-              }])
-        })
-   
-    }) 
-    }, 10)
-    }
+            //       }])
+            // })
+       
+        }) 
+        }, 1)
+        }
+    
+}
 
+// video 
+if(req.files){
+    if(req.files.lectureVideoUrl !== undefined && 'application/octet-stream'){
 
-// if(req.files && req.files.lectureVideoUrl !== undefined && 'application/octet-stream'){
-
-//     setTimeout(function b(){
-        
-//         filec = req.files.lectureVideoUrl;
-//         filenamec=  req.files.lectureVideoUrl.name;
-//     console.log(filec)
-//     location= UUID();
-//     console.log(location);
-//     filec.mv('tmp/'+filenamec,async (err)=>{
-//         boic = await uploadf('tmp/'+filenamec,location);
-//         console.log(boic);
-//         dbs.collection('courses/'+id+'/sections/').doc(sec_id).update({
-//             lectures: firebase.firestore.FieldValue.arrayUnion(...[{
-//                 id:id,
-//                 title:title,
-//                 lectureVideoKey:location,
-//                 lectureVideoUrl:boic            
-      
-//               }]) 
-         
-//         })
-   
-//     }) 
-//     },2400)
-//     }
+            setTimeout(function b(){
+                
+                filec = req.files.lectureVideoUrl;
+                filenamec=  req.files.lectureVideoUrl.name;
+            console.log(filec)
+            location= UUID();
+            console.log(location);
+            filec.mv('tmp/'+filenamec,async (err)=>{
+                boic = await uploadf('tmp/'+filenamec,location);
+                console.log('video thumbnail is updated here is the link:================>');
+                console.log(boic);
+                // dbs.collection('courses/'+id+'/sections/').doc(sec_id).update({
+                //     lectures: firebase.firestore.FieldValue.arrayUnion(...[{
+                //         id:id,
+                //         title:title,
+                //         lectureVideoKey:location,
+                //         lectureVideoUrl:boic            
+              
+                //       }]) 
+                 
+                // })
+           
+            }) 
+            },100)
+            }
+}
    
 
 // 
@@ -1310,70 +1320,149 @@ let save;
                 console.log('no doc');
             }else{
                 snap.docs.forEach((doc)=>{
-                    console.log('we got this data>')
+                    // console.log('we got this data>')
                     // console.log(doc.data().lectures);
                     save= doc.data().lectures;
                 })
-                console.log('logging title:');
-                save.forEach((doc)=>{
-                    if(doc.title == old_title){
-                        console.log(doc.title);
-                    }
+                console.log('results : ===>');
+
+                // save.forEach((doc)=>{
+                //     if(doc.title == old_title){
+                //         if(!req.files.lectureVideoUrl){location=doc.lectureVideoUrl,vidKey=location}
+                //         if(!req.files.lectureThumbnail){loac=doc.lectureThumbnail,picKey=loac}   
                     
-                })
-               
+                //         console.log(doc.title);
+                //     }
+                    
+                // })
+                setTimeout(function h(){
+                    the_data = save.map(item=>{
+                        if(item.id == lec_id){
+                            return{
+                                id:lec_id,
+                                title:title || item.title,
+                                picKey:loac || item.picKey,
+                                vidKey:location || item.vidKey,
+                                lectureThumbnail:boib || item.lectureThumbnail,
+                                lectureVideoUrl:boic || item.lectureVideoUrl
+                            }
+                        }else{
+                            return item
+                        }
+                    })
+                }, 7000)
+                console.log(the_data);
+                   // update image video and text: ps both keys
+ 
+                // let obj = JSON.stringify(the_data); 
+                // res.send(obj.getString('title'));
+                
             }
+            setTimeout(function live(){
+                let ref = dbs.collection('courses/'+id+'/sections/').doc(sec_id);
+                ref.update({
+                    lectures:the_data
+                });
+                
+              },9000)
         })
+        res.redirect('/screen/GetCourses')
+        let ok;
+        dbs.collection('courses/'+id+'/sections').get(sec_id).then((snap)=>{
+            ok = snap
+            ok.docs.forEach((item)=>{
+                console.log();
+                ok = item.data().title;
+            })
+        })
+        
+        //  res.redirect(`/screen/GetSection/${id}/${sec_id}/${ok}`);
 
-// 
-
-
-
-
-    // for title change
-  setTimeout(function live(){
-    let ref = dbs.collection('courses/'+id+'/sections/').doc(sec_id);
-    ref.update({
-        lectures: firebase.firestore.FieldValue.arrayUnion(...[{
-          id:lec_id,
-          title:title,
-        //   lectureThumbnail:lectureThumbnail,
-
-        }])
-    });
-  },4000)
-
-    // 
 
 })
+
+
+
+
+
+
+
+
+
+
 // Delete_Lecture/
 router.get('/Delete_Lecture/:id/:sec_id/:title', (req, res) => {
     console.log(req.params);
     let id = req.params.id;
     let sec_id= req.params.sec_id;
-    let titele = req.params.title;
+    let title = req.params.title;
+    // let old_title = req.params.old_title;
 
     console.log('ok in delete_lecture');
 
-    setTimeout(function live(){
+    
         let ref = dbs.collection('courses/'+id+'/sections/');
         ref.get(sec_id).then((sn)=>{
             let data= sn;
             data.docs.forEach((a)=>{
-                console.log(a.data().title);
+                // console.log(a.data().title);
                 
             })
         })
 
-        // ref.update({
-        //     lectures: firebase.firestore.FieldValue.arrayUnion(...[{
-        //       id:id,
-        //       title:title,
-        //     //   lectureThumbnail:lectureThumbnail,
+        // test for deleteing code
+        let save;
+        let Ref = dbs.collection('courses/'+id+'/sections').get(sec_id);
+        let lectureVideoUrl;
+        let lectureThumbnail;
+        let vidKey;
+        let picKey;
+        Ref.then((snap)=>{
+
+            if(!snap){
+                console.log('no doc');
+            }else{
+                snap.docs.forEach((doc)=>{
+                     console.log('we got this data ...>')
+                    // console.log(title);
+                    save= doc.data().lectures;
+                    let the_data = save.filter(item=>item.title == title)
+                    
+                    the_data.forEach((c)=>{
+                        console.log(c);
+                    })
+                    //delete 
+
+                     console.log(the_data)
+                            dbs.collection('courses/'+id+'/sections').doc(sec_id).update({
+                            lectures: firebase.firestore.FieldValue.arrayRemove(...the_data)
+                        });
+                })
+            
+                 
+              
+
+               
+            }
+
+               
     
-        //     }])
-        // });
-      },4000)
+                // console.log('<====== new Array results Start ============>');
+                // console.log(newArray);
+                // ref.update({
+                //     lectures: firebase.firestore.FieldValue.arrayRemove(...newArray)
+                // });
+                // console.log('<====== new Array results End ============>');
+            
+        })
+
+        // 
+       
+        
+        console.log('deleted!');
+      res.redirect('/screen/GetCourses');
+    //   /GetSection/:id/:sectionId/:title
+   
 })
 
 // Lecture_form_delete use later
@@ -1410,7 +1499,10 @@ router.get('/Delete_Lecture/:id/:sec_id/:title', (req, res) => {
 //     <button type="submit" class="btn btn-danger">Delete</button>
 // </form>
 
-
+// method (*)1
+// console.log('<====== new Array results Start ============>');
+// console.log(newArray);
+// console.log('<====== new Array results End ============>');
 // 
         // let ref = dbs.collection('courses/'+id+'/sections/').doc(sec_id);
         // ref.update({
@@ -1423,57 +1515,44 @@ router.get('/Delete_Lecture/:id/:sec_id/:title', (req, res) => {
 // 
 
 
-        
-// rewrite this shit use tommrow
-// await dbs.collection('courses/'+id+'/'+'content/').where('title' ,'==',title).get().then((snapshot)=>{
-//     let section = snapshot 
-    
-//     section.docs.forEach((o)=>{
-//          console.log(o.data().title);
-//         let sections= o.data();
-//          if(o.id == t ){
-             
-//             //  res.render('screen/GetSection',{sections:sections,id:id});
-//          }
-        
-//     })
-         
-//     })
-    
-    // .catch((err) => {
-    //     console.log('error at /course: '+ err);
-    // })
-
-// 
-
 })
 
+// let save= [
+//     {
+//        lectureVideoUrl:'video url 1',
+//        lectureThumbnail: 'video thumbnail 1',
+//        vidKey: 'vid key 1',
+//        picKey: 'pickey 1',
+//        id:'id 1',
+//        title:'one'
+//      },
+//     {
+//        lectureVideoUrl:'video url 2',
+//        lectureThumbnail: 'video thumbnail 2',
+//        vidKey: 'vid key 2',
+//        picKey: 'pickey 2',
+//        id:'id 2',
+//        title:'two'
+//      },
+//    ]
+   
+// const newArray = save.map((item)=>{
+// if(item.title == 'one'){
+//    return {
 
+//        lectureVideoUrl: item.lectureVideoUrl,
+//        lectureThumbnail:item.lectureThumbnail,
+//        vidKey:item. vidKey,
+//        picKey:item.picKey,
+//        id:item.id
+       
+//    }
+// }
+// })
+
+//  console.log(newArray);
 
 module.exports = router
-
-// download image and upload to specific collections setting url for specific vid .or img
-
-// create, edit and delete leactures  array in maps
-
-
-// solution:
-
-//set front end for adding leacture Name, title, and image.url// (upload for now)  
-
-// 
-
-
-// let person = [
-//     {
-//         name:'aftab',
-//         id:'02',
-//     },
-//     {
-//         name:'aftab',
-//         id:'02',
-//     }
-// ]
 
 
     
@@ -1514,3 +1593,18 @@ module.exports = router
 
 
 // })
+
+
+
+
+
+
+// DELETE WHOLE COLLECTION CODE
+// await dbs
+// .collection(type)
+// .get()
+// .then((querySnapshot) => {
+// querySnapshot.forEach((doc) => {
+//   doc.ref.delete();
+// });
+// });

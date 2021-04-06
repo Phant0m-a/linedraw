@@ -29,12 +29,15 @@
     </ul>
         <div class="row row-cols-1 row-cols-md-3">
         <% temp.forEach((lec)=>{%>
+            <%console.log('=====================')%>
+            <%console.log(lec)%>
+            <%console.log('=====================')%>
         <div class="col mb-4">
             <div class="card h-100">
-            <img src="<% lec.lectureThumbnail%>" width="100px" height="100px" class="card-img-top" alt="...">
+            <img src='<%=lec.lectureThumbnail%>'  height="250px" class="card-img-top" alt="image">
             <div class="card-body">
                 <h5 class="card-title"><%=lec.title%></h5>
-                <a href="<% lec.lectureVideoUrl%>" type='button' class='btn btn-primary'>Play lecture</a>
+                <a src='<%=lec.lectureVideoUrl%>' type='button' class='btn btn-primary'>Play lecture</a>
                 <p class="card-text"><%=lec.desc%></p>
             </div>
                 <div class="card-footer">
@@ -42,7 +45,7 @@
                 
               
 
-                <a href="/screen/Delete_Lecture/<%=id%>/<%=sectionId%>/<%=lec.id%>/" style="margin:5px"  type="button" class="btn btn-danger float-right">Delete</a>
+                <a href="/screen/Delete_Lecture/<%=id%>/<%=sectionId%>/<%=lec.title%>" style="margin:5px"  type="button" class="btn btn-danger float-right">Delete</a>
                 
                 <a href="/screen/Edit_Lecture/<%=id%>/<%=sectionId%>/<%=lec.id%>/<%=lec.title%>" style="margin:5px" type="button" class="btn btn-success float-right">Edit</a>
             </span>

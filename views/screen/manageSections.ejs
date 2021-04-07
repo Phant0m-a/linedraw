@@ -2,7 +2,7 @@
     <br>
     <form action="/screen/manageSections" enctype="multipart/form-data" method="post">
         <input type="hidden" name='id' value="<%=id%>">
-        <h3 class='text-light'>Manage Sections</h3>
+        <h3 class='text-dark'>Manage Sections</h3>
         <div class="form-group">
             <label for="">Title</label>
             <input type="text" class="form-control" name="sections" value='' placeholder="Enter section title ..." required>
@@ -20,7 +20,7 @@
     <ul class="list-group list-group-flush">
         
         <% sections.forEach((section)=>{%>
-        <li class="list-group-item">
+        <li class="list-group-item"  style='background:rgb(244, 243, 243)'>
             <%=section.data().title%>
             <span class="">
                 

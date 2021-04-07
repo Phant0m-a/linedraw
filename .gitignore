@@ -8,3 +8,6 @@ panel.ejs
 signature.ejs
 customers.ejs
 addProduct.ejs
+gender.ejs
+personality.ejs
+editCourse.ejs

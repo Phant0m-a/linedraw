@@ -4,20 +4,20 @@
 <form action="/screen/Edit_Lecture" enctype="multipart/form-data" method="post">
     <input type="hidden" name='id' value="<%=id%>">
     <input type="hidden" name='lec_id' value="<%=lec_id%>">
-    <h3 class='text-light'>Edit Lecture</h3>
+    <h3 class='text-dark'>Edit Lecture</h3>
     <div class="form-group">
-        <label for="">Title</label>
+        <label class='text-dark display-5' for="">Title</label>
         <input type="text" class="form-control" name="title" value='<%=title%>' placeholder="<%=title%>..." required>
         <input type="hidden" name="old_title" value='<%=title%>' >
         <input type="hidden" class="form-control" name="sec_id" value='<%=sec_id%>' >
     </div>
     <div class="form-group">
-        <label for="">Upload Thumbnail </label><br>
+        <label  class='text-dark display-5'for="">Upload Thumbnail </label><br>
         <input type="file" name="lectureThumbnail" >
     </div>
     
     <div class="form-group">
-        <label for="">Upload VideoUrl </label><br>
+        <label  class='text-dark display-5'for="">Upload VideoUrl </label><br>
         <input type="file" name="lectureVideoUrl" >
     </div>
    
@@ -25,7 +25,6 @@
     <br><br>
     <a type="submit" href='/screen/GetCourses' class="btn btn-danger">cancel</a>
 </form>
-
 
 
 

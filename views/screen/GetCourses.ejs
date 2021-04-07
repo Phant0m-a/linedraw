@@ -1,6 +1,6 @@
   <div class="container">
 
-        <h2 class='text-light'>Get Courses</h2><br>    
+        <h2 class='text-dark'>Get Courses</h2><br>    
         <a href="/screen/Add_Course" type='button' class='btn btn-primary'>Add New Course</a>
         <br><br>       
 
@@ -8,7 +8,7 @@
        <div class="card w-80" >
         <ul class="list-group list-group-flush">
             <% courses.docs.forEach((course)=>{%>
-            <li class="list-group-item"><%=course.data().title%>
+            <li class="list-group-item"  style='background:rgb(244, 243, 243)'><%=course.data().title%>
                 <span class="float-right">
                
                     <a href="/screen/Edit_Course/<%=course.id%>" type="button" class="btn btn-success">Edit</a>

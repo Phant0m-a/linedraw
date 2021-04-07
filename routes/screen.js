@@ -874,7 +874,11 @@ await dbs.collection('courses').add({
     totalStudents:0,
     totalRatingCount:0,
     category:'',
-    features:[]
+    features:[],
+    courseEnabled:true,
+    Days:1,
+    Months:0,
+    expiresIn:1
     }).then(()=>{
         res.redirect('/screen/GetCourses');
     });
@@ -914,8 +918,9 @@ router.get('/Edit_Course/:id', async(req,res)=>{
     } else {
     //   console.log('Document data:', doc.data());
       data= doc.data();
+      let status= doc.data().courseStatus;
     //   console.log(data.category);
-      res.render('screen/Edit_Course',{id:id,data:data,categories:categories});
+      res.render('screen/Edit_Course',{id:id,data:data,categories:categories,status:status});
 
     }
     
@@ -935,14 +940,19 @@ router.post('/Edit_Course', async(req,res)=>{
     let pprice = req.body.price;
     let oldPPrice = req.body.oldPrice;
     let tag = req.body.tag;
+    let courseEnabled;
+    let courseStatus=req.body.courseStatus;
     let price= pprice.toString();
     let oldPrice = oldPPrice.toString();
+    let days =req.body.Days;
+    let months = req.body.Months;
+    let expiresIn = months*30 + days;
     // console.log(id+' :: '+title+' :: '+category+' :: '+price+' :: '+rating+' :: '+description+' :: '+tag);
     // let bannerUrl=req.body.bannerUrl;
     let boi= req.body.bannerImage;
     let boib;
     let boic;
-    console.log(boi);
+    console.log(req.body);
    
    if(req.files){
     if(req.files.bannerImage !== undefined && req.files.bannerImage.mimetype === 'image/png' ||req.files.bannerImage.mimetype === 'image/jpeg'){
@@ -966,7 +976,7 @@ router.post('/Edit_Course', async(req,res)=>{
     } 
    }
 
-   if(req.files.videoThumbnail){
+   if(req.files){
   if(req.files.videoThumbnail !== undefined && req.files.videoThumbnail.mimetype === 'image/png' || req.files.videoThumbnail.mimetype === 'image/jpeg'){
 
     setTimeout(function b(){
@@ -992,6 +1002,8 @@ router.post('/Edit_Course', async(req,res)=>{
  //   if(req.files.video !== 'null' && req.files.video !== 'undefined'){
 if(req.files){
     if( req.files.video !== undefined && req.files.video.mimetype === 'application/octet-stream'){
+       
+
         let ftype= req.files.video.mimetype;
         console.log('video type is: '+ ftype);
         setTimeout(function c(){
@@ -1014,17 +1026,26 @@ if(req.files){
         }, 4000)
         }
 }
-
+if(courseStatus ==='off'){
+    courseEnabled= false;
+}else{
+    courseEnabled= true;
+}
  
     setTimeout(function u(){
-        
+       
         dbs.collection('courses').doc(id).update({ 
              title:title,
              category:category,
              description:description,
              price:price,
              oldPrice:oldPrice,
-             tag:tag
+             tag:tag,
+             courseEnabled:courseEnabled,
+             courseStatus:courseStatus,
+             Days:days,
+             Months:months,
+             expiresIn:expiresIn
          }).then(()=>{
              res.redirect('/screen/GetCourses');
          })
@@ -1166,32 +1187,136 @@ router.get('/GetSection/:id/:sectionId/:title', async(req,res)=>{
     let id = req.params.id;
     let sectionId = req.params.sectionId;
     let title = req.params.title;
-    let temp;
+    let te;
     await dbs.collection('courses/'+id+'/sections/').where('title','==',title).get().then((snapshot)=>{
         let section = snapshot;
    
         section.docs.forEach(doc => {
             console.log(doc.data().lectures);
-             temp= doc.data().lectures
+             te= doc.data().lectures
         })
 
-        res.render('screen/GetSection',{sectionId:sectionId,id:id,sections:section,temp:temp});
+        res.render('screen/GetSection',{sectionId:sectionId,id:id,sections:section,te:te});
         }).catch((err)=>{
             console.log('error at / : '+ err);
         })
-
+    })
 
         router.post('/AddLec', async(req,res)=>{
             let id = req.body.id;
             let leacture = req.body.leacture;
             let sec_id = req.body.sectionId;
+            let Demo =req.body.Demo?true:false;
+            
+          
             let u= UUID();
-            // if demo is false then put in lecs
+            // if demo is false then put in lecs else
+
+            // test zone()
+
+            var fileb;
+            var filenameb;
+            let loac;
+            let boib;
+        
+            // 2nd
+            let boic;
+            var filec ;
+            var filenamec;
+            let location;
+            let the_data;
+        
+        
+         // picture
+         if(req.files){
+            if(req.files.lectureThumbnail !== undefined && req.files.lectureThumbnail.mimetype === 'image/png' || req.files.lectureThumbnail.mimetype === 'image/jpeg'){
+        
+                setTimeout(function pic(){
+                    fileb = req.files.lectureThumbnail;
+                    filenameb=  req.files.lectureThumbnail.name;
+                console.log(fileb)
+                   loac= UUID();
+                console.log(loac);
+                fileb.mv('tmp/'+filenameb,async (err)=>{
+                    boib = await upload('tmp/'+filenameb,loac);
+                    console.log('lecture Thumbnail updated here is the new value: ===>');
+                    console.log(boib);
+                    // dbs.collection('courses/'+id+'/sections/').doc(sec_id).update({
+                      
+                    //     lectures: firebase.firestore.FieldValue.arrayUnion(...[{
+                    //         id:lec_id,
+                    //         lectureThumbnail:boib,
+                    //         id:id,
+                    //         title:title,
+                    //       //   lectureThumbnail:lectureThumbnail,
+                  
+                    //       }])
+                    // })
+               
+                }) 
+                }, 1)
+                }
+            
+         }
+        
+         // video 
+         if(req.files){
+            if(req.files.lectureVideoUrl !== undefined && 'application/octet-stream'){
+        
+                    setTimeout(function b(){
+                        
+                        filec = req.files.lectureVideoUrl;
+                        filenamec=  req.files.lectureVideoUrl.name;
+                    console.log(filec)
+                    location= UUID();
+                    console.log(location);
+                    filec.mv('tmp/'+filenamec,async (err)=>{
+                        boic = await uploadf('tmp/'+filenamec,location);
+                        console.log('video thumbnail is updated here is the link:================>');
+                        console.log(boic);
+                        // dbs.collection('courses/'+id+'/sections/').doc(sec_id).update({
+                        //     lectures: firebase.firestore.FieldValue.arrayUnion(...[{
+                        //         id:id,
+                        //         title:title,
+                        //         lectureVideoKey:location,
+                        //         lectureVideoUrl:boic            
+                      
+                        //       }]) 
+                         
+                        // })
+                   
+                    }) 
+                    },100)
+                    }
+         }
+           
+        
+
+            // 
+console.log(Demo);
+            setTimeout(function f(){
+           if(Demo===false){
+console.log('in demo man+++>>>[~  ]');
             const Ref = dbs.collection('courses/'+id+'/sections/').doc(sec_id);
-                    Ref.update({
-                            lectures: firebase.firestore.FieldValue.arrayUnion(...[{id:u,lectureThumbnail:'../',picKey:0,vidKey:0,lectureVideoUrl:'../',title:leacture}])
-                    });
-                    res.redirect('/screen/GetCourses');
+            Ref.update({
+                    lectures: firebase.firestore.FieldValue.arrayUnion(...[{id:u,
+                        lectureThumbnail:boib,picKey:loac,
+                         vidKey:location,lectureVideoUrl:boic,
+                        title:leacture}])
+            });
+            res.redirect('/screen/GetCourses');
+           }else{
+            let a = dbs.collection('courses').doc(id);
+            a.update({
+                    demoVideos: firebase.firestore.FieldValue.arrayUnion(...[{id:u,thumbnailUrl:boib,
+                         lectureVideoUrl:boic,
+                        title:leacture}])
+            });
+            console.log(req.body);
+            res.redirect('/screen/GetCourses');
+           }
+           
+        },9000)
             // 
         })
 
@@ -1515,7 +1640,7 @@ router.get('/Delete_Lecture/:id/:sec_id/:title', (req, res) => {
 // 
 
 
-})
+
 
 // let save= [
 //     {

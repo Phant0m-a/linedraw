@@ -3,10 +3,27 @@
     <form action="/screen/AddLec" enctype="multipart/form-data" method="post">
         <input type="hidden" name='id' value="<%=id%>">
         <input type="hidden" name="sectionId" value="<%=sectionId%>">
-        <h3 class='text-light'>Add Lecture</h3>
+        <h3 class='text-dark'>Add Lecture</h3>
         <div class="form-group">
-            <label for="">Title</label>
+            <label  class='text-dark'for="">Title</label>
             <input type="text" class="form-control" name="leacture" value='' placeholder="Enter leacture name ..." required>
+            <br>
+            <div class="form-group">
+                <label class='text-dark' for="">Upload Thumbnail </label><br>
+                <input type="file" name="lectureThumbnail" required >
+            </div><br>
+            <div class="form-group">
+                <label  class='text-dark'for="">Upload video  </label><br>
+                <input type="file" name="lectureVideoUrl" required >
+            </div><br>
+            
+            <div class="custom-control custom-switch">
+                <input type="checkbox" name='Demo'class="custom-control-input" id="customSwitch1">
+                <label class="custom-control-label text-dark" for="customSwitch1">Demo Video</label>
+            </div>
+            
+         
+            <br>
         </div>
     
         <button type="submit" class="btn btn-success">Upload</button>
@@ -23,13 +40,14 @@
         <% sections.forEach((leacture)=>{%>
         <li class="list-group-item">
             <%=leacture.data().title%>
+
           
         </li>
      <%})%>
     </ul>
         <div class="row row-cols-1 row-cols-md-3">
-        <% temp.forEach((lec)=>{%>
-            <%console.log('=====================')%>
+        <% te.forEach((lec)=>{%>
+            <%console.log(' un def=====================')%>
             <%console.log(lec)%>
             <%console.log('=====================')%>
         <div class="col mb-4">

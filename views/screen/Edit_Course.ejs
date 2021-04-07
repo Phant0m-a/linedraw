@@ -1,12 +1,14 @@
 <div class="container">
     <form action="/screen/Edit_Course" enctype="multipart/form-data" method="post">
-    <h3 style="display:inline-block" class='text-light'>Edit Course</h3>
-    <a href="/screen/manageFeatures/<%=id%>"style="display:inline-block"  type='button' class='btn btn-primary float-right'>Manage Features</a>  
-    <a href="/screen/manageSections/<%=id%>"style="display:inline-block"  type='button' class='btn btn-primary float-right'>Manage Sections</a>  
+    <h3 style="display:inline-block" class='text-dark'>Edit Course</h3>
+    <a href="/screen/manageFeatures/<%=id%>"style="display:inline-block;"  type='button' class='btn btn-primary float-right'>
+        Manage Features</a>  
+    <a href="/screen/manageSections/<%=id%>"style="display:inline-block;"  type='button' class='btn btn-primary float-right '>
+        Manage Sections</a>  
     <br>
     <br>
         <div class="form-group">
-            <label for="">Course Title</label>
+            <label class='text-dark' for="">Course Title</label>
             <input type="hidden" name='id' value="<%=id%>">
             <input type="text" class="form-control" name="title" value='<%=data.title%>' placeholder='<%=data.title%>' >
         </div>
@@ -24,33 +26,98 @@
             </select>
           </div>
         <div class="form-group">
-            <label for="">Course Description</label>
+            <label class='text-dark' for="">Course Description</label>
             <input type="text" class="form-control" name="description"  value='<%=data.description%>' placeholder="Enter Description">
         </div>
         <div class="form-group">
-            <label for="">Course Tag</label>
+            <label class='text-dark' for="">Course Tag</label>
             <input type="text" class="form-control" name="tag" value='<%=data.tag%>' placeholder="Enter Tag">
         </div>
+        <!-- test zone(*) -->
+        <p>
+            <button class="btn btn-danger" type="button" data-toggle="collapse" data-target="#collapseExampleA" aria-expanded="false" aria-controls="collapseExampleA">
+              Free / Paid
+            </button>
+        </p>
+          <div class="collapse" id="collapseExampleA">
+            <div class="card card-body">
+                <p class='text-danger'>* Set price or leave it zero</p>
+                <div class="form-group">
+                    <label  for="">Course Price</label>
+                    <input type="text" class="form-control" name="price"value='<%=data.price%>' placeholder="Enter price">
+                </div>
+                <div class="form-group">
+                    <label for="">Discount Price</label>
+                    <input type="text" class="form-control" name="oldPrice"  value='<%=data.oldPrice%>' placeholder="Enter price">
+                </div>
+               
+            </div>
+          </div>
+
+            <br>
+            <!-- <div class="custom-control custom-switch">
+                <input type="checkbox" name='Duration'class="custom-control-input" id="customSwitch1">
+                <label class="custom-control-label" for="customSwitch1">Duration</label>
+            </div> -->
+        <!-- test zone(*) end -->
+        <p>
+            <a class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+             Days / Month
+        </a>
+         </p>
+          <div class="collapse" id="collapseExample">
+            <div class="card card-body">
+                <p class='text-info'>* Write  expiresIn date in Days or months</p>
+                <div class="form-group">
+                    <label for="">Days</label>
+                    <input type="number" class="form-control" name="Days"  value='<%=data.Days%>' placeholder="Enter Days">
+                </div>
+                <div class="form-group">
+                    <label for="">Months</label>
+                    <input type="number" class="form-control" name="Months"  value='<%=data.Months%>' placeholder="Enter Months">
+                </div>
+               
+            </div>
+          </div>
+
+        <!-- zone 2 end -->
+
+
+
         <div class="form-group">
-            <label for="">Course Price</label>
-            <input type="text" class="form-control" name="price"value='<%=data.price%>' placeholder="Enter price">
-        </div>
-        <div class="form-group">
-            <label for="">old Price</label>
-            <input type="text" class="form-control" name="oldPrice"  value='<%=data.oldPrice%>' placeholder="Enter price">
-        </div>
-        <div class="form-group">
-            <label for="">Upload Banner Image </label><br>
+            <label class='text-dark' for="">Upload Banner Image </label><br>
             <input type="file" name="bannerImage" accept="image/gif, image/jpeg, image/png" >
         </div>
         <div class="form-group">
-            <label for="">Upload ‎Video Thumbnail</label><br>
+            <label class='text-dark' for="">Upload ‎Video Thumbnail</label><br>
             <input type="file" name="videoThumbnail" id="" accept="image/gif, image/jpeg, image/png" >
         </div>
         <div class="form-group">
-            <label for="">Upload Video</label><br>
+            <label class='text-dark' for="">Upload Video</label><br>
             <input type="file" name="video" accept="image/gif, image/jpeg, image/png" >
-        </div>
+        </div> 
+        <!-- <br>    <div class="custom-control custom-switch">
+          
+            <input type="checkbox" name="courseStatus" class="custom-control-input" id="customSwitch1"/>
+            <label class="custom-control-label text-light" for="customSwitch1">Course Status</label>
+        </div><br> -->
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="inputGroupSelect01">Course Status</label>
+            </div>
+            <select class="custom-select" name='courseStatus'  value='<%=data.courseStatus%>' id="inputGroupSelect01">
+              
+              <option selected disabled value='<%=data.courseStatus%>'style='text-transform: uppercase'> <%= data.courseStatus%>  </option>
+             
+             
+                <option value="on">ON</option>
+                <option value="off">OFF</option>
+           
+              
+            </select>
+          </div>
+
+
         <button type="submit" class="btn btn-success">update</button>
     </form>
     <br>

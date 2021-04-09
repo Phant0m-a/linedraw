@@ -3,6 +3,8 @@
     <h3 style="display:inline-block" class='text-dark'>Edit Course</h3>
     <a href="/screen/manageFeatures/<%=id%>"style="display:inline-block;"  type='button' class='btn btn-primary float-right'>
         Manage Features</a>  
+    <a href="/screen/DemoVideos/<%=id%>"style="display:inline-block;"  type='button' class='btn btn-primary float-right '>
+        Manage Demo Videos</a>  
     <a href="/screen/manageSections/<%=id%>"style="display:inline-block;"  type='button' class='btn btn-primary float-right '>
         Manage Sections</a>  
     <br>
@@ -14,11 +16,11 @@
         </div>
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-              <label class="input-group-text" for="inputGroupSelect01">Course Name</label>
+              <label class="input-group-text" for="inputGroupSelect01">Category Name</label>
             </div>
             <select class="custom-select" name='course_name'  value='<%=data.category%>' id="inputGroupSelect01">
               
-              <option selected  value='<%=data.category%>'>Select Section ...</option>
+              <option selected  value='<%=data.category%>'><%= data.category%></option>
               <%categories.docs.forEach((cate) => { %>
                 <option value="<%=cate.data().title%>"><%=cate.data().title%></option>
              <%}) %>
@@ -107,7 +109,7 @@
             </div>
             <select class="custom-select" name='courseStatus'  value='<%=data.courseStatus%>' id="inputGroupSelect01">
               
-              <option selected disabled value='<%=data.courseStatus%>'style='text-transform: uppercase'> <%= data.courseStatus%>  </option>
+              <option selected value='<%=data.courseStatus%>'style='text-transform: uppercase'> <%= data.courseStatus%>  </option>
              
              
                 <option value="on">ON</option>

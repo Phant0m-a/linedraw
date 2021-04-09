@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 var admin = require("firebase-admin");
 const firebase = require('firebase');
+const fStorage = require('firebase/storage');
 // const firebase = require("firebase/app");
 const firestore = require('firebase/firestore')
 const auth = require('../auth')
@@ -60,6 +61,15 @@ function uploadf(localFile, remoteFile){
         });
   }
 
+  //firebase delete function
+const deleteImages = async ({ downloadUrl }) => {
+    const httpsRef = firebase.storage().refFromURL(downloadUrl).fullPath;
+    return await bucket
+        .file(httpsRef)
+        .delete()
+        .then(() => "success")
+        .catch((error) => "error: " + error)
+}
 
 // var firebaseConfig = {
 //     apiKey: "AIzaSyBHd50N3vrsVyjUYUa-753UnpZQesUHHWU",
@@ -131,6 +141,9 @@ let bucketName= 'share-project-58415.appspot.com';
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+// bucket.ref('4440580b-7001-4993-9bc1-d955cd3489b9').delete();
+
+
 
 //firebase.auth.Auth.Persistence;
 firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE)
@@ -152,7 +165,7 @@ router.post('/uploadfile', auth,async(req,res)=>{
 //     })
     if(req.files){
         console.log(req.files)
-        var file = req.files.filename
+        var file = req.files.filename.name
         var filename= file.name;
         var type = req.body.type;
         file.mv('./tmp/'+filename,async (err)=>{
@@ -200,7 +213,26 @@ router.post('/uploadfile', auth,async(req,res)=>{
 
 
 // sign-in get 
-router.get('/signin',(req,res)=>{   
+router.get('/signin', async(req,res)=>{
+    
+// delete image from storage
+// const downloadUrl =  "https://firebasestorage.googleapis.com/v0/b/share-project-58415.appspot.com/o/0e531efb-7ea1-44d9-bc98-dae4c362bd54?alt=media&token=0e531efb-7ea1-44d9-bc98-dae4c362bd54";
+
+// //firebase delete function
+// const deleteImages = async ({ downloadUrl }) => {
+//     const httpsRef = firebase.storage().refFromURL(downloadUrl).fullPath;
+//     return await bucket
+//         .file(httpsRef)
+//         .delete()
+//         .then(() => "success")
+//         .catch((error) => "error: " + error)
+// }
+
+// //call the deleteImages inside async function
+// const deleteStatus = await deleteImages({ downloadUrl: downloadUrl });
+// console.log(deleteStatus)  //=> "success"
+
+   
     res.render('screen/signin');   
 });
 
@@ -876,6 +908,7 @@ await dbs.collection('courses').add({
     category:'',
     features:[],
     courseEnabled:true,
+    courseStatus:'on',
     Days:1,
     Months:0,
     expiresIn:1
@@ -1131,6 +1164,12 @@ router.post('/DeleteFeature', async(req,res)=>{
 
  let Ref = dbs.collection('courses').doc(id);
 
+
+//call the deleteImages inside async function
+const deleteStatus = await deleteImages({ downloadUrl:req.body.url });
+console.log(deleteStatus)  //=> "success"
+
+// 
  
             Ref.update({
                 features: firebase.firestore.FieldValue.arrayRemove(...[{
@@ -1200,7 +1239,7 @@ router.get('/GetSection/:id/:sectionId/:title', async(req,res)=>{
         }).catch((err)=>{
             console.log('error at / : '+ err);
         })
-    })
+    });
 
         router.post('/AddLec', async(req,res)=>{
             let id = req.body.id;
@@ -1241,20 +1280,9 @@ router.get('/GetSection/:id/:sectionId/:title', async(req,res)=>{
                     boib = await upload('tmp/'+filenameb,loac);
                     console.log('lecture Thumbnail updated here is the new value: ===>');
                     console.log(boib);
-                    // dbs.collection('courses/'+id+'/sections/').doc(sec_id).update({
-                      
-                    //     lectures: firebase.firestore.FieldValue.arrayUnion(...[{
-                    //         id:lec_id,
-                    //         lectureThumbnail:boib,
-                    //         id:id,
-                    //         title:title,
-                    //       //   lectureThumbnail:lectureThumbnail,
-                  
-                    //       }])
-                    // })
                
                 }) 
-                }, 1)
+                }, 0)
                 }
             
          }
@@ -1274,19 +1302,12 @@ router.get('/GetSection/:id/:sectionId/:title', async(req,res)=>{
                         boic = await uploadf('tmp/'+filenamec,location);
                         console.log('video thumbnail is updated here is the link:================>');
                         console.log(boic);
-                        // dbs.collection('courses/'+id+'/sections/').doc(sec_id).update({
-                        //     lectures: firebase.firestore.FieldValue.arrayUnion(...[{
-                        //         id:id,
-                        //         title:title,
-                        //         lectureVideoKey:location,
-                        //         lectureVideoUrl:boic            
-                      
-                        //       }]) 
+                       
                          
                         // })
                    
                     }) 
-                    },100)
+                    },0)
                     }
          }
            
@@ -1309,14 +1330,14 @@ console.log('in demo man+++>>>[~  ]');
             let a = dbs.collection('courses').doc(id);
             a.update({
                     demoVideos: firebase.firestore.FieldValue.arrayUnion(...[{id:u,thumbnailUrl:boib,
-                         lectureVideoUrl:boic,
+                         videoUrl:boic,
                         title:leacture}])
             });
             console.log(req.body);
             res.redirect('/screen/GetCourses');
            }
            
-        },9000)
+        },10000)
             // 
         })
 
@@ -1526,42 +1547,60 @@ router.get('/Delete_Lecture/:id/:sec_id/:title', (req, res) => {
     console.log('ok in delete_lecture');
 
     
-        let ref = dbs.collection('courses/'+id+'/sections/');
-        ref.get(sec_id).then((sn)=>{
-            let data= sn;
-            data.docs.forEach((a)=>{
-                // console.log(a.data().title);
+        // let ref = dbs.collection('courses/'+id+'/sections/');
+        // ref.get(sec_id).then((sn)=>{
+        //     let data= sn;
+        //     data.docs.forEach((a)=>{
+        //         // console.log(a.data().title);
                 
-            })
-        })
+        //     })
+        // })
 
         // test for deleteing code
         let save;
         let Ref = dbs.collection('courses/'+id+'/sections').get(sec_id);
-        let lectureVideoUrl;
-        let lectureThumbnail;
-        let vidKey;
-        let picKey;
+        // let lectureVideoUrl;
+        // let lectureThumbnail;
+        // let vidKey;
+        // let picKey;
         Ref.then((snap)=>{
 
             if(!snap){
                 console.log('no doc');
             }else{
-                snap.docs.forEach((doc)=>{
-                     console.log('we got this data ...>')
-                    // console.log(title);
+                snap.docs.forEach(async(doc)=>{
+                     console.log('we got this data [~]')
+                    //  console.log(doc.data());
+                   
                     save= doc.data().lectures;
-                    let the_data = save.filter(item=>item.title == title)
-                    
-                    the_data.forEach((c)=>{
-                        console.log(c);
-                    })
-                    //delete 
+                    // console.log(save);
 
-                     console.log(the_data)
-                            dbs.collection('courses/'+id+'/sections').doc(sec_id).update({
+                    let the_data = save.filter(item=>item.id == title)
+                     console.log(the_data);
+                    
+                     let url=the_data.map((item)=>{
+                        return item.lectureThumbnail;
+                     })
+                     let vidurl=the_data.map((item)=>{
+                        return item.lectureVideoUrl;
+                     })
+                     console.log(url+' ///////// '+ vidurl);
+                  //delete  IMAGE
+                  //call the deleteImages inside async function
+                    const deleteStatus = await deleteImages({ downloadUrl:url});
+                    console.log(deleteStatus)  //=> "success"
+                    const deletevid = await deleteImages({ downloadUrl:vidurl});
+                    console.log(deletevid)  //=> "success"
+
+                     //   
+
+                    //  DELETE FUNCTIONS
+                    setTimeout(function t(){        
+                        dbs.collection('courses/'+id+'/sections').doc(sec_id).update({
                             lectures: firebase.firestore.FieldValue.arrayRemove(...the_data)
                         });
+                     }, 1000);  
+                
                 })
             
                  
@@ -1572,13 +1611,7 @@ router.get('/Delete_Lecture/:id/:sec_id/:title', (req, res) => {
 
                
     
-                // console.log('<====== new Array results Start ============>');
-                // console.log(newArray);
-                // ref.update({
-                //     lectures: firebase.firestore.FieldValue.arrayRemove(...newArray)
-                // });
-                // console.log('<====== new Array results End ============>');
-            
+                
         })
 
         // 
@@ -1588,6 +1621,99 @@ router.get('/Delete_Lecture/:id/:sec_id/:title', (req, res) => {
       res.redirect('/screen/GetCourses');
     //   /GetSection/:id/:sectionId/:title
    
+})
+
+// Get Demo Videos 
+router.get('/DemoVideos/:id',async (req,res)=>{
+    let id = req.params.id;
+    // console.log(id);
+    let te;
+    let Demo; 
+     await dbs.collection('courses').get(id).then((snap)=>{
+        Demo= snap;
+        Demo.docs.forEach((d)=>{
+            // console.log(d.data().demoVideos);
+
+            te = d.data().demoVideos;
+
+           
+        })
+        res.render('screen/DemoVideos',{te:Demo,id:id});
+
+    });
+
+     
+})
+// Delete DemoVideos
+router.get('/Delete_DemoVideos/:id/:lec_id', async(req,res)=>{
+   
+    let id= req.params.id;
+    let lec_id= req.params.lec_id;
+   
+    console.log(req.params);
+
+    // test zone(*)
+    let save;
+    let Ref = dbs.collection('courses').get(id);
+    Ref.then((snap)=>{
+
+        if(!snap){
+            console.log('no doc');
+        }else{
+            snap.docs.forEach(async(doc)=>{
+                 console.log('we got this data [~]')
+                //  console.log(doc.data());
+               
+                save= doc.data().demoVideos;
+                // console.log(save);
+
+                let the_data = save.filter(item=>item.id == lec_id)
+                console.log('the data has this for you ===>');
+                 console.log(the_data);
+                
+                 let url=the_data.map((item)=>{
+                    return item.thumbnailUrl;
+                 })
+                 let vidurl=the_data.map((item)=>{
+                    return item.videoUrl;
+                 })
+                 console.log(url+' ///////// '+ vidurl);
+              //delete  IMAGE
+              //call the deleteImages inside async function
+                const deleteStatus = await deleteImages({ downloadUrl:url});
+                console.log(deleteStatus)  //=> "success"
+                const deletevid = await deleteImages({ downloadUrl:vidurl});
+                console.log(deletevid)  //=> "success"
+
+                 //   
+
+                //  DELETE FUNCTIONS
+                setTimeout(function t(){        
+                    dbs.collection('courses').doc(id).update({
+                        demoVideos: firebase.firestore.FieldValue.arrayRemove(...the_data)
+                    });
+                 }, 1000);  
+            
+            })
+        
+             
+          
+
+           
+        }
+
+           
+
+            
+    })
+
+
+
+    // 
+
+
+    res.redirect('/screen/GetCourses')
+
 })
 
 // Lecture_form_delete use later
@@ -1676,6 +1802,27 @@ router.get('/Delete_Lecture/:id/:sec_id/:title', (req, res) => {
 // })
 
 //  console.log(newArray);
+
+
+// var fileUrl = 
+// '';
+  
+
+// // gs Bucket URL
+// var fileUrl = 'gs://share-project-58415.appspot.com/fdd5774d-4bbf-46fc-93bf-c671401bd85d';
+  
+// // Create a reference to the file to delete
+// var fileRef = firebase.storage().refFromURL(fileUrl);
+  
+// // console.log("File in database before delete exists : "
+// //         + fileRef.exists())
+  
+// // Delete the file using the delete() method 
+// firebase.storage().ref().child('58eaf022-6491-4a7a-a387-c71a2f577cbe').delete()
+
+
+
+// 
 
 module.exports = router
 

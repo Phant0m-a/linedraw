@@ -1,0 +1,48 @@
+<div class="container">
+    <br>
+    <!-- <a href="/screen/deleteFeature/<%=id%>" type='button' class="btn btn-danger">Delete</a> -->
+    <a href="/screen/GetCourses" type='button' class="btn btn-dark">Back to courses</a>
+
+    <br>
+    <br><br>
+<div class="card w-80" >
+    <ul class="list-group list-group-flush">
+        
+     
+    </ul>
+        <div class="row row-cols-1 row-cols-md-3">
+            <% te.docs.forEach((t)=>{%>
+                <% t.data().demoVideos.forEach((lec)=>{%>
+                    <%console.log(' un def=====================')%>
+                    <%console.log(lec)%>
+                    <%console.log('=====================')%>
+                <div class="col mb-4">
+                    <div class="card h-100">
+                    <img src='<%=lec.thumbnailUrl%>'  height="250px" class="card-img-top" alt="image">
+                    <div class="card-body">
+                        <h5 class="card-title"><%=lec.title%></h5>
+                        <a src='<%=lec.videoUrl%>' type='button' class='btn btn-primary'>Play lecture</a>
+                        <p class="card-text"><%=lec.desc%></p>
+                    </div>
+                        <div class="card-footer">
+                  <span class="">
+                        
+        
+                        <a href="/screen/Delete_DemoVideos/<%=id%>/<%=lec.id%>" style="margin:5px"  type="button" class="btn btn-danger float-right">Delete</a>
+                        
+                    </span>
+                </div>
+                    </div>
+                </div>
+            <%})%>
+       
+        <%})%>
+        </div>
+    <!-- <div class="card-footer">
+      Card footer
+    </div> -->
+  </div>
+
+
+
+</div>

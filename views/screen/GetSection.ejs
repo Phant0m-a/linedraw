@@ -3,10 +3,10 @@
     <form action="/screen/AddLec" enctype="multipart/form-data" method="post">
         <input type="hidden" name='id' value="<%=id%>">
         <input type="hidden" name="sectionId" value="<%=sectionId%>">
-        <h3 class='text-dark'>Add Lecture</h3>
+        <h3 class='text-dark'>Add Lecture</h3><br>
         <div class="form-group">
             <label  class='text-dark'for="">Title</label>
-            <input type="text" class="form-control" name="leacture" value='' placeholder="Enter leacture name ..." required>
+            <input type="text" class="form-control" name="leacture" value='' placeholder="Enter lecture name ..." required>
             <br>
             <div class="form-group">
                 <label class='text-dark' for="">Upload Thumbnail </label><br>
@@ -63,7 +63,7 @@
                 
               
 
-                <a href="/screen/Delete_Lecture/<%=id%>/<%=sectionId%>/<%=lec.title%>" style="margin:5px"  type="button" class="btn btn-danger float-right">Delete</a>
+                <a href="/screen/Delete_Lecture/<%=id%>/<%=sectionId%>/<%=lec.id%>" style="margin:5px"  type="button" class="btn btn-danger float-right">Delete</a>
                 
                 <a href="/screen/Edit_Lecture/<%=id%>/<%=sectionId%>/<%=lec.id%>/<%=lec.title%>" style="margin:5px" type="button" class="btn btn-success float-right">Edit</a>
             </span>

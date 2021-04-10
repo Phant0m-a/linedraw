@@ -1,9 +1,11 @@
 <div class="container">
     <br>
+    <h3 class='text-dark' style="display:inline-block;">Add Lecture</h3><br><br>
+        <a href="/screen/uploadQuiz/<%=id%>/<%=sectionId%>" style="margin:5px;display:inline-block;"  type="button" class="btn btn-primary float-left">Manage Quiz</a> <br><br>
     <form action="/screen/AddLec" enctype="multipart/form-data" method="post">
         <input type="hidden" name='id' value="<%=id%>">
         <input type="hidden" name="sectionId" value="<%=sectionId%>">
-        <h3 class='text-dark'>Add Lecture</h3><br>
+        <br>
         <div class="form-group">
             <label  class='text-dark'for="">Title</label>
             <input type="text" class="form-control" name="leacture" value='' placeholder="Enter lecture name ..." required>
@@ -28,7 +30,56 @@
     
         <button type="submit" class="btn btn-success">Upload</button>
     </form>
-    <br>
+    <br><br>
+
+
+    <!-- upload MCQS OR QUIZ -->
+    <form action="/screen/uploadQuiz" method="post">
+        <h3>Add Quiz</h3>
+
+        <br>
+
+        <input type="hidden" name='id' value="<%=id%>">
+        <input type="hidden" name="sectionId" value="<%=sectionId%>">
+        <br>
+
+        <div class="form-group">
+             <!-- example -->
+             <p>
+                <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapseExampleA" aria-expanded="false" aria-controls="collapseExampleA">
+                  Example Question
+                </button>
+            </p>
+              <div class="collapse" id="collapseExampleA">
+                <div class="card card-body">
+                    <p class='text-info'>* Who was the first American President?</p>
+                    <div class="form-group">
+                        <label  for="">Options</label>
+                        <input type="readonly" class="form-control"value='Abraham-Lincoln,putin,Trump,John' disabled>   
+                        <label  for="">Correct Options</label>
+                        <input type="readonly" class="form-control" placeholder="Abraham-Lincoln" value='Abraham-Lincoln' disabled>
+                    </div>
+                 
+                </div>
+                </div>
+                <br>
+            <!-- example -->
+            <label  class='text-dark'for="">Question</label>
+            <input type="text" class="form-control" name="question" value='' placeholder="Enter Question ..." required>
+            <br>
+           
+            <label for="">Options</label>
+            <input type="text" class="form-control" name="options" placeholder='Enter four options separated by commas, with no spaces'>
+            <br>
+            <label for="">Correct Options</label>
+            <input type="text" class="form-control" name="answer" placeholder='Enter correct option ...'>
+            <br>
+        </div>
+        <button class="btn btn-success" type="submit">Add</button>
+    </form><br>
+
+
+
     <!-- <a href="/screen/deleteFeature/<%=id%>" type='button' class="btn btn-danger">Delete</a> -->
     <a href="/screen/GetCourses" type='button' class="btn btn-dark">Back to courses</a>
 

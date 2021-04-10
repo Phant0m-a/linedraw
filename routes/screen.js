@@ -1209,7 +1209,8 @@ router.post('/manageSections', async(req,res)=>{
 console.log(req.body);
 await dbs.collection('courses').doc(id).collection('sections').add({ timestamp: new Date(),
     title:sections,
-    lectures:[{time:new Date()}]
+    lectures:[],
+    quiz:[]
     }).then(()=>{
     res.redirect('/screen/GetCourses');
     }).catch((err)=>{
@@ -1716,6 +1717,84 @@ router.get('/Delete_DemoVideos/:id/:lec_id', async(req,res)=>{
 
 })
 
+// uploadQuiz
+router.post('/uploadQuiz', async(req,res)=>{
+    console.log(req.body);
+    let id= req.body.id;
+    let sectionId = req.body.sectionId;
+    
+    let question = req.body.question;
+    let options = req.body.options;
+    let answer = req.body.answer;
+
+    let uuid =UUID();
+    let ref = dbs.collection('courses/'+id+'/sections/').doc(sectionId);
+
+    ref.update({
+        quiz: firebase.firestore.FieldValue.arrayUnion(...[{
+            id:uuid,
+            question:question,
+            options:options,
+            answer:answer
+        }])
+    })
+    res.redirect('/screen/GetCourses');
+})
+
+// display quiz
+router.get('/uploadQuiz/:id/:sectionId', async(req,res)=>{
+    let id= req.params.id;
+    let sectionId = req.params.sectionId; 
+    console.log(req.params);
+    let data;
+   dbs.collection('courses/'+id+'/sections').get(sectionId).then((snap)=>{
+       if(!snap){
+           console.log('no docs or error maybe:');
+       }
+       else{
+           snap.docs.forEach((doc)=>{
+               data= doc.data().quiz;
+            //    console.log(doc.data().quiz);
+           })
+       }
+        
+         res.render('screen/uploadQuiz', {data:data,id:id,sectionId:sectionId});
+    });
+
+})
+
+
+// deleteQuiz
+router.get('/deleteQuiz/:id/:doc_id/:sectionId', async (req,res)=>{
+        console.log(req.params);
+        let id = req.params.id;
+        let doc_id = req.params.doc_id;
+        let sectionId = req.params.sectionId;
+
+        let save;
+        let Ref = dbs.collection('courses/'+id+'/sections').get(sectionId);
+        Ref.then((snap)=>{
+
+            if(!snap){
+                console.log('no doc');
+            }else{
+                
+                snap.docs.forEach(async(doc)=>{
+
+                    save=doc.data().quiz;
+                let the_data = save.filter(item=>item.id == doc_id)
+                console.log(the_data);
+                dbs.collection('courses/'+id+'/sections').doc(sectionId).update({
+                    quiz: firebase.firestore.FieldValue.arrayRemove(...the_data)
+                });
+                res.redirect('/screen/GetCourses');
+                })
+                
+            }
+
+        })
+
+})
 // Lecture_form_delete use later
 // router.post('/Lecture_form_delete', (req,res)=>{
 //     let id = req.body.id;

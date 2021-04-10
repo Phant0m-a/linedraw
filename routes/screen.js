@@ -1799,8 +1799,9 @@ router.get('/uploadQuiz/:id/:sectionId/:title', async(req,res)=>{   let title = 
 
 
 // deleteQuiz
-router.get('/deleteQuiz/:id/:doc_id/:sectionId', async (req,res)=>{
+router.get('/deleteQuiz/:id/:doc_id/:sectionId/:title', async (req,res)=>{
         console.log(req.params);
+        let title =req.body.title;
         let id = req.params.id;
         let doc_id = req.params.doc_id;
         let sectionId = req.params.sectionId;
@@ -1822,7 +1823,7 @@ router.get('/deleteQuiz/:id/:doc_id/:sectionId', async (req,res)=>{
                     quiz: firebase.firestore.FieldValue.arrayRemove(...the_data)
                 });
                 setTimeout(()=>{
-                    res.redirect(`/screen/uploadQuiz/${id}/${sectionId}`);
+                    res.redirect(`/screen/uploadQuiz/${id}/${sectionId}/${title}`);
                 },100)
                 })
                 

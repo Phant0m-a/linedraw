@@ -1212,7 +1212,7 @@ await dbs.collection('courses').doc(id).collection('sections').add({ timestamp: 
     lectures:[],
     quiz:[]
     }).then(()=>{
-    res.redirect('/screen/GetCourses');
+    res.redirect(`/screen/manageSections/${id}`);
     }).catch((err)=>{
         console.log('error at / : '+ err);
     })
@@ -1223,7 +1223,7 @@ await dbs.collection('courses').doc(id).collection('sections').add({ timestamp: 
 // GetSection
 
 router.get('/GetSection/:id/:sectionId/:title', async(req,res)=>{
-    console.log('triggered@');
+    console.log(req.params);
     let id = req.params.id;
     let sectionId = req.params.sectionId;
     let title = req.params.title;
@@ -1236,13 +1236,14 @@ router.get('/GetSection/:id/:sectionId/:title', async(req,res)=>{
              te= doc.data().lectures
         })
 
-        res.render('screen/GetSection',{sectionId:sectionId,id:id,sections:section,te:te});
+        res.render('screen/GetSection',{sectionId:sectionId,id:id,sections:section,te:te,title:title});
         }).catch((err)=>{
             console.log('error at / : '+ err);
         })
     });
 
         router.post('/AddLec', async(req,res)=>{
+            let title= req.body.title;
             let id = req.body.id;
             let leacture = req.body.leacture;
             let sec_id = req.body.sectionId;
@@ -1326,7 +1327,7 @@ console.log('in demo man+++>>>[~  ]');
                          vidKey:location,lectureVideoUrl:boic,
                         title:leacture}])
             });
-            res.redirect('/screen/GetCourses');
+            res.redirect(`/screen/GetSection/${id}/${sec_id}/${title}`);
            }else{
             let a = dbs.collection('courses').doc(id);
             a.update({
@@ -1335,7 +1336,7 @@ console.log('in demo man+++>>>[~  ]');
                         title:leacture}])
             });
             console.log(req.body);
-            res.redirect('/screen/GetCourses');
+            res.redirect(`/screen/GetSection/${id}/${sec_id}/${title}`);
            }
            
         },10000)
@@ -1348,11 +1349,14 @@ router.get('/deleteSection/:id/:sec_id', (req,res)=>{
     let id= req.params.id
     const Ref = dbs.collection('courses/'+id+'/sections/').doc(sec_id);
     Ref.delete();
-    res.redirect('/screen/GetCourses');
+    setTimeout(() => {
+        res.redirect(`/screen/manageSections/${id}`);
+    }, 500);
 
 })
 // the editing of lecture
-    router.get('/Edit_Lecture/:id/:sec_id/:lec_id/:lec_title', async(req,res)=>{
+    router.get('/Edit_Lecture/:id/:sec_id/:lec_id/:lec_title/:uid', async(req,res)=>{
+        let uid= req.params.uid;
         // console.log(req.params);
         let id = req.params.id;
         let sec_id= req.params.sec_id;
@@ -1360,13 +1364,14 @@ router.get('/deleteSection/:id/:sec_id', (req,res)=>{
         let lec_title= req.params.lec_title;
 
        
-        res.render('screen/Edit_Lecture',{id:id, title:lec_title,sec_id:sec_id,lec_id:lec_id})
+        res.render('screen/Edit_Lecture',{id:id, title:lec_title,sec_id:sec_id,lec_id:lec_id,uid:uid})
     }) 
 
 
     
 router.post('/Edit_Lecture', async(req,res)=>{
     console.log(req.body);
+    let uid =req.body.uid;
     let id =req.body.id;
     let sec_id= req.body.sec_id;
     let title= req.body.title;
@@ -1513,7 +1518,7 @@ let save;
                 
               },9000)
         })
-        res.redirect('/screen/GetCourses')
+        
         let ok;
         dbs.collection('courses/'+id+'/sections').get(sec_id).then((snap)=>{
             ok = snap
@@ -1524,7 +1529,9 @@ let save;
         })
         
         //  res.redirect(`/screen/GetSection/${id}/${sec_id}/${ok}`);
-
+    setTimeout(()=>{
+        res.redirect(`/screen/GetSection/${id}/${sec_id
+        }/${uid}`)},10000)
 
 })
 
@@ -1538,11 +1545,12 @@ let save;
 
 
 // Delete_Lecture/
-router.get('/Delete_Lecture/:id/:sec_id/:title', (req, res) => {
+router.get('/Delete_Lecture/:id/:sec_id/:title/:uid', (req, res) => {
     console.log(req.params);
     let id = req.params.id;
     let sec_id= req.params.sec_id;
     let title = req.params.title;
+    let uid = req.params.uid;
     // let old_title = req.params.old_title;
 
     console.log('ok in delete_lecture');
@@ -1600,6 +1608,10 @@ router.get('/Delete_Lecture/:id/:sec_id/:title', (req, res) => {
                         dbs.collection('courses/'+id+'/sections').doc(sec_id).update({
                             lectures: firebase.firestore.FieldValue.arrayRemove(...the_data)
                         });
+                       setTimeout(()=>{
+                        console.log('deleted!');
+                        res.redirect(`/screen/GetSection/${id}/${sec_id}/${uid}`);
+                       },1000)
                      }, 1000);  
                 
                 })
@@ -1618,8 +1630,7 @@ router.get('/Delete_Lecture/:id/:sec_id/:title', (req, res) => {
         // 
        
         
-        console.log('deleted!');
-      res.redirect('/screen/GetCourses');
+      
     //   /GetSection/:id/:sectionId/:title
    
 })
@@ -1704,7 +1715,9 @@ router.get('/Delete_DemoVideos/:id/:lec_id', async(req,res)=>{
         }
 
            
-
+        setTimeout(()=>{
+            res.redirect(`/screen/DemoVideos/${id}`)
+        },2000)
             
     })
 
@@ -1713,7 +1726,7 @@ router.get('/Delete_DemoVideos/:id/:lec_id', async(req,res)=>{
     // 
 
 
-    res.redirect('/screen/GetCourses')
+  
 
 })
 
@@ -1728,6 +1741,7 @@ router.post('/uploadQuiz', async(req,res)=>{
     let answer = req.body.answer;
 
     let uuid =UUID();
+    let n =dbs.collection('courses/'+id+'/sections').get(sectionId);
     let ref = dbs.collection('courses/'+id+'/sections/').doc(sectionId);
 
     ref.update({
@@ -1738,11 +1752,29 @@ router.post('/uploadQuiz', async(req,res)=>{
             answer:answer
         }])
     })
-    res.redirect('/screen/GetCourses');
+    let info;
+    n.then((snap)=>{
+        if(!snap){
+            console.log('no doc');
+        }else{
+           let data= snap;
+           data.docs.forEach((s)=>{
+               console.log(s.data().title);
+               info=s.data().title
+           }) 
+        }
+    })
+    // res.redirect('/screen/GetCourses');
+    //  test zone(*)
+        setTimeout(()=>{
+            res.redirect(`/screen/GetSection/${id}/${sectionId}/${info}`);
+        },1000)
+        
+        // 
 })
 
 // display quiz
-router.get('/uploadQuiz/:id/:sectionId', async(req,res)=>{
+router.get('/uploadQuiz/:id/:sectionId/:title', async(req,res)=>{   let title = req.params.title;
     let id= req.params.id;
     let sectionId = req.params.sectionId; 
     console.log(req.params);
@@ -1758,7 +1790,9 @@ router.get('/uploadQuiz/:id/:sectionId', async(req,res)=>{
            })
        }
         
-         res.render('screen/uploadQuiz', {data:data,id:id,sectionId:sectionId});
+         res.render('screen/uploadQuiz', {data:data,id:id,sectionId:sectionId,title:title});
+
+        
     });
 
 })
@@ -1787,7 +1821,9 @@ router.get('/deleteQuiz/:id/:doc_id/:sectionId', async (req,res)=>{
                 dbs.collection('courses/'+id+'/sections').doc(sectionId).update({
                     quiz: firebase.firestore.FieldValue.arrayRemove(...the_data)
                 });
-                res.redirect('/screen/GetCourses');
+                setTimeout(()=>{
+                    res.redirect(`/screen/uploadQuiz/${id}/${sectionId}`);
+                },100)
                 })
                 
             }

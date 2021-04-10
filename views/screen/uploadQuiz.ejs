@@ -1,5 +1,5 @@
 <div class="container">
-    <a href="/screen/GetCourses" type='button' class="btn btn-dark">Back to courses</a>
+    <a href="/screen/GetSection/<%=id%>/<%=sectionId%>/<%=title%>" type='button' class="btn btn-dark">Back to Lecture</a>
 
 <br>
 <br><br>    <h2>Quiz Section</h2>
@@ -10,9 +10,13 @@
     
     <% data.forEach((doc)=>{%>
     <li class="list-group-item"  style='background:rgb(244, 243, 243)'>
-        <span>Question: <%=doc.question%></span> <br>
-        <span>Options:  <%=doc.options%></span> <br>
-        <span>Answer:  <%=doc.answer%></span> 
+        <% let str = doc.options %>
+        <%  let ready=str.split(",").join("<br/>"); %>
+        <span style='font-size:16px;font-weight: bold;'>Question: <%=doc.question %></span> <br>
+        <span style='font-size:16px;font-weight: bold;'>Options:</span>
+        <span><br>  <%-ready%></span> <br>
+        <span style='font-size:16px;font-weight: bold;'>Answer:  <%=doc.answer%></span> 
+        
         <span class="">
             
           <br>

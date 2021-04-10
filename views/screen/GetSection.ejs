@@ -1,9 +1,13 @@
 <div class="container">
     <br>
+    <h2><%=title%></h2><br><br>
     <h3 class='text-dark' style="display:inline-block;">Add Lecture</h3><br><br>
-        <a href="/screen/uploadQuiz/<%=id%>/<%=sectionId%>" style="margin:5px;display:inline-block;"  type="button" class="btn btn-primary float-left">Manage Quiz</a> <br><br>
+
+        <a href="/screen/uploadQuiz/<%=id%>/<%=sectionId%>/<%=title%>" style="margin:5px;display:inline-block;"  type="button" class="btn btn-primary float-left">Manage Quiz</a> <br><br>
+
     <form action="/screen/AddLec" enctype="multipart/form-data" method="post">
         <input type="hidden" name='id' value="<%=id%>">
+        <input type="hidden" name='title' value="<%=title%>">
         <input type="hidden" name="sectionId" value="<%=sectionId%>">
         <br>
         <div class="form-group">
@@ -56,7 +60,7 @@
                     <div class="form-group">
                         <label  for="">Options</label>
                         <input type="readonly" class="form-control"value='Abraham-Lincoln,putin,Trump,John' disabled>   
-                        <label  for="">Correct Options</label>
+                        <label  for="">Correct Option</label>
                         <input type="readonly" class="form-control" placeholder="Abraham-Lincoln" value='Abraham-Lincoln' disabled>
                     </div>
                  
@@ -71,7 +75,7 @@
             <label for="">Options</label>
             <input type="text" class="form-control" name="options" placeholder='Enter four options separated by commas, with no spaces'>
             <br>
-            <label for="">Correct Options</label>
+            <label for="">Correct Option</label>
             <input type="text" class="form-control" name="answer" placeholder='Enter correct option ...'>
             <br>
         </div>
@@ -81,7 +85,7 @@
 
 
     <!-- <a href="/screen/deleteFeature/<%=id%>" type='button' class="btn btn-danger">Delete</a> -->
-    <a href="/screen/GetCourses" type='button' class="btn btn-dark">Back to courses</a>
+    <a href="/screen/manageSections/<%=id%>" type='button' class="btn btn-dark">Back to Sections</a>
 
     <br>
     <br><br>
@@ -114,9 +118,9 @@
                 
               
 
-                <a href="/screen/Delete_Lecture/<%=id%>/<%=sectionId%>/<%=lec.id%>" style="margin:5px"  type="button" class="btn btn-danger float-right">Delete</a>
+                <a href="/screen/Delete_Lecture/<%=id%>/<%=sectionId%>/<%=lec.id%>/<%=title%>" style="margin:5px"  type="button" class="btn btn-danger float-right">Delete</a>
                 
-                <a href="/screen/Edit_Lecture/<%=id%>/<%=sectionId%>/<%=lec.id%>/<%=lec.title%>" style="margin:5px" type="button" class="btn btn-success float-right">Edit</a>
+                <a href="/screen/Edit_Lecture/<%=id%>/<%=sectionId%>/<%=lec.id%>/<%=lec.title%>/<%=title%>" style="margin:5px" type="button" class="btn btn-success float-right">Edit</a>
             </span>
         </div>
             </div>

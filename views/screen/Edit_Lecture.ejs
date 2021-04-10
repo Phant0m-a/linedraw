@@ -4,6 +4,7 @@
 <form action="/screen/Edit_Lecture" enctype="multipart/form-data" method="post">
     <input type="hidden" name='id' value="<%=id%>">
     <input type="hidden" name='lec_id' value="<%=lec_id%>">
+    <input type="hidden" name='uid' value="<%=uid%>">
     <h3 class='text-dark'>Edit Lecture</h3>
     <div class="form-group">
         <label class='text-dark display-5' for="">Title</label>
@@ -23,7 +24,7 @@
    
     <button type="submit" class="btn btn-success">Upload</button>
     <br><br>
-    <a type="submit" href='/screen/GetCourses' class="btn btn-danger">cancel</a>
+    <a type="submit" href='/screen/GetSection/<%=id%>/<%=sec_id%>/<%=uid%>' class="btn btn-danger">cancel</a>
 </form>
 
 

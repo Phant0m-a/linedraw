@@ -1210,7 +1210,10 @@ console.log(req.body);
 await dbs.collection('courses').doc(id).collection('sections').add({ timestamp: new Date(),
     title:sections,
     lectures:[],
-    quiz:[]
+    quiz:[],
+    quizDesc:'',
+    quizThumnail:'',
+
     }).then(()=>{
     res.redirect(`/screen/manageSections/${id}`);
     }).catch((err)=>{
@@ -1729,13 +1732,13 @@ router.get('/Delete_DemoVideos/:id/:lec_id', async(req,res)=>{
   
 
 })
-
+let hello
 // uploadQuiz
 router.post('/uploadQuiz', async(req,res)=>{
     console.log(req.body);
     let id= req.body.id;
     let sectionId = req.body.sectionId;
-    
+    let title = req.body.title;
     let question = req.body.question;
     let options = req.body.options;
     let answer = req.body.answer;
@@ -1752,54 +1755,67 @@ router.post('/uploadQuiz', async(req,res)=>{
             answer:answer
         }])
     })
-    let info;
+    
     n.then((snap)=>{
         if(!snap){
             console.log('no doc');
         }else{
            let data= snap;
            data.docs.forEach((s)=>{
-               console.log(s.data().title);
-               info=s.data().title
+              
            }) 
         }
     })
     // res.redirect('/screen/GetCourses');
     //  test zone(*)
         setTimeout(()=>{
-            res.redirect(`/screen/GetSection/${id}/${sectionId}/${info}`);
+            res.redirect(`/screen/GetSection/${id}/${sectionId}/${title}`);
         },1000)
         
         // 
 })
 
 // display quiz
-router.get('/uploadQuiz/:id/:sectionId/:title', async(req,res)=>{   let title = req.params.title;
+router.get('/uploadQuiz/:id/:sectionId/:title', async(req,res)=>{ 
+    let title = req.params.title;
     let id= req.params.id;
     let sectionId = req.params.sectionId; 
     console.log(req.params);
     let data;
-   dbs.collection('courses/'+id+'/sections').get(sectionId).then((snap)=>{
-       if(!snap){
-           console.log('no docs or error maybe:');
-       }
-       else{
-           snap.docs.forEach((doc)=>{
-               data= doc.data().quiz;
-            //    console.log(doc.data().quiz);
-           })
-       }
+//    dbs.collection('courses/'+id+'/sections').doc(sectionId).then((snap)=>{
+//        if(!snap){
+//            console.log('no docs or error maybe:');
+//        }
+//        else{
+//            snap.docs.forEach((doc)=>{
+//                data= doc.data().quiz;
+//            console.log('in uplaod quiz and these are quizes==>');
+//            console.log(doc.data().quiz);
+//            })
+//        }
         
-         res.render('screen/uploadQuiz', {data:data,id:id,sectionId:sectionId,title:title});
+//          res.render('screen/uploadQuiz', {data:data,id:id,sectionId:sectionId,title:title});
 
         
-    });
+//     });
+let d = dbs.collection('courses/'+id+'/sections').doc(sectionId);
+let doc =await d.get();
+if(!doc.exists){
+    console.log('no doc!');
+}else{
+    console.log('tite i received');
+    console.log(doc.data().quiz);
+    data= doc.data().quiz;
+    res.render('screen/uploadQuiz', {data:data,id:id,sectionId:sectionId,title:title});
+}
+
 
 })
 
 
 // deleteQuiz
 router.get('/deleteQuiz/:id/:doc_id/:sectionId/:title', async (req,res)=>{
+        console.log('in delete quiz==>');
         console.log(req.params);
         let title =req.body.title;
         let id = req.params.id;
@@ -1807,6 +1823,21 @@ router.get('/deleteQuiz/:id/:doc_id/:sectionId/:title', async (req,res)=>{
         let sectionId = req.params.sectionId;
 
         let save;
+
+        let store;
+        // test zone(*)
+        let zone = dbs.collection('courses/'+id+'/sections').doc(sectionId);
+        let doc = await zone.get();
+        if(!doc.exists){
+            console.log('no doc in delete quiz');
+        }
+        else{
+            store= doc.data().title;
+            console.log('the title is=>');
+            console.log(doc.data().title);
+        }
+
+        // 
         let Ref = dbs.collection('courses/'+id+'/sections').get(sectionId);
         Ref.then((snap)=>{
 
@@ -1815,23 +1846,75 @@ router.get('/deleteQuiz/:id/:doc_id/:sectionId/:title', async (req,res)=>{
             }else{
                 
                 snap.docs.forEach(async(doc)=>{
-
+                    console.log('this is the title:');
+                    let ok = doc.data().title;
+                    console.log(ok);
                     save=doc.data().quiz;
-                let the_data = save.filter(item=>item.id == doc_id)
+
+                let the_data = save.filter(item=>item.id == doc_id);
+
                 console.log(the_data);
+                
                 dbs.collection('courses/'+id+'/sections').doc(sectionId).update({
                     quiz: firebase.firestore.FieldValue.arrayRemove(...the_data)
                 });
-                setTimeout(()=>{
-                    res.redirect(`/screen/uploadQuiz/${id}/${sectionId}/${title}`);
-                },100)
+               
                 })
                 
             }
 
         })
+        setTimeout(()=>{
+            res.redirect(`/screen/uploadQuiz/${id}/${sectionId}/${store}`);
+        },1000)
+})
+
+
+
+// Edit_quiz
+router.post('/Edit_quiz', async(req,res) => {
+    let id = req.body.id;
+    let title = req.body.title;
+    let sectionId = req.body.sectionId;
+    let quizDesc = req.body.quizDesc;
+    // test zone
+ console.log(req.body);
+    let task ;
+    // uplaod pic
+    // start from here tommorw111
+    // if(req.files){
+    //     var file = req.files.quizThumbnail;
+    //     var filename= file.name;
+    //     let loc = UUID.randomUUID().toString;
+    //     console.log(file)
+    //     file.mv('tmp/'+filename,async (err)=>{
+    //         task = await upload('tmp/'+filename,loc);
+    //         console.log(task);
+    //         setTimeout(()=>{
+    //             dbs.collection('courses/'+id+'/sections').doc(sectionId).update({
+    //                 quizDesc:quizDesc,
+    //                 quizThumbnail:task
+    //             });
+    //         },2000)
+       
+    //     })   
+        
+
+        
+    // }
+
+
+
+    // 
+
+
+   
+    res.redirect(`/screen/GetSection/${id}/${sectionId}/${title}`);
+        
 
 })
+
+
 // Lecture_form_delete use later
 // router.post('/Lecture_form_delete', (req,res)=>{
 //     let id = req.body.id;

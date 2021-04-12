@@ -36,6 +36,23 @@
     </form>
     <br><br>
 
+    <!-- Edit Quiz quizDesc and quizThumnail -->
+    <form action="/screen/Edit_quiz" method="post">
+
+        <input type="hidden" name='id' value="<%=id%>">
+        <input type="hidden" name='title' value="<%=title%>">
+        <input type="hidden" name="sectionId" value="<%=sectionId%>">
+
+        <label  class='text-dark'for="">Quiz Description</label>
+        <input type="text" class="form-control" name="quizDesc" value='' placeholder="Enter Quiz Description ..." required>
+        <br>
+       
+        <label for="">Quiz Thumbnail </label><br>
+        <input type="file" name="quizThumbnail" >
+        <br><br>
+        <button type="submit" class="btn btn-primary">Add</button><br><br><br>
+    </form>
+    <!-- ==== -->
 
     <!-- upload MCQS OR QUIZ -->
     <form action="/screen/uploadQuiz" method="post">
@@ -44,6 +61,7 @@
         <br>
 
         <input type="hidden" name='id' value="<%=id%>">
+        <input type="hidden" name='title' value="<%=title%>">
         <input type="hidden" name="sectionId" value="<%=sectionId%>">
         <br>
 

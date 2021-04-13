@@ -1211,8 +1211,8 @@ await dbs.collection('courses').doc(id).collection('sections').add({ timestamp: 
     title:sections,
     lectures:[],
     quiz:[],
-    quizDesc:'',
-    quizThumnail:'',
+    quizDesc:'Add Description',
+    quizThumnail:'https://i.picsum.photos/id/866/536/354.jpg?hmac=tGofDTV7tl2rprappPzKFiZ9vDh5MKj39oa2D--gqhA',
 
     }).then(()=>{
     res.redirect(`/screen/manageSections/${id}`);
@@ -1231,15 +1231,17 @@ router.get('/GetSection/:id/:sectionId/:title', async(req,res)=>{
     let sectionId = req.params.sectionId;
     let title = req.params.title;
     let te;
+    let quiz_desc;
     await dbs.collection('courses/'+id+'/sections/').where('title','==',title).get().then((snapshot)=>{
         let section = snapshot;
    
         section.docs.forEach(doc => {
             console.log(doc.data().lectures);
              te= doc.data().lectures
+             quiz_desc=doc.data().quizDesc;
         })
 
-        res.render('screen/GetSection',{sectionId:sectionId,id:id,sections:section,te:te,title:title});
+        res.render('screen/GetSection',{sectionId:sectionId,id:id,sections:section,te:te,title:title,quiz_desc:quiz_desc});
         }).catch((err)=>{
             console.log('error at / : '+ err);
         })
@@ -1879,192 +1881,80 @@ router.post('/Edit_quiz', async(req,res) => {
     let quizDesc = req.body.quizDesc;
     // test zone
  console.log(req.body);
-    let task ;
-    // uplaod pic
-    // start from here tommorw111
-    // if(req.files){
-    //     var file = req.files.quizThumbnail;
-    //     var filename= file.name;
-    //     let loc = UUID.randomUUID().toString;
-    //     console.log(file)
-    //     file.mv('tmp/'+filename,async (err)=>{
-    //         task = await upload('tmp/'+filename,loc);
-    //         console.log(task);
-    //         setTimeout(()=>{
-    //             dbs.collection('courses/'+id+'/sections').doc(sectionId).update({
-    //                 quizDesc:quizDesc,
-    //                 quizThumbnail:task
-    //             });
-    //         },2000)
-       
-    //     })   
-        
-
-        
-    // }
-
 
 
     // 
+// test zone(*)
+if(req.files){
+    if(req.files.quizThumbnail.mimetype === 'image/jpeg' || req.files.quizThumbnail.mimetype === 'image/png'){
+    
+    
+        var file = req.files.quizThumbnail;
+        var filename= file.name;
+        console.log(file)
+        let loc= UUID();
+        console.log(loc);
 
 
-   
-    res.redirect(`/screen/GetSection/${id}/${sectionId}/${title}`);
-        
+        // check part
+        let bro=  dbs.collection('courses/'+id+'/sections').doc(sectionId);
+        let refer= await bro.get();
+
+        console.log('The thumbnail url is: ');
+        console.log(refer.data().quizThumbnail);
+// condition to check wether there is already any thumbnail or not
+        if(refer.data().quizThumbnail !== ''){
+
+        let i= refer.data().quizThumbnail;
+
+       console.log('[+] Executing CUZ  quizThumbnail is  NOT EMPTY ');
+       const deleteStatus = await deleteImages({ downloadUrl:i });
+ console.log(deleteStatus)  //=> "success"
+            } 
+          
+
+        //    upload part
+      setTimeout(()=>{
+        file.mv('tmp/'+filename,async (err)=>{
+
+            boi = await upload('tmp/'+filename,loc);
+    
+            
+                       
+                // come here!
+                setTimeout(function aka(){
+                    dbs.collection('courses/'+id+'/sections').doc(sectionId).update({
+                        quizDesc:quizDesc,
+                        quizThumbnail:boi
+                    });
+                },2000)
+                res.redirect(`/screen/GetSection/${id}/${sectionId}/${title}`);  
+           
+            }) 
+      },100)   
+       
+    } 
+}
+    // if empty
+    if(!req.files){
+ 
+        // come here!
+            dbs.collection('courses/'+id+'/sections').doc(sectionId).update({
+                quizDesc:quizDesc,
+            });
+        res.redirect(`/screen/GetSection/${id}/${sectionId}/${title}`);  
+
+        }   
+            
 
 })
 
 
-// Lecture_form_delete use later
-// router.post('/Lecture_form_delete', (req,res)=>{
-//     let id = req.body.id;
-//     let title = req.body.title;
-//     let inner_id = req.body.inner_id;
-//     let section_id = req.body.section_id;
-//     let lectureThumbnail = req.body.lectureThumbnail;
-//     let lectureVideoUrl= req.body.lectureVideoUrl;
-//     let ref = dbs.collection('courses/'+id+'/sections/').doc(section_id);
-//      ref.update({
-//             lectures: firebase.firestore.FieldValue.arrayRemove(...[{
-//               id:inner_id,
-//               title:title,
-//               lectureThumbnail:lectureThumbnail,
-//               lectureVideoUr:lectureVideoUrl
-//             }])
-//         });
-//         res.redirect('/screen/GetCourses');
-// })
-// <%=section.data().title%>
-// <% let store= section.data()%>
-// <% store.forEach((item)=>{%>
-//     <% console.log(item) %>
-// <%})%>
-// <form action="/screen/Lecture_form_delete" method="post">
-//     <input type="hidden" name='id' value="<%= id %>">
-//     <input type="hidden" name='title' value="<%= section.data().title %>">
-//     <input type="hidden" name='inner_id' value="<%=section.data().id %>" />
-//     <input type="hidden" name='section_id' value="<%= sectionId %>">
-//     <input type="hidden" name='lectureThumbnail' value="<%= section.data().lectureThumbnail %>">
-//     <input type="hidden" name='lectureVideoUrl' value="<%= section.data().lectureVideoUrl %>">
-//     <button type="submit" class="btn btn-danger">Delete</button>
-// </form>
-
-// method (*)1
-// console.log('<====== new Array results Start ============>');
-// console.log(newArray);
-// console.log('<====== new Array results End ============>');
-// 
-        // let ref = dbs.collection('courses/'+id+'/sections/').doc(sec_id);
-        // ref.update({
-        //     features: firebase.firestore.FieldValue.arrayUnion(...[{
-        //       id:
-        //     }])
-        // });
-
-
-// 
-
-
-
-
-// let save= [
-//     {
-//        lectureVideoUrl:'video url 1',
-//        lectureThumbnail: 'video thumbnail 1',
-//        vidKey: 'vid key 1',
-//        picKey: 'pickey 1',
-//        id:'id 1',
-//        title:'one'
-//      },
-//     {
-//        lectureVideoUrl:'video url 2',
-//        lectureThumbnail: 'video thumbnail 2',
-//        vidKey: 'vid key 2',
-//        picKey: 'pickey 2',
-//        id:'id 2',
-//        title:'two'
-//      },
-//    ]
-   
-// const newArray = save.map((item)=>{
-// if(item.title == 'one'){
-//    return {
-
-//        lectureVideoUrl: item.lectureVideoUrl,
-//        lectureThumbnail:item.lectureThumbnail,
-//        vidKey:item. vidKey,
-//        picKey:item.picKey,
-//        id:item.id
-       
-//    }
-// }
-// })
-
-//  console.log(newArray);
-
-
-// var fileUrl = 
-// '';
-  
-
-// // gs Bucket URL
-// var fileUrl = 'gs://share-project-58415.appspot.com/fdd5774d-4bbf-46fc-93bf-c671401bd85d';
-  
-// // Create a reference to the file to delete
-// var fileRef = firebase.storage().refFromURL(fileUrl);
-  
-// // console.log("File in database before delete exists : "
-// //         + fileRef.exists())
-  
-// // Delete the file using the delete() method 
-// firebase.storage().ref().child('58eaf022-6491-4a7a-a387-c71a2f577cbe').delete()
-
-
-
-// 
 
 module.exports = router
 
 
-    
-// use this to write lec
-// router.post('addLeacture/create',async(req,res)=>{
-//     console.log(req.body);
-//     let col_name = req.body.col_name;
-//     let course_name=req.body.course_name;
-//     let title=req.body.title;
-//     let demo= req.body.demo;
-
-// // get catagory id using title 
-//     let course_id;
-// await dbs.collection('catagories').where('title', '==',col_name).get().then(async(snap)=>{
-//     let data = snap;
-//     data.docs.forEach((i)=>{
-//         console.log(i.id)
-//         course_id= i.id;
-//     })
-// // get section id using title
-//     let sec_id;
-// await dbs.collection('catagories/'+course_id+'/content/').get().where('title' ,'==',course_name).get().then((snapshot)=>{
-//     let stuff = snapshot;
-//     stuff.docs.forEach((a)=>{
-//         console.log(a.data())
-//         sec_id= a.id;
-
-//         // add lectures
-//         const Ref = dbs.collection('catagories/'+course_id+'/content/').doc(sec_id);
-//         Ref.update({
-//                 leacture: firebase.firestore.FieldValue.arrayUnion(...[{demo:true, id:new Date(),thumbnail:'../',title:title}])
-//         });
-//     })
-//     res.redirect('/screen/udemyPanel');
-// })
-    
-// })
-
-
-// })
-
+  
 
 
 

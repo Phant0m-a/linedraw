@@ -903,6 +903,7 @@ await dbs.collection('courses').add({
     introVideoThumbnailKey:'',
     introVideoUrl:'',
     rating:0,
+    totalLectures:0,
     totalStudents:0,
     totalRatingCount:0,
     category:'',
@@ -1210,6 +1211,10 @@ console.log(req.body);
 await dbs.collection('courses').doc(id).collection('sections').add({ timestamp: new Date(),
     title:sections,
     lectures:[],
+    QuizProgress:{
+        score:0,
+        isPlayed:false
+    },
     quiz:[],
     quizDesc:'Add Description',
     quizThumnail:'https://i.picsum.photos/id/866/536/354.jpg?hmac=tGofDTV7tl2rprappPzKFiZ9vDh5MKj39oa2D--gqhA',
@@ -1222,6 +1227,9 @@ await dbs.collection('courses').doc(id).collection('sections').add({ timestamp: 
 // 
 //   res.render('screen/manageSections', {id:id})
 });
+
+// increment or decrement 1
+
 
 // GetSection
 
@@ -1319,19 +1327,30 @@ router.get('/GetSection/:id/:sectionId/:title', async(req,res)=>{
          }
            
         
-
+let fun = dbs.collection('courses').doc(id);
+let addition;
+let received= await fun.get();
+if(received){
+    console.log(received.data().totalLectures);
+    let temp = received.data().totalLectures;
+    addition= temp+1;
+    console.log(addition);
+}
             // 
 console.log(Demo);
             setTimeout(function f(){
            if(Demo===false){
-console.log('in demo man+++>>>[~  ]');
+console.log('[+] In Demo False =>');
             const Ref = dbs.collection('courses/'+id+'/sections/').doc(sec_id);
             Ref.update({
+                   
                     lectures: firebase.firestore.FieldValue.arrayUnion(...[{id:u,
                         lectureThumbnail:boib,picKey:loac,
                          vidKey:location,lectureVideoUrl:boic,
                         title:leacture}])
             });
+            // addition of count
+            dbs.collection('courses').doc(id).update({ totalLectures:addition });
             res.redirect(`/screen/GetSection/${id}/${sec_id}/${title}`);
            }else{
             let a = dbs.collection('courses').doc(id);
@@ -1341,11 +1360,12 @@ console.log('in demo man+++>>>[~  ]');
                         title:leacture}])
             });
             console.log(req.body);
+            
             res.redirect(`/screen/GetSection/${id}/${sec_id}/${title}`);
            }
            
-        },10000)
-            // 
+        },50000)
+            //  
         })
 
 // deleteSection
@@ -1608,6 +1628,23 @@ router.get('/Delete_Lecture/:id/:sec_id/:title/:uid', (req, res) => {
 
                      //   
 
+                    //  test zone(*)
+                    let fun = dbs.collection('courses').doc(id);
+                    let addition;
+                    let received= await fun.get();
+                    if(received){
+                        console.log(received.data().totalLectures);
+                        let temp = received.data().totalLectures;
+                        addition= temp-1;
+                        console.log(addition);
+                    }
+                    dbs.collection('courses').doc(id).update({
+                        totalLectures:addition
+                    });
+                    // 
+
+
+
                     //  DELETE FUNCTIONS
                     setTimeout(function t(){        
                         dbs.collection('courses/'+id+'/sections').doc(sec_id).update({
@@ -1703,6 +1740,20 @@ router.get('/Delete_DemoVideos/:id/:lec_id', async(req,res)=>{
                 console.log(deletevid)  //=> "success"
 
                  //   
+                  //  test zone(*)-not meant for demo
+                //   let fun = dbs.collection('courses').doc(id);
+                //   let addition;
+                //   let received= await fun.get();
+                //   if(received){
+                //       console.log(received.data().totalLectures);
+                //       let temp = received.data().totalLectures;
+                //       addition= temp-1;
+                //       console.log(addition);
+                //   }
+                //   dbs.collection('courses').doc(id).update({
+                //       totalLectures:addition
+                //   });
+                  // 
 
                 //  DELETE FUNCTIONS
                 setTimeout(function t(){        
@@ -1951,13 +2002,16 @@ if(req.files){
 
 
 
+// new module for create leactures
+router.get('/createLecture', async (req, res) =>{
+
+})
+
+
 module.exports = router
 
 
-  
-
-
-
+ 
 
 
 // DELETE WHOLE COLLECTION CODE
@@ -1969,3 +2023,10 @@ module.exports = router
 //   doc.ref.delete();
 // });
 // });
+
+// function lanat(Lan){
+      
+//      for(i=1;i<Lan;i++)
+//         { console.log('Lanat!');}
+//                         } 
+//         lanat(100);

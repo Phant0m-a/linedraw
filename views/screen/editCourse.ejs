@@ -115,7 +115,7 @@
           <label class="input-group-text" for="inputGroupSelect01">Get Course</label>
         </div>
         <select class="custom-select" name='course' id="inputGroupSelect01" required>
-          <option selected>Select Course ...</option>
+          <!-- <option selected>Select Course ...</option> -->
          <% courses.docs.forEach((course)=>{%>
             <option value="<%=course.id%>"><%=course.data().title%></option>
          <%}) %>

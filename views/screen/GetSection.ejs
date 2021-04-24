@@ -1,26 +1,46 @@
 <div class="container">
     <br>
     <h2><%=title%></h2><br><br>
+
+    <!-- manage quiz -->
+    <a href="/screen/uploadQuiz/<%=id%>/<%=sectionId%>/<%=title%>" style="margin:5px;display:inline-block;"  type="button" class="btn btn-primary float-left">Manage Quiz</a> <br><br>
+    <br>
+    <!-- updateSectionNo -->
+    <form action="/screen/updateSectionNo" method="post">
+    <label for="">Section No</label>
+    <input type="number" class="form-control" name='order' placeholder="update order">
+    <input type="hidden" name="sectionId" value="<%=sectionId%>">
+    <input type="hidden" name='id' value="<%=id%>">
+    <input type="hidden" name='title' value="<%=title%>">
+    <br>
+    <br>
+    <button type="submit" class="btn btn-success">Update</button>
+    </form>
+
+    <br><br>
     <h3 class='text-dark' style="display:inline-block;">Add Lecture</h3><br><br>
 
-        <a href="/screen/uploadQuiz/<%=id%>/<%=sectionId%>/<%=title%>" style="margin:5px;display:inline-block;"  type="button" class="btn btn-primary float-left">Manage Quiz</a> <br><br>
-
+      
     <form action="/screen/AddLec" enctype="multipart/form-data" method="post">
+        <!-- three values necessary in order to upload to firebase. -->
         <input type="hidden" name='id' value="<%=id%>">
         <input type="hidden" name='title' value="<%=title%>">
         <input type="hidden" name="sectionId" value="<%=sectionId%>">
         <br>
         <div class="form-group">
             <label  class='text-dark'for="">Title</label>
-            <input type="text" class="form-control" name="leacture" value='' placeholder="Enter lecture name ..." required>
+            <input type="text" class="form-control" name="leacture" placeholder="Enter lecture name ..."  required>
+           <!-- url --><br>
+            <label  class='text-dark'for="">Url</label>
+            <input type="text" class="form-control" name="url" value='...' minlength="12" placeholder="Enter url" >
             <br>
             <div class="form-group">
                 <label class='text-dark' for="">Upload Thumbnail </label><br>
-                <input type="file" name="lectureThumbnail" required >
+                <input type="file" name="lectureThumbnail" required>
             </div><br>
             <div class="form-group">
                 <label  class='text-dark'for="">Upload video  </label><br>
-                <input type="file" name="lectureVideoUrl" required >
+                <input type="file" name="lectureVideoUrl"  >
             </div><br>
             
             <div class="custom-control custom-switch">
@@ -37,7 +57,7 @@
     <br><br><br><br><br>
 <!-- test zone(*) -->
 
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -95,7 +115,7 @@
     </div>
 </div>
 </body>
-</html>                            
+</html>                             -->
 
 <!-- test zone(*) END -->
     <br><br><br><br><br>
@@ -120,7 +140,7 @@
     <!-- ==== -->
 
     <!-- upload MCQS OR QUIZ -->
-    <form action="/screen/uploadQuiz" method="post">
+    <form action="/screen/uploadQuiz" method="post"  enctype="multipart/form-data">
         <h3>Add Quiz</h3>
 
         <br>
@@ -131,7 +151,7 @@
         <br>
 
         <div class="form-group">
-             <!-- example -->
+             <!-- example  start-->
              <p>
                 <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapseExampleA" aria-expanded="false" aria-controls="collapseExampleA">
                   Example Question
@@ -142,7 +162,7 @@
                     <p class='text-info'>* Who was the first president of the United States of America?</p>
                     <div class="form-group">
                         <label  for="">Options</label>
-                        <input type="readonly" class="form-control"value='Abraham-Lincoln,putin,Trump,John' disabled>   
+                        <input type="readonly" class="form-control"value='Abraham-Lincoln,Putin,George-Bush,Nixon' disabled>   
                         <label  for="">Correct Option</label>
                         <input type="readonly" class="form-control" placeholder="Abraham-Lincoln" value='Abraham-Lincoln' disabled>
                     </div>
@@ -150,14 +170,49 @@
                 </div>
                 </div>
                 <br>
-            <!-- example -->
+            <!-- example end -->
             <label  class='text-dark'for="">Question</label>
             <input type="text" class="form-control" name="question" value='' placeholder="Enter Question ..." required>
             <br>
+            <!-- question image input -->
+            <br>
+            <div class="form-group">
+                <label class='text-dark' for="">Upload question Thumbnail </label><br>
+                <input type="file" name="questionThumbnail" >
+            </div><br>
+            <!--  -->
            
             <label for="">Options</label>
             <input type="text" class="form-control" name="options" placeholder='Enter four options separated by commas, with no spaces'>
             <br>
+            <!-- option 1 image input -->
+            <br>
+            <div class="form-group">
+                <label class='text-dark' for="">Upload option one Thumbnail </label><br>
+                <input type="file" name="option1" >
+            </div><br>
+            <!--  -->
+            <!-- option 2 image input -->
+            <br>
+            <div class="form-group">
+                <label class='text-dark' for="">Upload option two Thumbnail </label><br>
+                <input type="file" name="option2" >
+            </div><br>
+            <!--  -->
+            <!-- option 3 image input -->
+            <br>
+            <div class="form-group">
+                <label class='text-dark' for="">Upload option three Thumbnail </label><br>
+                <input type="file" name="option3" >
+            </div><br>
+            <!--  -->
+            <!-- option 4 image input -->
+            <br>
+            <div class="form-group">
+                <label class='text-dark' for="">Upload option four Thumbnail </label><br>
+                <input type="file" name="option4" >
+            </div><br>
+            <!--  -->
             <label for="">Correct Option</label>
             <input type="text" class="form-control" name="answer" placeholder='Enter correct option ...'>
             <br>

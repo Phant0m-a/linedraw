@@ -13,11 +13,11 @@
      
     </ul>
         <div class="row row-cols-1 row-cols-md-3">
-            <% te.docs.forEach((t)=>{%>
-                <% t.data().demoVideos.forEach((lec)=>{%>
-                    <%console.log(' un def=====================')%>
+         
+                <% te.forEach((lec)=>{%>
+                    <%console.log(' in Demo Videos page ::=====================')%>
                     <%console.log(lec)%>
-                    <%console.log('=====================')%>
+                    <%console.log('=====================>')%>
                 <div class="col mb-4">
                     <div class="card h-100">
                     <img src='<%=lec.thumbnailUrl%>'  height="250px" class="card-img-top" alt="image">
@@ -38,7 +38,7 @@
                 </div>
             <%})%>
        
-        <%})%>
+        
         </div>
     <!-- <div class="card-footer">
       Card footer

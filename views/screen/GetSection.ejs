@@ -1,24 +1,33 @@
 <div class="container">
     <br>
     <h2><%=title%></h2><br><br>
-
+    <a href="/screen/manageSections/<%=id%>" type='button' class="btn btn-dark">Back to Sections</a>
+    <br><br>
     <!-- manage quiz -->
     <a href="/screen/uploadQuiz/<%=id%>/<%=sectionId%>/<%=title%>" style="margin:5px;display:inline-block;"  type="button" class="btn btn-primary float-left">Manage Quiz</a> <br><br>
+    
     <br>
+    
     <!-- updateSectionNo -->
-    <form action="/screen/updateSectionNo" method="post">
-    <label for="">Section No</label>
-    <input type="number" class="form-control" name='order' placeholder="update order">
-    <input type="hidden" name="sectionId" value="<%=sectionId%>">
-    <input type="hidden" name='id' value="<%=id%>">
-    <input type="hidden" name='title' value="<%=title%>">
-    <br>
-    <br>
-    <button type="submit" class="btn btn-success">Update</button>
-    </form>
+    <div class="card">
+        <div class="card-body" style='background:rgb(238, 230, 230);'>
+            <form action="/screen/updateSectionNo" method="post">
+                <label for="">Section No</label>
+                <input type="number" class="form-control" name='order' placeholder="update order">
+                <input type="hidden" name="sectionId" value="<%=sectionId%>">
+                <input type="hidden" name='id' value="<%=id%>">
+                <input type="hidden" name='title' value="<%=title%>">
+                <br>
+                <br>
+                <button type="submit" class="btn btn-success">Update</button>
+                </form>
+        </div>
+    </div>
 
     <br><br>
-    <h3 class='text-dark' style="display:inline-block;">Add Lecture</h3><br><br>
+    <div class="card">
+        <div class="card-body" style='background:rgb(238, 230, 230);'>
+            <h3 class='text-dark' style="display:inline-block;">Add Lecture</h3><br><br>
 
       
     <form action="/screen/AddLec" enctype="multipart/form-data" method="post">
@@ -27,17 +36,31 @@
         <input type="hidden" name='title' value="<%=title%>">
         <input type="hidden" name="sectionId" value="<%=sectionId%>">
         <br>
+        <br>
+            
         <div class="form-group">
             <label  class='text-dark'for="">Title</label>
             <input type="text" class="form-control" name="leacture" placeholder="Enter lecture name ..."  required>
-           <!-- url --><br>
+           <br>
+           <div class="form-group">
+            <label class='text-dark' for="">Upload Thumbnail </label><br>
+            <input type="file" name="lectureThumbnail" required>
+        </div><br>
+            <p>
+                <a class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseExample"
+                    aria-expanded="false" aria-controls="collapseExample">
+                   Add URL instead
+                </a>
+            </p>
+            <div class="collapse" id="collapseExample">
+                <div class="card card-body">
+                   <!-- url --><br>
             <label  class='text-dark'for="">Url</label>
             <input type="text" class="form-control" name="url" value='...' minlength="12" placeholder="Enter url" >
+            
+                </div>
+            </div>
             <br>
-            <div class="form-group">
-                <label class='text-dark' for="">Upload Thumbnail </label><br>
-                <input type="file" name="lectureThumbnail" required>
-            </div><br>
             <div class="form-group">
                 <label  class='text-dark'for="">Upload video  </label><br>
                 <input type="file" name="lectureVideoUrl"  >
@@ -54,6 +77,8 @@
     
         <button type="submit" class="btn btn-success">Upload</button>
     </form>
+        </div>
+    </div>
     <br><br><br><br><br>
 <!-- test zone(*) -->
 
@@ -118,8 +143,10 @@
 </html>                             -->
 
 <!-- test zone(*) END -->
-    <br><br><br><br><br>
-
+    <br><br><br>
+<div class="card">
+    <div class="card-body" style='background:rgb(238, 230, 230);'>
+        
     <!-- Edit Quiz quizDesc and quizThumnail -->
     <h2>Edit Quiz</h2><br><br>
     <form action="/screen/Edit_quiz" method="post"  enctype="multipart/form-data" >
@@ -135,11 +162,16 @@
         <label for="">Quiz Thumbnail </label><br>
         <input type="file" name="quizThumbnail" >
         <br><br>
-        <button type="submit" class="btn btn-primary">Add</button><br><br><br>
-    </form><br><br><br><br><br>
+        <button type="submit" class="btn btn-success">update</button><br><br><br>
+    </form>
     <!-- ==== -->
 
-    <!-- upload MCQS OR QUIZ -->
+    </div>
+</div>
+<br><br><br>
+   <div class="card">
+       <div class="card-body" style='background:rgb(238, 230, 230);'>
+            <!-- upload MCQS OR QUIZ -->
     <form action="/screen/uploadQuiz" method="post"  enctype="multipart/form-data">
         <h3>Add Quiz</h3>
 
@@ -174,45 +206,58 @@
             <label  class='text-dark'for="">Question</label>
             <input type="text" class="form-control" name="question" value='' placeholder="Enter Question ..." required>
             <br>
-            <!-- question image input -->
+          
+           
+            <label for="">Options</label>
+            <input type="text" class="form-control" name="options" placeholder='Enter four options separated by commas, with no spaces'>
+            <br>
+            <p>
+                <a class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseExampleC"
+                    aria-expanded="false" aria-controls="collapseExampleC">
+                    Add Image Thumbnail<br>
+                </a>
+            </p>
+            <div class="collapse" id="collapseExampleC">
+                <div class="card card-body">
+                  <!-- question image input -->
             <br>
             <div class="form-group">
                 <label class='text-dark' for="">Upload question Thumbnail </label><br>
                 <input type="file" name="questionThumbnail" >
             </div><br>
-            <!--  -->
+            <!--  -->   
+            
+             <!-- option 1 image input -->
+             <br>
+             <div class="form-group">
+                 <label class='text-dark' for="">Upload option one Thumbnail </label><br>
+                 <input type="file" name="option1" >
+             </div><br>
+             <!--  -->
+             <!-- option 2 image input -->
+             <br>
+             <div class="form-group">
+                 <label class='text-dark' for="">Upload option two Thumbnail </label><br>
+                 <input type="file" name="option2" >
+             </div><br>
+             <!--  -->
+             <!-- option 3 image input -->
+             <br>
+             <div class="form-group">
+                 <label class='text-dark' for="">Upload option three Thumbnails </label><br>
+                 <input type="file" name="option3" >
+             </div><br>
+             <!--  -->
+             <!-- option 4 image input -->
+             <br>
+             <div class="form-group">
+                 <label class='text-dark' for="">Upload option four Thumbnail </label><br>
+                 <input type="file" name="option4" >
+             </div><br>
+             <!--  -->
+                </div>
+            </div>
            
-            <label for="">Options</label>
-            <input type="text" class="form-control" name="options" placeholder='Enter four options separated by commas, with no spaces'>
-            <br>
-            <!-- option 1 image input -->
-            <br>
-            <div class="form-group">
-                <label class='text-dark' for="">Upload option one Thumbnail </label><br>
-                <input type="file" name="option1" >
-            </div><br>
-            <!--  -->
-            <!-- option 2 image input -->
-            <br>
-            <div class="form-group">
-                <label class='text-dark' for="">Upload option two Thumbnail </label><br>
-                <input type="file" name="option2" >
-            </div><br>
-            <!--  -->
-            <!-- option 3 image input -->
-            <br>
-            <div class="form-group">
-                <label class='text-dark' for="">Upload option three Thumbnail </label><br>
-                <input type="file" name="option3" >
-            </div><br>
-            <!--  -->
-            <!-- option 4 image input -->
-            <br>
-            <div class="form-group">
-                <label class='text-dark' for="">Upload option four Thumbnail </label><br>
-                <input type="file" name="option4" >
-            </div><br>
-            <!--  -->
             <label for="">Correct Option</label>
             <input type="text" class="form-control" name="answer" placeholder='Enter correct option ...'>
             <br>
@@ -221,13 +266,15 @@
     </form><br>
 
 
+       </div>
+   </div>
 
     <!-- <a href="/screen/deleteFeature/<%=id%>" type='button' class="btn btn-danger">Delete</a> -->
-    <a href="/screen/manageSections/<%=id%>" type='button' class="btn btn-dark">Back to Sections</a>
+    
 
     <br>
     <br><br>
-<div class="card w-80" >
+<div class="card w-80" style='background:rgb(238, 230, 230);' >
     <ul class="list-group list-group-flush">
         
         <% sections.forEach((leacture)=>{%>
@@ -248,7 +295,13 @@
             <img src='<%=lec.lectureThumbnail%>'  height="250px" class="card-img-top" alt="image">
             <div class="card-body">
                 <h5 class="card-title"><%=lec.title%></h5>
-                <a src='<%=lec.lectureVideoUrl%>' type='button' class='btn btn-primary'>Play lecture</a>
+             
+                <% if(lec.url.length <= 12){%>
+                <a href='<%=lec.lectureVideoUrl%>' type='button' class='btn btn-primary'>Play lecture</a>
+                <%}else{%>
+                    <% console.log('ok url is on!!!!!!!!!!!!!!!!!!!!!!!!!!!!'+ lec.url)%>
+                <a href='<%=lec.url%>' type='button' class='btn btn-primary'>Play lecture</a>
+                <%}%>
                 <p class="card-text"><%=lec.desc%></p>
             </div>
                 <div class="card-footer">

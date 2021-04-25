@@ -23,7 +23,14 @@
                     <img src='<%=lec.thumbnailUrl%>'  height="250px" class="card-img-top" alt="image">
                     <div class="card-body">
                         <h5 class="card-title"><%=lec.title%></h5>
-                        <a src='<%=lec.videoUrl%>' type='button' class='btn btn-primary'>Play lecture</a>
+                        
+                        <% if(lec.url.length <= 12){%>
+                            <%console.log('[+] spawn==============$$################################')%>
+                           <a href='<%=lec.videoUrl%>' type='button' class='btn btn-primary'>Play lecture</a>
+                            <%}else{%>
+                                <% console.log('ok url is on!!!!!!!!!!!!!!!!!!!!!!!!!!!!'+ lec.url)%>
+                            <a href='<%=lec.url%>' type='button' class='btn btn-primary'>Play lecture</a>
+                            <%}%>
                         <p class="card-text"><%=lec.desc%></p>
                     </div>
                         <div class="card-footer">

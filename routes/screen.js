@@ -1897,10 +1897,14 @@ router.get('/Delete_DemoVideos/:id/:lec_id', async (req, res) => {
                 console.log(url + ' ///////// ' + vidurl);
                 //delete  IMAGE
                 //call the deleteImages inside async function
+               if(url !== undefined){
                 const deleteStatus = await deleteImages({ downloadUrl: url });
                 console.log(deleteStatus)  //=> "success"
-                const deletevid = await deleteImages({ downloadUrl: vidurl });
+               }
+                if(vidurl !== undefined){
+                    const deletevid = await deleteImages({ downloadUrl: vidurl });
                 console.log(deletevid)  //=> "success"
+                }
 
                 //   
                 //  test zone(*)-not meant for demo
@@ -1923,7 +1927,7 @@ router.get('/Delete_DemoVideos/:id/:lec_id', async (req, res) => {
                     dbs.collection('courses').doc(id).update({
                         demoVideos: firebase.firestore.FieldValue.arrayRemove(...the_data)
                     });
-                }, 1000);
+                }, 100);
 
             })
 

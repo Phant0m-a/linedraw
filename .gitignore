@@ -11,3 +11,13 @@ addProduct.ejs
 gender.ejs
 personality.ejs
 editCourse.ejs
+personality.ejs
+writingType.ejs
+type1.ejs
+gender.ejs
+addCourse.ejs
+add_lecture.ejs
+test.ejs
+getCourse.ejs
+getLeacture.ejs
+editCourse.ejs

@@ -171,63 +171,63 @@ const dbs = firebase.firestore();
 dbs.settings({ timestampsInSnapshot: true });
 
 // upload-file
-let location = 'tmp/' + 'work.csv';
+// let location = 'tmp/' + 'work.csv';
 
-router.post('/uploadfile', auth, async (req, res) => {
+// router.post('/uploadfile', auth, async (req, res) => {
 
-    // console.log(req.files.filename);
-    //     csv().fromStream(req.files.filename.data).then((ob)=>{
-    //         console.log(ob);
-    //         res.send("okay")
-    //     }).catch(err=>{
-    //         console.log(err);
-    //     })
-    if (req.files) {
-        console.log(req.files)
-        var file = req.files.filename.name
-        var filename = file.name;
-        var type = req.body.type;
-        file.mv('./tmp/' + filename, async (err) => {
+//     // console.log(req.files.filename);
+//     //     csv().fromStream(req.files.filename.data).then((ob)=>{
+//     //         console.log(ob);
+//     //         res.send("okay")
+//     //     }).catch(err=>{
+//     //         console.log(err);
+//     //     })
+//     if (req.files) {
+//         console.log(req.files)
+//         var file = req.files.filename.name
+//         var filename = file.name;
+//         var type = req.body.type;
+//         file.mv('./tmp/' + filename, async (err) => {
 
-            if (err) {
-                res.send('error occured!')
-            } else {
-                await dbs
-                    .collection(type)
-                    .get()
-                    .then((querySnapshot) => {
-                        querySnapshot.forEach((doc) => {
-                            doc.ref.delete();
-                        });
-                    });
-                location = 'tmp/' + filename;
-                console.log(filename);
-                csv()
-                    .fromFile(location)
-                    .then((jsonObj) => {
-                        console.log('this is : ' + jsonObj);
-                        let d;
-                        jsonObj.forEach(async function (item) {
+//             if (err) {
+//                 res.send('error occured!')
+//             } else {
+//                 await dbs
+//                     .collection(type)
+//                     .get()
+//                     .then((querySnapshot) => {
+//                         querySnapshot.forEach((doc) => {
+//                             doc.ref.delete();
+//                         });
+//                     });
+//                 location = 'tmp/' + filename;
+//                 console.log(filename);
+//                 csv()
+//                     .fromFile(location)
+//                     .then((jsonObj) => {
+//                         console.log('this is : ' + jsonObj);
+//                         let d;
+//                         jsonObj.forEach(async function (item) {
 
-                            console.log(item);
-                            d = item;
-                            await dbs.collection(type).add({
-                                No: parseInt(item.No),
-                                question: item.STATEMENTS
-                            });
+//                             console.log(item);
+//                             d = item;
+//                             await dbs.collection(type).add({
+//                                 No: parseInt(item.No),
+//                                 question: item.STATEMENTS
+//                             });
 
-                        });
+//                         });
 
-                    })
-                res.redirect('/screen/admin');
-            }
-        })
-        // const jsonArray = await csv().fromFile('./public/upload/'+filename);
+//                     })
+//                 res.redirect('/screen/admin');
+//             }
+//         })
+//         // const jsonArray = await csv().fromFile('./public/upload/'+filename);
 
-    } else {
-        res.redirect('/screen/admin');
-    }
-})
+//     } else {
+//         res.redirect('/screen/admin');
+//     }
+// })
 
 
 
@@ -290,136 +290,7 @@ router.post('/signin', async (req, res) => {
 
 })
 
-
-//sign-in post
-// router.post('/signin',(req,res)=>{
-//     let  u_email = req.body.email;
-//     let u_password = req.body.password;
-//     const auth = firebase.auth();
-//     auth.signInWithEmailAndPassword(u_email, u_password).then(resp=>{
-
-//       res.render("screen/admin-panel");
-
-//     }).catch(err=>{
-
-//         switch(err.code){
-//                 case "auth/user-not-found":
-//                     console.log("User not found");
-
-//                     break;
-//                     default:
-//                         console.log("Default");
-//         }
-
-//     });
-//     // change
-//     res.redirect('/screen/signin')
-// })
-
-// signout
-router.get('/signout/:signout', auth, async (req, res) => {
-    try {
-        console.log(req.params.signout);
-        res.clearCookie('jwt_cookie');
-        console.log('logout successfully');
-        firebase.auth().signOut();
-        res.redirect('/screen/signin');
-
-    }
-    catch (error) {
-        res.status(500).send(error);
-    }
-});
-
-
-
-// getting question to upload on firestore
-// router.post('/admin',auth, (req,res) =>{
-
-// let questionType = req.body.options;
-// let question = req.body.question;
-
-// if(question !== undefined && question !== '' && question.length >= 10 ){
-//     var timestamp = new Date().getTime();
-
-//     dbs.collection(questionType).add({
-//         question: question,
-//         timeStamp: timestamp
-//     });
-
-//     res.redirect('/screen/admin');
-// }else{
-
-//     res.redirect('/screen/admin');
-// }
-
-// })
-// new better version
-router.post('/writingType', auth, async (req, res) => {
-    let questionType = req.body.options;
-    let question = req.body.question;
-    // console.log(req.body);
-    if (question !== undefined && question !== '' && question.length >= 10) {
-        // var timestamp = new Date().getTime();
-        // find the eg. mySelf collection- and get its doc eg. No and then add index+1 to it. and then add.
-        // let number ;
-        // let count = 0;
-        // await dbs.collection(questionType).orderBy('No').get('No').then((no)=>{
-        //     number = no.docs;
-        //     number.forEach((i)=>{
-        //         console.log('logging questions: '+ i.data().No);
-        //         count= i.data().No;
-        //         console.log('count is: '+ count);
-        //     })
-        //     number= count++;
-        //     console.log('number: '+ number);
-        // })
-        var len;
-        let st;
-        dbs.collection(questionType).get().then(async snapshot => {
-
-            len = snapshot.size;
-            len = len + 1;
-            console.log(len);
-
-            await dbs.collection(questionType).add({
-                question: question,
-                No: len
-            }).then(() => {
-                res.render('screen/writingType', { type: questionType });
-            });
-        })
-
-
-
-        // res.redirect('/screen/admin');
-    } else {
-        res.redirect('/screen/admin');
-    }
-
-})
-
-
-// redirect to collection type page
-router.get('/writingType/:type', auth, (req, res) => {
-    console.log(req.params.type);
-    if (req.params.type == 'himSelf') {
-        res.render('screen/writingType', { type: req.params.type })
-    }
-    else if (req.params.type == 'herSelf') {
-        res.render('screen/writingType', { type: req.params.type })
-    }
-    else if (req.params.type == 'mySelf') {
-        res.render('screen/writingType', { type: req.params.type })
-    }
-    else {
-        res.redirect('/screen/admin')
-    }
-})
-
-
-
-
+// ====================================>
 // udmy app
 
 // udmyPanel
@@ -439,177 +310,6 @@ router.get('/udmyPanel', async (req, res) => {
 
 });
 
-// addCourse
-router.get('/addCourse', async (req, res) => {
-    // get All collections for displaying all cols
-    await dbs.collection('types').get().then((snapshot) => {
-        let data = snapshot.docs;
-        // get all catagories
-        res.render('screen/addCourse', { catagories: data });
-
-    }).catch((err) => {
-        console.log('error at /addCourse GET:' + err);
-    })
-
-
-});
-
-router.post('/addCourse', async (req, res) => {
-    // res.send('screen/addCourse successful!');
-    // file-upload
-    if (req.files) {
-        var file = req.files.filename
-        var filename = file.name;
-        console.log(file)
-        file.mv('tmp/' + filename, async (err) => {
-            let task = await bucket.upload(
-                'tmp/' + filename,
-                {
-                    destination: 'collectionA/courseA/' + filename + new Date(),
-                    metadata: {
-                        cacheControl: "public, max-age=315360000",
-                        contentType: "image/jpeg"
-                    }
-                })
-        })
-        res.render('screen/udmyPanel');
-    }
-    // handling 
-    let title = req.body.title;
-    let pricing = req.body.price;
-    let description = req.body.description;
-    let catagory = req.body.catagory;
-    let tick = req.body.bestseller ? true : false;
-    // let rating= req.body.rating;
-    let rating = '3'
-
-    console.log(req.body);
-    console.log('Bestseller is: ' + tick);
-
-    await dbs.collection('catagories').add({
-        timestamp: new Date(Date.now()),
-        title: title,
-        catagory: catagory,
-        rating: rating,
-        pricing: pricing,
-        imgurl: '../',
-        intro_video_url: '../',
-        intro_video_thumbnail: '../',
-        description: description,
-        Best_seller: tick
-        // ,content: [{
-        //     icon:'../',
-        //     desc:'some desc'
-        // }]
-    }).then(() => {
-        res.redirect('/screen/udmyPanel');
-    }).catch((err) => {
-        console.log('error at addCourse POST ' + err);
-    })
-
-
-
-});
-
-// begin from here! start
-// edit Leacture
-router.get('/addLeacture', async (req, res) => {
-
-    let title = req.body.title;
-
-
-    let catagory = req.body.catagory;
-    let tick = req.body.bestseller ? true : false;
-    // let rating= req.body.rating;
-    let rating = '3'
-
-    console.log(req.body);
-    console.log('Bestseller is: ' + tick);
-
-    await dbs.collection('catagories').add({
-        timestamp: new Date(Date.now()),
-        title: title,
-        catagory: catagory,
-        rating: rating,
-        pricing: pricing,
-        imgurl: '../',
-        intro_video_url: '../',
-        intro_video_thumbnail: '../',
-        description: description,
-        Best_seller: tick
-        // ,content: [{
-        //     icon:'../',
-        //     desc:'some desc'
-        // }]
-    }).then(() => {
-        res.redirect('/screen/udmyPanel');
-    }).catch((err) => {
-        console.log('error at addCourse POST ' + err);
-    })
-
-})
-
-
-
-// editCourse
-router.get('/editCourse', async (req, res) => {
-    let courses;
-    // get all catagories-for edit
-    await dbs.collection('catagories').get().then((snapshot) => {
-        courses = snapshot;
-        //   get all catagories
-        courses.docs.forEach((course) => {
-            console.log(course.data().title);
-        })
-        res.render('screen/editCourse', { courses: courses });
-
-    }).catch((err) => {
-        console.log('error at /editcourse Get:' + err);
-    })
-
-}
-)
-
-// posting edit catagory here=>{ catagory }
-//ps. this route isnt being used 
-router.post('/catagory', async (req, res) => {
-    // edit catagory isnt working!
-    let catagory = req.body.catagory;
-    let replace = req.body.replace;
-    console.log('collection to remove: ' + catagory);
-
-    await dbs.collection('catagories').doc(catagory).set({
-        timestamp: new Date(),
-        catagory: catagory,
-
-    }).then(() => {
-        res.redirect('/screen/editCourse');
-    }).catch((err) => {
-        console.log('error at /catagory POST  : ' + err);
-    })
-}
-)
-
-// screen/course from editsection containing section title Post
-
-router.post('/course', async (req, res) => {
-    let course = req.body.course;
-    let title = req.body.sectionTitle;
-    console.log(req.body);
-
-    await dbs.collection('catagories/' + course + '/' + 'content/').add({
-        title: title, leacture: [{ demo: true, id: new Date(), thumbnail: '../', title: 'changed!' }]
-    }, { merge: true }).then(() => {
-        res.redirect('/screen/udmypanel');
-    })
-
-        .catch((err) => {
-            console.log('error at /course: ' + err);
-        })
-
-}
-)
-// ====================================>
 
 // add leacture
 router.get('/add_lecture', async (req, res) => {
@@ -767,11 +467,6 @@ router.post('/courseSection', async (req, res) => {
 )
 
 
-// useless route!
-router.post('/editCourse', (req, res) => {
-    res.send('edit applied !')
-}
-)
 
 
 
@@ -1027,9 +722,11 @@ router.post('/Edit_Course', async (req, res) => {
     let courseStatus = req.body.courseStatus;
     let price = pprice.toString();
     let oldPrice = oldPPrice.toString();
-    let days = req.body.Days;
-    let months = req.body.Months;
-    let expiresIn = months * 30 + days;
+    var days = req.body.Days;
+    var months = req.body.Months;
+    var te= 'unseffornow';
+   console.log(te)
+    var expiresIn = te;
     // console.log(id+' :: '+title+' :: '+category+' :: '+price+' :: '+rating+' :: '+description+' :: '+tag);
     // let bannerUrl=req.body.bannerUrl;
     let boi = req.body.bannerImage;
@@ -1042,6 +739,7 @@ router.post('/Edit_Course', async (req, res) => {
     let toDelete = await refer.get();
     if (!toDelete) { console.log('no doc'); }
     else {
+        
         // console.log('got this data from delete===<><><>');
         // console.log(toDelete.data());
         //     const deleteStatus = await deleteImages({ downloadUrl:req.body.url });
@@ -1051,7 +749,7 @@ router.post('/Edit_Course', async (req, res) => {
 
     if (req.files) {
         if (req.files.bannerImage !== undefined) {
-            if (req.files.bannerImage.mimetype === 'image/png' || req.files.bannerImage.mimetype === 'image/jpeg') {
+            if (req.files.bannerImage.mimetype === 'image/png' || req.files.bannerImage.mimetype === 'image/jpeg' || req.files.bannerImage.mimetype === 'image/jpg') {
 
                 var file = req.files.bannerImage;
                 var filename = file.name;
@@ -1064,8 +762,14 @@ router.post('/Edit_Course', async (req, res) => {
                     console.log(boi);
 
                     //Delete old url
-                    const deleteStatus = await deleteImages({ downloadUrl: toDelete.data().bannerUrl });
-                    console.log(deleteStatus)  //=> "success"
+                    console.log('[+]To Delete banner url');
+                    console.log(toDelete.data().bannerUrl.length);
+                    if(toDelete.data().bannerUrl.length >= 10 ){
+                        console.log('[in delete]');
+                        const deleteStatus = await deleteImages({ downloadUrl: toDelete.data().bannerUrl });
+                        console.log(deleteStatus)  //=> "success"
+                    }
+                  
 
 
                     //update banner url  
@@ -1100,9 +804,11 @@ router.post('/Edit_Course', async (req, res) => {
                         boib = "https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(loc) + "?alt=media&token=" + loc;
                         console.log(boib);
 
-                        //Delete introVideoThumbnail
+                       if(toDelete.data().videoThumbnail >=10 ){
+                            //Delete introVideoThumbnail
                         const deleteStatus = await deleteImages({ downloadUrl: toDelete.data().introVideoThumbnail });
                         console.log(deleteStatus)  //=> "success"
+                       }
 
                         // update introVideoThumbnail
                         setTimeout(function () {
@@ -1125,7 +831,7 @@ router.post('/Edit_Course', async (req, res) => {
     //   if(req.files.video !== 'null' && req.files.video !== 'undefined'){
     if (req.files) {
         if (req.files.video !== undefined) {
-            if (req.files.video.mimetype === 'application/octet-stream') {
+            if (req.files.video.mimetype == 'video/webm' || req.files.video.mimetype == 'video/webm' || req.files.video.mimetype == 'video/x-matroska') {
 
 
                 let ftype = req.files.video.mimetype;
@@ -1144,8 +850,11 @@ router.post('/Edit_Course', async (req, res) => {
                         console.log(boic);
 
                         //Delete introVideoThumbnail
-                        const deleteStatus = await deleteImages({ downloadUrl: toDelete.data().introVideoUrl });
-                        console.log(deleteStatus)  //=> "success"
+                        if(toDelete.data().introVideoUrl >= 10){
+                            const deleteStatus = await deleteImages({ downloadUrl: toDelete.data().introVideoUrl });
+                            console.log(deleteStatus)  //=> "success"
+                        }
+                       
 
 
                         // update videoVideoUrl and videothumbnailKey
@@ -1325,7 +1034,7 @@ router.post('/manageSections', async (req, res) => {
         },
         quiz: [],
         quizDesc: 'Add Description',
-        quizThumnail: 'https://i.picsum.photos/id/866/536/354.jpg?hmac=tGofDTV7tl2rprappPzKFiZ9vDh5MKj39oa2D--gqhA',
+        quizThumbnail: 'https://i.picsum.photos/id/866/536/354.jpg?hmac=tGofDTV7tl2rprappPzKFiZ9vDh5MKj39oa2D--gqhA',
 
     }).then(() => {
         res.redirect(`/screen/manageSections/${id}`);
@@ -1580,7 +1289,7 @@ console.log(all2.data());
 
     // picture
     if (req.files) {
-        if (req.files.lectureThumbnail !== undefined )if(req.files.lectureThumbnail.mimetype === 'image/png' || req.files.lectureThumbnail.mimetype === 'image/jpeg') {
+        if (req.files.lectureThumbnail !== undefined )if(req.files.lectureThumbnail.mimetype === 'image/png' || req.files.lectureThumbnail.mimetype === 'image/jpeg'|| req.files.lectureThumbnail.mimetype === 'image/jpg') {
 
             setTimeout(function pic() {
                 fileb = req.files.lectureThumbnail;
@@ -1624,9 +1333,10 @@ console.log(all2.data());
 
     // video 
     if (req.files) {
-        if (req.files.lectureVideoUrl !== undefined && !req.body.url) {
+        // if (req.files.lectureVideoUrl !== undefined && !req.body.url) {
+        if (req.files.lectureVideoUrl !== undefined) {
             if (req.files.lectureVideoUrl !== undefined){
-                if(req.files.lectureVideoUrl.mimetype == 'application/octet-stream'){
+                if (req.files.lectureVideoUrl.mimetype == 'video/webm' || req.files.lectureVideoUrl.mimetype == 'video/webm' || req.files.lectureVideoUrl.mimetype == 'video/x-matroska'){
 
                     setTimeout(function b() {
     
@@ -1673,33 +1383,33 @@ console.log(all2.data());
             }
         }
     }
+// update feature
+    // if (!req.files) {
+    //     if (req.body.url) {
+    //         url = req.body.url;
+    //         location = '...';
+    //         boic = '...';
 
-    if (!req.files) {
-        if (req.body.url) {
-            url = req.body.url;
-            location = '...';
-            boic = '...';
 
-
-             // delete videourl
-             let vidurl = the_data2.map((item) => {
-                return item.lectureVideoUrl;
-            })
+    //          // delete videourl
+    //          let vidurl = the_data2.map((item) => {
+    //             return item.lectureVideoUrl;
+    //         })
           
-            let deletevid;
+    //         let deletevid;
             
-            if (vidurl != '...') {
-                deletevid = await deleteImages({ downloadUrl: vidurl });
-                console.log(deletevid)  //=> "success"
-            }
+    //         if (vidurl != '...') {
+    //             deletevid = await deleteImages({ downloadUrl: vidurl });
+    //             console.log(deletevid)  //=> "success"
+    //         }
 
 
-        }
-    }
-    if(!req.files && !req.body.url){
-        res.redirect(`/screen/GetSection/${id}/${sec_id
-        }/${uid}`)
-    }
+    //     }
+    // }
+    // if(!req.files && !req.body.url){
+    //     res.redirect(`/screen/GetSection/${id}/${sec_id
+    //     }/${uid}`)
+    // }
 
 
     //  dbs.collection('courses/'+id+'/sections').get(sec_id).then((snap)=>{
@@ -1719,24 +1429,12 @@ console.log(all2.data());
         if (!fun) {
             console.log('no doc');
         } else {
-            // fun.docs.forEach((doc)=>{
-            //     console.log('we got this data>')
-            //     console.log(doc.data());
-            //     save= doc.data().lectures;
-            // })
+            
             console.log(fun.data().title);
             save = fun.data().lectures;
             console.log('results : ===>');
 
-            // save.forEach((doc)=>{
-            //     if(doc.title == old_title){
-            //         if(!req.files.lectureVideoUrl){location=doc.lectureVideoUrl,vidKey=location}
-            //         if(!req.files.lectureThumbnail){loac=doc.lectureThumbnail,picKey=loac}   
-
-            //         console.log(doc.title);
-            //     }
-
-            // })
+           
             setTimeout(function h() {
                 the_data = save.map(item => {
                     if (item.id == lec_id) {
@@ -1747,7 +1445,8 @@ console.log(all2.data());
                             vidKey: location || item.vidKey,
                             lectureThumbnail: boib || item.lectureThumbnail,
                             lectureVideoUrl: boic || item.lectureVideoUrl,
-                            url: req.body.url || item.url
+                            url:'...' || item.url
+                            // url: req.body.url || item.url
                         }
                     } else {
                         return item
@@ -2068,24 +1767,33 @@ router.post('/uploadQuiz', async (req, res) => {
     //upload images 
     if(req.files){
         console.log('[+] in if conditional');
-        if(req.files.questionThumbnail !== undefined)if(req.files.questionThumbnail.mimetype === 'image/png' || req.files.questionThumbnail.mimetype === 'image/jpeg' || req.files.questionThumbnail.mimetype === 'image/PNG' || req.files.questionThumbnail.mimetype ==='image/jpg'){
-            console.log('[+0~] in if question');
-            let Tq=req.files.questionThumbnail;
-            Tq.mv('tmp/' + req.files.questionThumbnail.name,  (err) => {
-                 qid= UUID();
-                t =  upload('tmp/' + req.files.questionThumbnail.name, qid);
-                console.log('question updated here is the new value: ===>');
-                qThumbnail = "https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(qid) + "?alt=media&token=" + qid;
-                console.log(qThumbnail);
-              return;  
-            });
-        }else{
+        if(req.files.questionThumbnail !== undefined){
+            if(req.files.questionThumbnail.mimetype === 'image/png' || req.files.questionThumbnail.mimetype === 'image/jpeg' || req.files.questionThumbnail.mimetype === 'image/PNG' || req.files.questionThumbnail.mimetype ==='image/jpg'){
+                console.log('[+0~] in if question');
+                let Tq=req.files.questionThumbnail;
+                Tq.mv('tmp/' + req.files.questionThumbnail.name,  (err) => {
+                     qid= UUID();
+                    t =  upload('tmp/' + req.files.questionThumbnail.name, qid);
+                    console.log('question updated here is the new value: ===>');
+                    qThumbnail = "https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(qid) + "?alt=media&token=" + qid;
+                    console.log(qThumbnail);
+                  return;  
+                });
+            }else{
+                qThumbnail= '...';
+                console.log('qThunmbnail else man  inside.......>');
+                return;
+            }
+        }
+        else{
             qThumbnail= '...';
             console.log('qThumbnail else man .......>');
          
         }
 
-        if(req.files.option1 !== undefined && req.files.option1.mimetype === 'image/png' || req.files.option1.mimetype === 'image/jpeg' || req.files.option1.mimetype ==='image/jpg'){
+        if(req.files.option1 !== undefined){
+        if(req.files.option1.mimetype === 'image/png' || req.files.option1.mimetype === 'image/jpeg' || req.files.option1.mimetype ==='image/jpg')
+        {
             console.log('[+1~] in if option1');
             let To1=req.files.option1;
              To1.mv('tmp/' + req.files.option1.name,  (err) => {
@@ -2098,12 +1806,20 @@ router.post('/uploadQuiz', async (req, res) => {
              });
         }else{
             o1= '...';
-            console.log('o1 else man .......>');
-            
+            console.log('o1 else man  inside.......>');
+            return;
         }
+    }else{
+        o1= '...';
+        console.log('o1 else man .......>');
+        
+    }
+
         console.log('*************************coming here##########');
 
-        if(req.files.option2 !== undefined && req.files.option2.mimetype === 'image/png' || req.files.option2.mimetype === 'image/jpeg' || req.files.option2.mimetype ==='image/jpg'){
+        if(req.files.option2 !== undefined){
+        if(req.files.option2.mimetype === 'image/png' || req.files.option2.mimetype === 'image/jpeg' || req.files.option2.mimetype ==='image/jpg')
+        {
             console.log('[+2~] in if option2');
             let To2=req.files.option2;
              To2.mv('tmp/' + req.files.option2.name, (err) => {
@@ -2116,11 +1832,17 @@ router.post('/uploadQuiz', async (req, res) => {
              });
         }else{
             o2= '...';
+            console.log('o2 else man  inside.......>');
+            return;
+        }
+        }else{
+            o2= '...';
             console.log('o2 else man .......>');
             
         }
-        
-        if(req.files.option3 !== undefined && req.files.option3.mimetype === 'image/png' || req.files.option3.mimetype === 'image/jpeg' || req.files.option3.mimetype ==='image/jpg'){
+        if(req.files.option3 !== undefined){
+        if(req.files.option3.mimetype === 'image/png' || req.files.option3.mimetype === 'image/jpeg' || req.files.option3.mimetype ==='image/jpg')
+        {
             console.log('[+3~] in if option3');
             let To3=req.files.option3;
              To3.mv('tmp/' + req.files.option3.name,  (err) => {
@@ -2133,11 +1855,17 @@ router.post('/uploadQuiz', async (req, res) => {
              });
         }else{
             o3= '...';
-            console.log('o3 else man .......>');
-           
+            console.log('o3 else man  inside.......>');
+           return;
         }
-        
-        if(req.files.option4 !== undefined && req.files.option4.mimetype === 'image/png' || req.files.option4.mimetype === 'image/jpeg' || req.files.option4.mimetype ==='image/jpg'){
+        }else{
+            o3= '...';
+            console.log('o3 else man .......>');
+            
+        }
+        if(req.files.option4 !== undefined){
+        if(req.files.option4.mimetype === 'image/png' || req.files.option4.mimetype === 'image/jpeg' || req.files.option4.mimetype ==='image/jpg')
+        {
             console.log('[+4~] in if option4');
             let To4=req.files.option4;
              To4.mv('tmp/' + req.files.option4.name, (err) => {
@@ -2150,10 +1878,14 @@ router.post('/uploadQuiz', async (req, res) => {
              });
         }else{
             o4= '...';
-            console.log('o4 else man .......>');
-           
+            console.log('o4 else man  inside.......>');
+            return;
         }
-    
+    }else{
+        o4= '...';
+        console.log('o4 else man .......>');
+        
+    }
     }
     else{
         qThumbnail='...';
@@ -2359,7 +2091,7 @@ router.get('/deleteQuiz/:id/:doc_id/:sectionId/:title', async (req, res) => {
     })
     setTimeout(() => {
         res.redirect(`/screen/uploadQuiz/${id}/${sectionId}/${store}`);
-    }, 1000)
+    }, 1500)
 })
 
 
@@ -2377,7 +2109,7 @@ router.post('/Edit_quiz', async (req, res) => {
     // 
     // test zone(*)
     if (req.files) {
-        if (req.files.quizThumbnail.mimetype === 'image/jpeg' || req.files.quizThumbnail.mimetype === 'image/png') {
+        if (req.files.quizThumbnail.mimetype === 'image/jpeg' || req.files.quizThumbnail.mimetype === 'image/png'||req.files.quizThumbnail.mimetype === 'image/jpg') {
 
 
             var file = req.files.quizThumbnail;
@@ -2389,16 +2121,22 @@ router.post('/Edit_quiz', async (req, res) => {
 
             // check part
             let bro = dbs.collection('courses/' + id + '/sections').doc(sectionId);
-            let refer = await bro.get();
-
+            let o= await bro.get();
+            let refer ;
+            if(!o){console.log('no doc!');}
+            else{
+                console.log('[++]quizThumbnail');
+                console.log(o.data())
+                refer= o.data().quizThumbnail;
+            }
             console.log('The thumbnail url is: ');
-            console.log(refer.data().quizThumbnail);
+            console.log(refer);
             // condition to check wether there is already any thumbnail or not
-            if (refer.data().quizThumbnail !== '') {
+            if (refer.length <=10 || !refer == 'https://i.picsum.photos/id/866/536/354.jpg?hmac=tGofDTV7tl2rprappPzKFiZ9vDh5MKj39oa2D--gqhA') {
 
-                let i = refer.data().quizThumbnail;
+                let i = refer;
 
-                console.log('[+] Executing CUZ  quizThumbnail is  NOT EMPTY ');
+                console.log('[+] Executing old quiz pic CUZ  quizThumbnail is  NOT EMPTY ');
                 const deleteStatus = await deleteImages({ downloadUrl: i });
                 console.log(deleteStatus)  //=> "success"
             }
@@ -2451,7 +2189,7 @@ router.post('/AddLec', async (req, res) => {
     let Demo = req.body.Demo ? true : false;
 
     // the url
-    let url = req.body.url;
+    // let url = req.body.url;
 
     let u = UUID();
     // if demo is false then put in lecs else
@@ -2469,13 +2207,13 @@ router.post('/AddLec', async (req, res) => {
     var filenamec;
     let location;
     let the_data;
-    let glength = req.body.url;
-    let length = glength.length;
+    // let glength = req.body.url;
+    // let length = glength.length;
 
     // picture
     if (req.files) {
-        if (req.files.lectureThumbnail !== undefined && req.files.lectureThumbnail.mimetype === 'image/png' || req.files.lectureThumbnail.mimetype === 'image/jpeg' && req.files.lectureThumbnail.mimetype === 'image/PNG') {
-
+        if (req.files.lectureThumbnail !== undefined && req.files.lectureThumbnail.mimetype === 'image/png' || req.files.lectureThumbnail.mimetype === 'image/jpeg'|| req.files.lectureThumbnail.mimetype === 'image/jpg' || req.files.lectureThumbnail.mimetype === 'image/PNG') {
+            
             setTimeout(function pic() {
                 fileb = req.files.lectureThumbnail;
                 filenameb = req.files.lectureThumbnail.name;
@@ -2483,25 +2221,30 @@ router.post('/AddLec', async (req, res) => {
                 loac = UUID();
                 console.log(loac);
                 fileb.mv('tmp/' + filenameb, async (err) => {
-                    let random = await upload('tmp/' + filenameb, loac);
+                    let random = upload('tmp/' + filenameb, loac);
                     console.log('lecture Thumbnail updated here is the new value: ===>');
                     console.log(boib);
 
                 })
                 boib = "https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(loac) + "?alt=media&token=" + loac;
             }, 0)
+        }else{
+            boib= '...'
+            loac='...'
         }
 
     }
 
     //  url checker
 
-    console.log(req.files.lectureThumbnail);
-    console.log(req.files.lectureVideoUrl);
+    console.log(req.files);
+    
     // video 
-    if (req.files.lectureVideoUrl !== undefined && length <= 12) {
-        if (req.files.lectureVideoUrl.mimetype === 'application/octet-stream') {
-            console.log('[+] in lecture video url...');
+    // if (req.files.lectureVideoUrl !== undefined && length <= 12) {
+    if (req.files.lectureVideoUrl !== undefined) {
+        console.log('outside oct stream');
+        if (req.files.lectureVideoUrl.mimetype == 'video/webm' || req.files.lectureVideoUrl.mimetype == 'video/webm' || req.files.lectureVideoUrl.mimetype == 'video/x-matroska') {
+            console.log('[+] in octstream // lecture video url...');
             setTimeout(async function b() {
 
                 filec = req.files.lectureVideoUrl;
@@ -2511,8 +2254,8 @@ router.post('/AddLec', async (req, res) => {
                 url = '...';
                 console.log(location);
 
-                await filec.mv('tmp/' + filenamec, async (err) => {
-                    let random = await uploadf('tmp/' + filenamec, location);
+                filec.mv('tmp/' + filenamec, async (err) => {
+                    let random =  uploadf('tmp/' + filenamec, location);
                     console.log('video thumbnail is updated here is the link:================>');
                     console.log(boic);
 
@@ -2532,29 +2275,33 @@ router.post('/AddLec', async (req, res) => {
 
             }, 0)
 
+        } else {
+            boic='...'
+            location= '...'
+            // console.log('all conditional s failed');
+            // res.redirect(`/screen/GetSection/${id}/${sec_id}/${title}`);
         }
 
     }
-    if (req.files.lectureVideoUrl === undefined && length > 12) {
-        console.log('triggered  url inside!');
-        location = '...';
-        boic = '...';
-        url = req.body.url;
-    }
-    else if (req.files.lectureVideoUrl !== undefined && length > 12) {
-        console.log('triggered URL  with non undefind value of videourl!');
-        location = '...';
-        boic = '...';
-        url = req.body.url;
-        //    url.length >= 13 then accept this other wise not\
-        // length not working ...
-    }
-    else {
-        console.log('all conditional s failed');
-        res.redirect(`/screen/GetSection/${id}/${sec_id}/${title}`);
-    }
-    console.log('the length is .....................');
-    console.log(length);
+    // if (req.files.lectureVideoUrl === undefined && length > 12) {
+    // if (req.files.lectureVideoUrl === undefined ) {
+    //     console.log('triggered  url inside!');
+    //     location = '...';
+    //     boic = '...';
+    //     url = req.body.url;
+        
+    // }
+    // else if (req.files.lectureVideoUrl !== undefined && length > 12) {
+    //     console.log('triggered URL  with non undefind value of videourl!');
+    //     location = '...';
+    //     boic = '...';
+    //     url = req.body.url;
+    //     //    url.length >= 13 then accept this other wise not\
+    //     // length not working ...
+    // }
+   
+    // console.log('the length is .....................');
+    // console.log(length);
 
     // count updator will only work when demo == false
     let fun = dbs.collection('courses').doc(id);
@@ -2580,7 +2327,8 @@ router.post('/AddLec', async (req, res) => {
                     id: u,
                     lectureThumbnail: boib, picKey: loac,
                     vidKey: location, lectureVideoUrl: boic,
-                    title: leacture, url: req.body.url
+                    title: leacture, url: '...'
+                    // title: leacture, url: req.body.url
                 }])
             });
             // addition of count
@@ -2595,7 +2343,8 @@ router.post('/AddLec', async (req, res) => {
                     thumbnailUrl: boib,
                     videoUrl: boic,
                     title: leacture,
-                    url: req.body.url
+                    url: '...'
+                    // url: req.body.url
                 }])
             });
             console.log(req.body);
@@ -2606,6 +2355,22 @@ router.post('/AddLec', async (req, res) => {
     }, 1000)
     //  
 })
+
+// signout
+router.get('/signout/:signout', auth, async (req, res) => {
+    try {
+        console.log(req.params.signout);
+        res.clearCookie('jwt_cookie');
+        console.log('logout successfully');
+        firebase.auth().signOut();
+        res.redirect('/screen/signin');
+
+    }
+    catch (error) {
+        res.status(500).send(error);
+    }
+});
+
 // 
 // var a = 'asdfasdfa';
 // var b = a.length;

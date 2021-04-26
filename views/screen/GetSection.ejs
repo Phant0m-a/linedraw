@@ -1,6 +1,6 @@
 <div class="container">
     <br>
-    <h2><%=title%></h2><br><br>
+    <h2 style="text-transform: uppercase;"><%=title%></h2><br><br>
     <a href="/screen/manageSections/<%=id%>" type='button' class="btn btn-dark">Back to Sections</a>
     <br><br>
     <!-- manage quiz -->
@@ -13,7 +13,7 @@
         <div class="card-body" style='background:rgb(238, 230, 230);'>
             <form action="/screen/updateSectionNo" method="post">
                 <label for="">Section No</label>
-                <input type="number" class="form-control" name='order' placeholder="update order">
+                <input type="number" class="form-control" name='order' placeholder="update order" required>
                 <input type="hidden" name="sectionId" value="<%=sectionId%>">
                 <input type="hidden" name='id' value="<%=id%>">
                 <input type="hidden" name='title' value="<%=title%>">
@@ -46,24 +46,24 @@
             <label class='text-dark' for="">Upload Thumbnail </label><br>
             <input type="file" name="lectureThumbnail" required>
         </div><br>
-            <p>
+           <!--   <p>
                 <a class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseExample"
                     aria-expanded="false" aria-controls="collapseExample">
                    Add URL instead
                 </a>
             </p>
-            <div class="collapse" id="collapseExample">
+           <div class="collapse" id="collapseExample">
                 <div class="card card-body">
-                   <!-- url --><br>
+                <br>
             <label  class='text-dark'for="">Url</label>
             <input type="text" class="form-control" name="url" value='...' minlength="12" placeholder="Enter url" >
             
                 </div>
-            </div>
+            </div> -->
             <br>
             <div class="form-group">
                 <label  class='text-dark'for="">Upload video  </label><br>
-                <input type="file" name="lectureVideoUrl"  >
+                <input type="file" name="lectureVideoUrl" required >
             </div><br>
             
             <div class="custom-control custom-switch">
@@ -156,7 +156,7 @@
         <input type="hidden" name="sectionId" value="<%=sectionId%>">
 
         <label  class='text-dark'for="">Quiz Description</label>
-        <input type="text" class="form-control" name="quizDesc" value='<%=quiz_desc%>' placeholder="<%=quiz_desc%>..." >
+        <input type="text" class="form-control" name="quizDesc" value='<%=quiz_desc%>' placeholder="<%=quiz_desc%>" >
         <br>
        
         <label for="">Quiz Thumbnail </label><br>
@@ -216,7 +216,7 @@
           
            
             <label for="">Options</label>
-            <input type="text" class="form-control" name="options" placeholder='Enter four options separated by commas, with no spaces'>
+            <input type="text" class="form-control" name="options" placeholder='Enter four options separated by commas, with no spaces' required>
             <br>
 
             <!-- collapse able -->
@@ -268,7 +268,7 @@
             </div>
            
             <label for="">Correct Option</label>
-            <input type="text" class="form-control" name="answer" placeholder='Enter correct option ...'>
+            <input type="text" class="form-control" name="answer" placeholder='Enter correct option ...' required>
             <br>
         </div>
         <button class="btn btn-success" type="submit">Add</button>
@@ -310,8 +310,10 @@
                 <%}else{%>
                     <% console.log('ok url is on!!!!!!!!!!!!!!!!!!!!!!!!!!!!'+ lec.url)%>
                 <a href='<%=lec.url%>' type='button' class='btn btn-primary'>Play lecture</a>
-                <%}%>
-                <p class="card-text"><%=lec.desc%></p> -->
+                <%}%>-->
+                <!-- <p class="card-text"><%=lec.desc%></p>  -->
+                <a href='<%=lec.lectureVideoUrl%>' type='button' class='btn btn-primary'>Play lecture</a>
+
             </div>
                 <div class="card-footer">
           <span class="">

@@ -2537,20 +2537,21 @@ router.post('/AddLec', async (req, res) => {
     }
     if (req.files.lectureVideoUrl === undefined && length > 12) {
         console.log('triggered  url inside!');
-        location = '../';
-        boic = '../';
+        location = '...';
+        boic = '...';
         url = req.body.url;
     }
     else if (req.files.lectureVideoUrl !== undefined && length > 12) {
         console.log('triggered URL  with non undefind value of videourl!');
-        location = '../';
-        boic = '../';
+        location = '...';
+        boic = '...';
         url = req.body.url;
         //    url.length >= 13 then accept this other wise not\
         // length not working ...
     }
     else {
-        console.log('all conditional s failed')
+        console.log('all conditional s failed');
+        res.redirect(`/screen/GetSection/${id}/${sec_id}/${title}`);
     }
     console.log('the length is .....................');
     console.log(length);

@@ -1,13 +1,60 @@
+<nav class="navbar navbar-expand-lg navbar-dark text-dark bg-light bg-invisible" style="margin-top:-20px;">
+    <a class="navbar-brand text-light"  href="/screen/udmyPanel">Linedraw</a>
+    <button class="navbar-toggler " style='background:rgb(196, 187, 187);' type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon " ></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+         <li class="nav-item">
+          <a class="nav-link text-dark" href="/screen/udmyPanel">Home </a>
+        </li>
+       
+        <li class="nav-item ">
+          <a class="nav-link text-dark" href="/screen/uploadQuiz/<%=id%>/<%=sectionId%>/<%=title%>">Manage Quiz</a>
+        </li>
+         <!--
+        <li class="nav-item">
+          <a class="nav-link" href="/screen/editCourse">Edit</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Dropdown
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+        </li> -->
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+     
+        <!-- <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> -->
+        <a class="btn btn-danger float-right"  style="margin-left:10px;" type="button" href="/screen/signout/signout">Signout</a>
+      </form>
+    </div>
+  </nav>
+
 <div class="container">
     <br>
-    <h2 style="text-transform: uppercase;"><%=title%></h2><br><br>
+    <h2 style="text-transform: uppercase;">
+        <%=title%>
+    </h2><br><br>
     <a href="/screen/manageSections/<%=id%>" type='button' class="btn btn-dark">Back to Sections</a>
     <br><br>
     <!-- manage quiz -->
-    <a href="/screen/uploadQuiz/<%=id%>/<%=sectionId%>/<%=title%>" style="margin:5px;display:inline-block;"  type="button" class="btn btn-primary float-left">Manage Quiz</a> <br><br>
-    
+    <!-- <a href="/screen/uploadQuiz/<%=id%>/<%=sectionId%>/<%=title%>" style="margin:5px;display:inline-block;"
+        type="button" class="btn btn-primary float-left">Manage Quiz</a> <br><br> -->
+
     <br>
-    
+
     <!-- updateSectionNo -->
     <div class="card">
         <div class="card-body" style='background:rgb(238, 230, 230);'>
@@ -20,7 +67,7 @@
                 <br>
                 <br>
                 <button type="submit" class="btn btn-success">Update</button>
-                </form>
+            </form>
         </div>
     </div>
 
@@ -29,24 +76,25 @@
         <div class="card-body" style='background:rgb(238, 230, 230);'>
             <h3 class='text-dark' style="display:inline-block;">Add Lecture</h3><br><br>
 
-      
-    <form action="/screen/AddLec" enctype="multipart/form-data" method="post">
-        <!-- three values necessary in order to upload to firebase. -->
-        <input type="hidden" name='id' value="<%=id%>">
-        <input type="hidden" name='title' value="<%=title%>">
-        <input type="hidden" name="sectionId" value="<%=sectionId%>">
-        <br>
-        <br>
-            
-        <div class="form-group">
-            <label  class='text-dark'for="">Title</label>
-            <input type="text" class="form-control" name="leacture" placeholder="Enter lecture name ..."  required>
-           <br>
-           <div class="form-group">
-            <label class='text-dark' for="">Upload Thumbnail </label><br>
-            <input type="file" name="lectureThumbnail" required>
-        </div><br>
-           <!--   <p>
+
+            <form action="/screen/AddLec" enctype="multipart/form-data" method="post">
+                <!-- three values necessary in order to upload to firebase. -->
+                <input type="hidden" name='id' value="<%=id%>">
+                <input type="hidden" name='title' value="<%=title%>">
+                <input type="hidden" name="sectionId" value="<%=sectionId%>">
+                <br>
+                <br>
+
+                <div class="form-group">
+                    <label class='text-dark' for="">Title</label>
+                    <input type="text" class="form-control" name="leacture" placeholder="Enter lecture name ..."
+                        required>
+                    <br>
+                    <div class="form-group">
+                        <label class='text-dark' for="">Upload Thumbnail </label><br>
+                        <input type="file" name="lectureThumbnail" required>
+                    </div><br>
+                    <!--   <p>
                 <a class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseExample"
                     aria-expanded="false" aria-controls="collapseExample">
                    Add URL instead
@@ -60,29 +108,29 @@
             
                 </div>
             </div> -->
-            <br>
-            <div class="form-group">
-                <label  class='text-dark'for="">Upload video  </label><br>
-                <input type="file" name="lectureVideoUrl" required >
-            </div><br>
-            
-            <div class="custom-control custom-switch">
-                <input type="checkbox" name='Demo'class="custom-control-input" id="customSwitch1">
-                <label class="custom-control-label text-dark" for="customSwitch1">Demo Video</label>
-            </div>
-            
-         
-            <br>
-        </div>
-    
-        <button type="submit" class="btn btn-success">Upload</button>
-    </form>
+                    <br>
+                    <div class="form-group">
+                        <label class='text-dark' for="">Upload video </label><br>
+                        <input type="file" name="lectureVideoUrl" required>
+                    </div><br>
+
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" name='Demo' class="custom-control-input" id="customSwitch1">
+                        <label class="custom-control-label text-dark" for="customSwitch1">Demo Video</label>
+                    </div>
+
+
+                    <br>
+                </div>
+
+                <button type="submit" class="btn btn-success">Upload</button>
+            </form>
         </div>
     </div>
     <br><br><br><br><br>
-<!-- test zone(*) -->
+    <!-- test zone(*) -->
 
-<!-- <!DOCTYPE html>
+    <!-- <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -142,197 +190,208 @@
 </body>
 </html>                             -->
 
-<!-- test zone(*) END -->
+    <!-- test zone(*) END -->
     <br><br><br>
-<div class="card">
-    <div class="card-body" style='background:rgb(238, 230, 230);'>
-        
-    <!-- Edit Quiz quizDesc and quizThumnail -->
-    <h2>Edit Quiz</h2><br><br>
-    <form action="/screen/Edit_quiz" method="post"  enctype="multipart/form-data" >
+    <div class="card">
+        <div class="card-body" style='background:rgb(238, 230, 230);'>
 
-        <input type="hidden" name='id' value="<%=id%>">
-        <input type="hidden" name='title' value="<%=title%>">
-        <input type="hidden" name="sectionId" value="<%=sectionId%>">
+            <!-- Edit Quiz quizDesc and quizThumnail -->
+            <h2>Edit Quiz</h2><br><br>
+            <form action="/screen/Edit_quiz" method="post" enctype="multipart/form-data">
 
-        <label  class='text-dark'for="">Quiz Description</label>
-        <input type="text" class="form-control" name="quizDesc" value='<%=quiz_desc%>' placeholder="<%=quiz_desc%>" >
-        <br>
-       
-        <label for="">Quiz Thumbnail </label><br>
-        <input type="file" name="quizThumbnail" >
-        <br><br>
-        <button type="submit" class="btn btn-success">update</button><br><br><br>
-    </form>
-    <!-- ==== -->
+                <input type="hidden" name='id' value="<%=id%>">
+                <input type="hidden" name='title' value="<%=title%>">
+                <input type="hidden" name="sectionId" value="<%=sectionId%>">
 
+                <label class='text-dark' for="">Quiz Description</label>
+                <input type="text" class="form-control" name="quizDesc" value='<%=quiz_desc%>'
+                    placeholder="<%=quiz_desc%>">
+                <br>
+
+                <label for="">Quiz Thumbnail </label><br>
+                <input type="file" name="quizThumbnail">
+                <br><br>
+                <button type="submit" class="btn btn-success">update</button><br><br><br>
+            </form>
+            <!-- ==== -->
+
+        </div>
     </div>
-</div>
 
 
 
 
 
-<br><br><br>
-   <div class="card">
-       <div class="card-body" style='background:rgb(238, 230, 230);'>
+    <br><br><br>
+    <div class="card">
+        <div class="card-body" style='background:rgb(238, 230, 230);'>
             <!-- upload MCQS OR QUIZ -->
 
 
-    <form action="/screen/uploadQuiz" method="post"  enctype="multipart/form-data">
-        <h3>Add Quiz</h3>
+            <form action="/screen/uploadQuiz" method="post" enctype="multipart/form-data">
+                <h3>Add Quiz</h3>
 
-        <br>
-
-        <input type="hidden" name='id' value="<%=id%>">
-        <input type="hidden" name='title' value="<%=title%>">
-        <input type="hidden" name="sectionId" value="<%=sectionId%>">
-        <br>
-
-        <div class="form-group">
-             <!-- example  start-->
-             <p>
-                <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapseExampleA" aria-expanded="false" aria-controls="collapseExampleA">
-                  Example Question
-                </button>
-            </p>
-              <div class="collapse" id="collapseExampleA">
-                <div class="card card-body">
-                    <p class='text-info'>* Who was the first president of the United States of America?</p>
-                    <div class="form-group">
-                        <label  for="">Options</label>
-                        <input type="readonly" class="form-control"value='Abraham-Lincoln,Putin,George-Bush,Nixon' disabled>   
-                        <label  for="">Correct Option</label>
-                        <input type="readonly" class="form-control" placeholder="Abraham-Lincoln" value='Abraham-Lincoln' disabled>
-                    </div>
-                 
-                </div>
-                </div>
                 <br>
-            <!-- example end -->
-            <label  class='text-dark'for="">Question</label>
-            <input type="text" class="form-control" name="question" value='' placeholder="Enter Question ..." required>
-            <br>
-          
-           
-            <label for="">Options</label>
-            <input type="text" class="form-control" name="options" placeholder='Enter four options separated by commas, with no spaces' required>
-            <br>
 
-            <!-- collapse able -->
-            <p>
-                <a class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseExampleC"
-                    aria-expanded="false" aria-controls="collapseExampleC">
-                    Add Image Thumbnail<br>
-                </a>
-            </p>
-            <div class="collapse" id="collapseExampleC">
-                <div class="card card-body">
-                  <!-- question image input -->
-            <br>
-            <div class="form-group">
-                <label class='text-dark' for="">Upload question Thumbnail </label><br>
-                <input type="file" name="questionThumbnail" >
-            </div><br>
-            <!--  -->   
-            
-             <!-- option 1 image input -->
-             <br>
-             <div class="form-group">
-                 <label class='text-dark' for="">Upload option one Thumbnail </label><br>
-                 <input type="file" name="option1" >
-             </div><br>
-             <!--  -->
-             <!-- option 2 image input -->
-             <br>
-             <div class="form-group">
-                 <label class='text-dark' for="">Upload option two Thumbnail </label><br>
-                 <input type="file" name="option2" >
-             </div><br>
-             <!--  -->
-             <!-- option 3 image input -->
-             <br>
-             <div class="form-group">
-                 <label class='text-dark' for="">Upload option three Thumbnails </label><br>
-                 <input type="file" name="option3" >
-             </div><br>
-             <!--  -->
-             <!-- option 4 image input -->
-             <br>
-             <div class="form-group">
-                 <label class='text-dark' for="">Upload option four Thumbnail </label><br>
-                 <input type="file" name="option4" >
-             </div><br>
-             <!--  -->
+                <input type="hidden" name='id' value="<%=id%>">
+                <input type="hidden" name='title' value="<%=title%>">
+                <input type="hidden" name="sectionId" value="<%=sectionId%>">
+                <br>
+
+                <div class="form-group">
+                    <!-- example  start-->
+                    <p>
+                        <button class="btn btn-info" type="button" data-toggle="collapse"
+                            data-target="#collapseExampleA" aria-expanded="false" aria-controls="collapseExampleA">
+                            Example Question
+                        </button>
+                    </p>
+                    <div class="collapse" id="collapseExampleA">
+                        <div class="card card-body">
+                            <p class='text-info'>* Who was the first president of the United States of America?</p>
+                            <div class="form-group">
+                                <label for="">Options</label>
+                                <input type="readonly" class="form-control"
+                                    value='Abraham-Lincoln,Putin,George-Bush,Nixon' disabled>
+                                <label for="">Correct Option</label>
+                                <input type="readonly" class="form-control" placeholder="Abraham-Lincoln"
+                                    value='Abraham-Lincoln' disabled>
+                            </div>
+
+                        </div>
+                    </div>
+                    <br>
+                    <!-- example end -->
+                    <label class='text-dark' for="">Question</label>
+                    <input type="text" class="form-control" name="question" value='' placeholder="Enter Question ..."
+                        required>
+                    <br>
+
+
+                    <label for="">Options</label>
+                    <input type="text" class="form-control" name="options"
+                        placeholder='Enter four options separated by commas, with no spaces' required>
+                    <br>
+
+                    <!-- collapse able -->
+                    <p>
+                        <a class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseExampleC"
+                            aria-expanded="false" aria-controls="collapseExampleC">
+                            Add Image Thumbnail<br>
+                        </a>
+                    </p>
+                    <div class="collapse" id="collapseExampleC">
+                        <div class="card card-body">
+                            <!-- question image input -->
+                            <br>
+                            <div class="form-group">
+                                <label class='text-dark' for="">Upload question Thumbnail </label><br>
+                                <input type="file" name="questionThumbnail">
+                            </div><br>
+                            <!--  -->
+
+                            <!-- option 1 image input -->
+                            <br>
+                            <div class="form-group">
+                                <label class='text-dark' for="">Upload option one Thumbnail </label><br>
+                                <input type="file" name="option1">
+                            </div><br>
+                            <!--  -->
+                            <!-- option 2 image input -->
+                            <br>
+                            <div class="form-group">
+                                <label class='text-dark' for="">Upload option two Thumbnail </label><br>
+                                <input type="file" name="option2">
+                            </div><br>
+                            <!--  -->
+                            <!-- option 3 image input -->
+                            <br>
+                            <div class="form-group">
+                                <label class='text-dark' for="">Upload option three Thumbnails </label><br>
+                                <input type="file" name="option3">
+                            </div><br>
+                            <!--  -->
+                            <!-- option 4 image input -->
+                            <br>
+                            <div class="form-group">
+                                <label class='text-dark' for="">Upload option four Thumbnail </label><br>
+                                <input type="file" name="option4">
+                            </div><br>
+                            <!--  -->
+                        </div>
+                    </div>
+
+                    <label for="">Correct Option</label>
+                    <input type="text" class="form-control" name="answer" placeholder='Enter correct option ...'
+                        required>
+                    <br>
                 </div>
-            </div>
-           
-            <label for="">Correct Option</label>
-            <input type="text" class="form-control" name="answer" placeholder='Enter correct option ...' required>
-            <br>
+                <button class="btn btn-success" type="submit">Add</button>
+            </form><br>
+
+
         </div>
-        <button class="btn btn-success" type="submit">Add</button>
-     </form><br>
-
-
-       </div>
-   </div>
+    </div>
 
     <!-- <a href="/screen/deleteFeature/<%=id%>" type='button' class="btn btn-danger">Delete</a> -->
-    
+
 
     <br>
     <br><br>
-<div class="card w-80" style='background:rgb(238, 230, 230);' >
-    <ul class="list-group list-group-flush">
-        
-        <% sections.forEach((leacture)=>{%>
-        <li class="list-group-item">
-            <%=leacture.data().title%>
+    <div class="card w-80" style='background:rgb(238, 230, 230);'>
+        <ul class="list-group list-group-flush">
 
-          
-        </li>
-     <%})%>
-    </ul>
+            <% sections.forEach((leacture)=>{%>
+                <li class="list-group-item">
+                    <%=leacture.data().title%>
+
+
+                </li>
+                <%})%>
+        </ul>
         <div class="row row-cols-1 row-cols-md-3">
-        <% te.forEach((lec)=>{%>
-            <%console.log(' un def=====================')%>
+            <% te.forEach((lec)=>{%>
+                <%console.log(' un def=====================')%>
             <%console.log(lec)%>
             <%console.log('=====================')%>
         <div class="col mb-4">
             <div class="card h-100">
-            <img src='<%=lec.lectureThumbnail%>'  height="250px" class="card-img-top" alt="image">
-            <div class="card-body">
-                <h5 class="card-title"><%=lec.title%></h5>
-             
-                <!-- <% if(lec.url.length <= 12){%>
+            <img src=' <%=lec.lectureThumbnail%>' height="250px" class="card-img-top" alt="image">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <%=lec.title%>
+                        </h5>
+
+                        <!-- <% if(lec.url.length <= 12){%>
                 <a href='<%=lec.lectureVideoUrl%>' type='button' class='btn btn-primary'>Play lecture</a>
                 <%}else{%>
                     <% console.log('ok url is on!!!!!!!!!!!!!!!!!!!!!!!!!!!!'+ lec.url)%>
                 <a href='<%=lec.url%>' type='button' class='btn btn-primary'>Play lecture</a>
                 <%}%>-->
-                <!-- <p class="card-text"><%=lec.desc%></p>  -->
-                <a href='<%=lec.lectureVideoUrl%>' type='button' class='btn btn-primary'>Play lecture</a>
+                        <!-- <p class="card-text"><%=lec.desc%></p>  -->
+                        <a href='<%=lec.lectureVideoUrl%>' type='button' class='btn btn-primary'>Play lecture</a>
 
-            </div>
-                <div class="card-footer">
-          <span class="">
-                
-              
+                    </div>
+                    <div class="card-footer">
+                        <span class="">
 
-                <a href="/screen/Delete_Lecture/<%=id%>/<%=sectionId%>/<%=lec.id%>/<%=title%>" style="margin:5px"  type="button" class="btn btn-danger float-right">Delete</a>
-                
-                <a href="/screen/Edit_Lecture/<%=id%>/<%=sectionId%>/<%=lec.id%>/<%=lec.title%>/<%=title%>" style="margin:5px" type="button" class="btn btn-success float-right">Edit</a>
-            </span>
+
+
+                            <a href="/screen/Delete_Lecture/<%=id%>/<%=sectionId%>/<%=lec.id%>/<%=title%>"
+                                style="margin:5px" type="button" class="btn btn-danger float-right">Delete</a>
+
+                            <a href="/screen/Edit_Lecture/<%=id%>/<%=sectionId%>/<%=lec.id%>/<%=lec.title%>/<%=title%>"
+                                style="margin:5px" type="button" class="btn btn-success float-right">Edit</a>
+                        </span>
+                    </div>
         </div>
-            </div>
-        </div>
-        <%})%>
-        </div>
-    <!-- <div class="card-footer">
+    </div>
+    <%})%>
+</div>
+<!-- <div class="card-footer">
       Card footer
     </div> -->
-  </div>
+</div>
 
 
 

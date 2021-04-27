@@ -1,18 +1,77 @@
+<nav class="navbar navbar-expand-lg navbar-dark text-dark bg-light bg-invisible" style="margin-top:-20px;">
+    <a class="navbar-brand text-dark" href="/screen/udmyPanel">Linedraw</a>
+    <button class="navbar-toggler " style='background:rgb(196, 187, 187);' type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon " ></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+         <li class="nav-item active">
+          <a class="nav-link text-muted" href="/screen/udmyPanel">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-muted" href="/screen/viewCourse/<%=id%>">View Course</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-muted" href="/screen/manageSections/<%=id%>">Manage Sections</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-muted" href="/screen/DemoVideos/<%=id%>">Demo videos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-muted" href="/screen/manageFeatures/<%=id%>">Manage features</a>
+        </li>
+        <!--
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Dropdown
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+        </li> -->
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+     
+        <!-- <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> -->
+        <a class="btn btn-danger float-right"  style="margin-left:10px;" type="button" href="/screen/signout/signout">Signout</a>
+      </form>
+    </div>
+  </nav>
+<br>
+
+
+
 <div class="container">
+
     <form action="/screen/Edit_Course" enctype="multipart/form-data" method="post">
         <h3 style="display:inline-block" class='text-dark'>Edit Course</h3>
-        <span class="float-right">
+        <br>
+        <br>
+        <a href="/screen/GetCourses" type="button" class="btn btn-dark">Back to all courses</a> 
+        <!-- <span class="float-right">
 
             <a href="/screen/manageFeatures/<%=id%>" style="display:inline-block;margin-left:20px;" type='button'
                 class='btn btn-primary float-right'>
                 Manage Features</a>
             <a href="/screen/DemoVideos/<%=id%>" style="display:inline-block;margin-left:20px;" type='button'
                 class='btn btn-primary float-right '>
-                Manage Demo Videos</a>
-            <a href="/screen/manageSections/<%=id%>" style="display:inline-block;" type='button'
+                Demo Videos</a>
+            <a href="/screen/manageSections/<%=id%>" style="display:inline-block;margin-left:20px;" type='button'
                 class='btn btn-primary float-right '>
                 Manage Sections</a>
-        </span>
+            <a href="/screen/viewCourse/<%=id%>" style="display:inline-block;" type='button'
+                class='btn btn-primary float-right '>
+                View Course</a>
+        </span> -->
         <br>
         <br>
         <div class="form-group">
@@ -79,7 +138,7 @@
             </div>
         </div>
 
-        <br>
+        
         <!-- <div class="custom-control custom-switch">
                 <input type="checkbox" name='Duration'class="custom-control-input" id="customSwitch1">
                 <label class="custom-control-label" for="customSwitch1">Duration</label>
@@ -88,12 +147,12 @@
         <p>
             <a class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample"
                 aria-expanded="false" aria-controls="collapseExample">
-                Date & Time
+                Expiry Date
             </a>
         </p>
         <div class="collapse" id="collapseExample">
             <div class="card card-body">
-                <p class='text-info'>* Write expiresIn date in Days or months</p>
+                <p class='text-info'>* Write expiry date in Days or months</p>
                 <div class="form-group">
                     <label for="">Days</label>
                     <input type="number" class="form-control" name="Days" value='<%=data.Days%>'
@@ -109,9 +168,14 @@
         </div>
 
         <!-- zone 2 end -->
-
-
-
+<p>
+    <a class="btn btn-warning" type="button" data-toggle="collapse" data-target="#upload"
+        aria-expanded="false" aria-controls="upload">
+        upload
+    </a>
+</p>
+<div class="collapse" id="upload">
+    <div class="card card-body">
         <div class="form-group">
             <label class='text-dark' for="">Upload Banner Image </label><br>
             <input type="file" name="bannerImage" accept="image/gif, image/jpeg, image/png">
@@ -124,6 +188,15 @@
             <label class='text-dark' for="">Upload Video</label><br>
             <input type="file" name="video" accept="image/gif, image/jpeg, image/png">
         </div>
+
+    </div>
+</div>
+
+
+       
+
+
+
         <!-- <br>    <div class="custom-control custom-switch">
           
             <input type="checkbox" name="courseStatus" class="custom-control-input" id="customSwitch1"/>
@@ -158,7 +231,7 @@
         <button type="submit" class="btn btn-success">update</button>
     </form>
     <br>
-    <a href="/screen/GetCourses" type="button" class="btn btn-danger">cancel</a>
+   
 </div>
 <!-- add sections and then work on leactures -->
 

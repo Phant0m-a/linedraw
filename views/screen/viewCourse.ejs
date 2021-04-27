@@ -1,0 +1,100 @@
+<div class="jumbotron" style="margin-top:-30px">
+    <h2 style="text-transform: uppercase">
+        <%=data.data().title%>
+    </h2>
+    <br>
+    <a href="/screen/Edit_Course/<%=data.id%>" class='btn btn-dark'>Back</a>
+    <br><br>
+
+    <!-- <img src="<%=data.data().bannerUrl%>" width='250px' height='250px' class="rounded" alt="Cinque Terre"> -->
+    <br><br>
+    <div class="card mb-3">
+        <img class="card-img-top" width='250px' height='450px' src="<%=data.data().bannerUrl%>"
+            alt='Banner Image not found!'>
+        <div class="card-body">
+            <h5 class="card-title">Banner Image</h5>
+            <p class="card-text">This is a wider display of the card being used.</p>
+            <!-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> -->
+        </div>
+    </div>
+    <br><br>
+    <!-- <img src="<%=data.data().introVideoThumbnail%>" alt="intro video thumbnail"
+  class="img-thumbnail"/> -->
+    <br><br>
+    <div class="row">
+        <!-- <div class="col-sm-6">
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" width='250px' height='250px' src="<%=data.data().bannerUrl%>" alt="BannerImage">
+                <div class="card-body">
+                    <h4 class="card-text text-center text-muted">Banner Image</h4>
+                    <br><p style='color:white'>...</p>
+                   
+                </div>
+            </div>
+            <br>
+            
+        </div> -->
+        <div class="col-sm-12 col-mb-3 col-md-6">
+
+            <div class="card w-80">
+                <img class="card-img-top" width='250px' height='250px' src="<%=data.data().introVideoThumbnail%>"
+                    alt="intro video thumbnail">
+                <div class="card-body">
+                    <h4 class="card-text text-center text-muted">intro Video Thumbnail</h4>
+                    <%if(data.data().introVideoUrl.length>= 10){%>
+                        <br>
+                        <a href="<%=data.data().introVideoUrl%>" type="button" class="btn btn-success">Play video</a>
+                        <%}else{%>
+                            <a type="button" class="btn btn-danger">No Video</a>
+                            <%}%>
+                </div>
+            </div>
+            <br>
+        </div>
+        <div class="col-sm-12 col-md-6 ">
+
+            <div class="card w-80" style="margin-left:10px;">
+
+                <div class="card-body">
+                    <h4 class="card-text text-center text-muted">Course Details</h4>
+
+                    <ul style='padding:10px;list-style-type: none;'>
+                        <li style='color:black;font-size:18px;'>Title:<br><span
+                                style='color:dark-grey;font-weight:bold'>
+                                <%=data.data().title%>
+                            </span> </li><br>
+                        <li style='color:black;font-size:18px;'>Description:<br><span
+                                style='color:dark-grey;font-weight:bold'>
+                                <%=data.data().description%>
+                            </span> </li><br>
+                        <li style='color:black;font-size:18px;'>Tag:<br><span style='color:dark-grey;font-weight:bold'>
+                                <%=data.data().tag%>
+                            </span> </li><br>
+                        <li>Category:<br><span style='color:dark-grey;font-weight:bold'>
+                                <%=data.data().category%>
+                            </span> </li><br>
+                        <li style='color:black;font-size:18px;'>Course Status:<br><span
+                                style='color:dark-grey;font-weight:bold'>
+                                <%=data.data().courseEnabled%>
+                            </span> </li><br>
+                        <li style='color:black;font-size:18px;'>Total Lectures:<br><span
+                                style='color:dark-grey;font-weight:bold'>
+                                <%=data.data().totalLectures%>
+                            </span> </li><br>
+                        <li style='color:black;font-size:18px;'>Total Price:<br><span
+                                style='color:dark-grey;font-weight:bold'>
+                                <%=data.data().price%>
+                            </span> </li><br>
+
+                    </ul>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+    <br><br>
+
+    <!-- new -->
+
+
+</div>

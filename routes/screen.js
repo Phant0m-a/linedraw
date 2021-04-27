@@ -296,13 +296,17 @@ router.post('/signin', async (req, res) => {
 // udmyPanel
 router.get('/udmyPanel', async (req, res) => {
     // 
-    dbs.collection('catagories').get().then((snapshot) => {
+    dbs.collection('catagories').get().then(async(snapshot) => {
         let courses = snapshot;
-        // courses.docs.forEach((test)=>{
-        //     console.log(test);
-        // })
-        //        
-        res.render('screen/udmyPanel', { courses: courses });
+        let count=0;    
+        //total sales
+        let sales=await dbs.collection('enrolledCourses').get();
+        sales.docs.forEach((i)=>{
+            count=count+1;
+        })
+        res.render('screen/udmyPanel', { courses: courses, count:count });
+
+       
 
     }).catch((err) => {
         console.log('udemyPanel error Get: ' + err)
@@ -724,8 +728,8 @@ router.post('/Edit_Course', async (req, res) => {
     let oldPrice = oldPPrice.toString();
     var days = req.body.Days;
     var months = req.body.Months;
-    var te= 'unseffornow';
-   console.log(te)
+    var te = 'unseffornow';
+    console.log(te)
     var expiresIn = te;
     // console.log(id+' :: '+title+' :: '+category+' :: '+price+' :: '+rating+' :: '+description+' :: '+tag);
     // let bannerUrl=req.body.bannerUrl;
@@ -739,7 +743,7 @@ router.post('/Edit_Course', async (req, res) => {
     let toDelete = await refer.get();
     if (!toDelete) { console.log('no doc'); }
     else {
-        
+
         // console.log('got this data from delete===<><><>');
         // console.log(toDelete.data());
         //     const deleteStatus = await deleteImages({ downloadUrl:req.body.url });
@@ -757,19 +761,19 @@ router.post('/Edit_Course', async (req, res) => {
                 let loc = UUID();
                 console.log(loc);
                 file.mv('tmp/' + filename, async (err) => {
-                    let a =  upload('tmp/' + filename, loc);
+                    let a = upload('tmp/' + filename, loc);
                     boi = "https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(loc) + "?alt=media&token=" + loc;
                     console.log(boi);
 
                     //Delete old url
                     console.log('[+]To Delete banner url');
                     console.log(toDelete.data().bannerUrl.length);
-                    if(toDelete.data().bannerUrl.length >= 10 ){
+                    if (toDelete.data().bannerUrl.length >= 10) {
                         console.log('[in delete]');
                         const deleteStatus = await deleteImages({ downloadUrl: toDelete.data().bannerUrl });
                         console.log(deleteStatus)  //=> "success"
                     }
-                  
+
 
 
                     //update banner url  
@@ -782,11 +786,11 @@ router.post('/Edit_Course', async (req, res) => {
                     return;
                 })
 
-               
+
             }
-           
+
         }
-       
+
     }
 
     if (req.files) {
@@ -804,11 +808,11 @@ router.post('/Edit_Course', async (req, res) => {
                         boib = "https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(loc) + "?alt=media&token=" + loc;
                         console.log(boib);
 
-                       if(toDelete.data().videoThumbnail >=10 ){
+                        if (toDelete.data().videoThumbnail >= 10) {
                             //Delete introVideoThumbnail
-                        const deleteStatus = await deleteImages({ downloadUrl: toDelete.data().introVideoThumbnail });
-                        console.log(deleteStatus)  //=> "success"
-                       }
+                            const deleteStatus = await deleteImages({ downloadUrl: toDelete.data().introVideoThumbnail });
+                            console.log(deleteStatus)  //=> "success"
+                        }
 
                         // update introVideoThumbnail
                         setTimeout(function () {
@@ -822,10 +826,10 @@ router.post('/Edit_Course', async (req, res) => {
                     })
                 }, 10)
             }
-            
+
         }
 
-      
+
     }
 
     //   if(req.files.video !== 'null' && req.files.video !== 'undefined'){
@@ -845,16 +849,16 @@ router.post('/Edit_Course', async (req, res) => {
                     console.log(loc);
                     filec.mv('tmp/' + filenamec, async (err) => {
                         // start from here man!
-                        let life =  uploadf('tmp/' + filenamec, loc);
+                        let life = uploadf('tmp/' + filenamec, loc);
                         boic = "https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(loc) + "?alt=media&token=" + loc;
                         console.log(boic);
 
                         //Delete introVideoThumbnail
-                        if(toDelete.data().introVideoUrl >= 10){
+                        if (toDelete.data().introVideoUrl >= 10) {
                             const deleteStatus = await deleteImages({ downloadUrl: toDelete.data().introVideoUrl });
                             console.log(deleteStatus)  //=> "success"
                         }
-                       
+
 
 
                         // update videoVideoUrl and videothumbnailKey
@@ -869,9 +873,9 @@ router.post('/Edit_Course', async (req, res) => {
                     })
                 }, 10)
             }
-           
+
         }
-        
+
     }
     if (courseStatus === 'off') {
         courseEnabled = false;
@@ -1256,40 +1260,40 @@ router.post('/Edit_Lecture', async (req, res) => {
     let location;
     let the_data;
 
-// TESTZONE(+)
-// this gets data about edit lecture and delete its old content to replace with new
-let finder =  dbs.collection('courses/' + id + '/sections').doc(sec_id);
-let all2 = await finder.get();
-let save2;
-let the_data2;
+    // TESTZONE(+)
+    // this gets data about edit lecture and delete its old content to replace with new
+    let finder = dbs.collection('courses/' + id + '/sections').doc(sec_id);
+    let all2 = await finder.get();
+    let save2;
+    let the_data2;
 
-if(!all2){ console.log('no doc found'); }
-else{
-    
-console.log('All 2 has got this data ################################################################');
-console.log(all2.data());
+    if (!all2) { console.log('no doc found'); }
+    else {
 
-  save2 = all2.data().lectures;
-  // console.log(save);
+        console.log('All 2 has got this data ################################################################');
+        console.log(all2.data());
 
-  the_data2 = save2.filter(item => item.id == lec_id)
+        save2 = all2.data().lectures;
+        // console.log(save);
 
-  console.log('This is filtered data **************************************************************');
-  console.log(the_data2);
+        the_data2 = save2.filter(item => item.id == lec_id)
 
-  
-  // console.log();
-//   console.log(url + ' ///////// ' + vidurl);
-
-}
+        console.log('This is filtered data **************************************************************');
+        console.log(the_data2);
 
 
-// end test zone
+        // console.log();
+        //   console.log(url + ' ///////// ' + vidurl);
+
+    }
+
+
+    // end test zone
 
 
     // picture
     if (req.files) {
-        if (req.files.lectureThumbnail !== undefined )if(req.files.lectureThumbnail.mimetype === 'image/png' || req.files.lectureThumbnail.mimetype === 'image/jpeg'|| req.files.lectureThumbnail.mimetype === 'image/jpg') {
+        if (req.files.lectureThumbnail !== undefined) if (req.files.lectureThumbnail.mimetype === 'image/png' || req.files.lectureThumbnail.mimetype === 'image/jpeg' || req.files.lectureThumbnail.mimetype === 'image/jpg') {
 
             setTimeout(function pic() {
                 fileb = req.files.lectureThumbnail;
@@ -1298,7 +1302,7 @@ console.log(all2.data());
                 loac = UUID();
                 console.log(loac);
                 fileb.mv('tmp/' + filenameb, async (err) => {
-                   let oc = upload('tmp/' + filenameb, loac);
+                    let oc = upload('tmp/' + filenameb, loac);
                     console.log('lecture Thumbnail updated here is the new value: ===>');
                     boib = "https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(loac) + "?alt=media&token=" + loac;
                     console.log(boib);
@@ -1335,11 +1339,11 @@ console.log(all2.data());
     if (req.files) {
         // if (req.files.lectureVideoUrl !== undefined && !req.body.url) {
         if (req.files.lectureVideoUrl !== undefined) {
-            if (req.files.lectureVideoUrl !== undefined){
-                if (req.files.lectureVideoUrl.mimetype == 'video/webm' || req.files.lectureVideoUrl.mimetype == 'video/webm' || req.files.lectureVideoUrl.mimetype == 'video/x-matroska'){
+            if (req.files.lectureVideoUrl !== undefined) {
+                if (req.files.lectureVideoUrl.mimetype == 'video/webm' || req.files.lectureVideoUrl.mimetype == 'video/webm' || req.files.lectureVideoUrl.mimetype == 'video/x-matroska') {
 
                     setTimeout(function b() {
-    
+
                         filec = req.files.lectureVideoUrl;
                         filenamec = req.files.lectureVideoUrl.name;
                         console.log(filec)
@@ -1351,30 +1355,30 @@ console.log(all2.data());
                             console.log('video thumbnail is updated here is the link:================>');
                             boic = "https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(location) + "?alt=media&token=" + location;
                             console.log(boic);
-    
+
                             // delete videourl
                             let vidurl = the_data2.map((item) => {
                                 return item.lectureVideoUrl;
                             })
-                          
-                            
+
+
                             let deletevid;
-                            
+
                             if (vidurl != '...') {
                                 deletevid = await deleteImages({ downloadUrl: vidurl });
                                 console.log(deletevid)  //=> "success"
                             }
-    
-                            
+
+
                             // dbs.collection('courses/'+id+'/sections/').doc(sec_id).update({
                             //     lectures: firebase.firestore.FieldValue.arrayUnion(...[{
                             //         id:id,
                             //         title:title,
                             //         lectureVideoKey:location,
                             //         lectureVideoUrl:boic            
-    
+
                             //       }]) 
-    
+
                             // })
                             return;
                         })
@@ -1383,7 +1387,7 @@ console.log(all2.data());
             }
         }
     }
-// update feature
+    // update feature
     // if (!req.files) {
     //     if (req.body.url) {
     //         url = req.body.url;
@@ -1395,9 +1399,9 @@ console.log(all2.data());
     //          let vidurl = the_data2.map((item) => {
     //             return item.lectureVideoUrl;
     //         })
-          
+
     //         let deletevid;
-            
+
     //         if (vidurl != '...') {
     //             deletevid = await deleteImages({ downloadUrl: vidurl });
     //             console.log(deletevid)  //=> "success"
@@ -1429,12 +1433,12 @@ console.log(all2.data());
         if (!fun) {
             console.log('no doc');
         } else {
-            
+
             console.log(fun.data().title);
             save = fun.data().lectures;
             console.log('results : ===>');
 
-           
+
             setTimeout(function h() {
                 the_data = save.map(item => {
                     if (item.id == lec_id) {
@@ -1445,7 +1449,7 @@ console.log(all2.data());
                             vidKey: location || item.vidKey,
                             lectureThumbnail: boib || item.lectureThumbnail,
                             lectureVideoUrl: boic || item.lectureVideoUrl,
-                            url:'...' || item.url
+                            url: '...' || item.url
                             // url: req.body.url || item.url
                         }
                     } else {
@@ -1615,7 +1619,7 @@ router.get('/Delete_Lecture/:id/:sec_id/:title/:uid', async (req, res) => {
 router.get('/DemoVideos/:id', async (req, res) => {
     let id = req.params.id;
     // console.log(id);
-    
+
     let Demo;
     // await dbs.collection('courses').get(id).then((snap) => {
     //     Demo = snap;
@@ -1629,10 +1633,10 @@ router.get('/DemoVideos/:id', async (req, res) => {
     //     res.render('screen/DemoVideos', { te: Demo, id: id });
 
     // });
-    let myref=  dbs.collection('courses').doc(id);
-    let data= await myref.get();
+    let myref = dbs.collection('courses').doc(id);
+    let data = await myref.get();
     console.log(data.data().demoVideos);
-    Demo= data.data().demoVideos;
+    Demo = data.data().demoVideos;
     res.render('screen/DemoVideos', { te: Demo, id: id });
 
 })
@@ -1672,13 +1676,13 @@ router.get('/Delete_DemoVideos/:id/:lec_id', async (req, res) => {
                 console.log(url + ' ///////// ' + vidurl);
                 //delete  IMAGE
                 //call the deleteImages inside async function
-               if(url !== undefined){
-                const deleteStatus = await deleteImages({ downloadUrl: url });
-                console.log(deleteStatus)  //=> "success"
-               }
-                if(vidurl !== undefined){
+                if (url !== undefined) {
+                    const deleteStatus = await deleteImages({ downloadUrl: url });
+                    console.log(deleteStatus)  //=> "success"
+                }
+                if (vidurl !== undefined) {
                     const deletevid = await deleteImages({ downloadUrl: vidurl });
-                console.log(deletevid)  //=> "success"
+                    console.log(deletevid)  //=> "success"
                 }
 
                 //   
@@ -1739,11 +1743,11 @@ router.post('/uploadQuiz', async (req, res) => {
     let answer = req.body.answer;
 
     // quiz images (will be used in /tmp+ quiz_image)
-    
-    
-    
-   
-   
+
+
+
+
+
 
 
     // quiz images url
@@ -1765,134 +1769,130 @@ router.post('/uploadQuiz', async (req, res) => {
     console.log(req.files)
 
     //upload images 
-    if(req.files){
+    if (req.files) {
         console.log('[+] in if conditional');
-        if(req.files.questionThumbnail !== undefined){
-            if(req.files.questionThumbnail.mimetype === 'image/png' || req.files.questionThumbnail.mimetype === 'image/jpeg' || req.files.questionThumbnail.mimetype === 'image/PNG' || req.files.questionThumbnail.mimetype ==='image/jpg'){
+        if (req.files.questionThumbnail !== undefined) {
+            if (req.files.questionThumbnail.mimetype === 'image/png' || req.files.questionThumbnail.mimetype === 'image/jpeg' || req.files.questionThumbnail.mimetype === 'image/PNG' || req.files.questionThumbnail.mimetype === 'image/jpg') {
                 console.log('[+0~] in if question');
-                let Tq=req.files.questionThumbnail;
-                Tq.mv('tmp/' + req.files.questionThumbnail.name,  (err) => {
-                     qid= UUID();
-                    t =  upload('tmp/' + req.files.questionThumbnail.name, qid);
+                let Tq = req.files.questionThumbnail;
+                Tq.mv('tmp/' + req.files.questionThumbnail.name, (err) => {
+                    qid = UUID();
+                    t = upload('tmp/' + req.files.questionThumbnail.name, qid);
                     console.log('question updated here is the new value: ===>');
                     qThumbnail = "https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(qid) + "?alt=media&token=" + qid;
                     console.log(qThumbnail);
-                  return;  
+                    return;
                 });
-            }else{
-                qThumbnail= '...';
+            } else {
+                qThumbnail = '...';
                 console.log('qThunmbnail else man  inside.......>');
                 return;
             }
         }
-        else{
-            qThumbnail= '...';
+        else {
+            qThumbnail = '...';
             console.log('qThumbnail else man .......>');
-         
+
         }
 
-        if(req.files.option1 !== undefined){
-        if(req.files.option1.mimetype === 'image/png' || req.files.option1.mimetype === 'image/jpeg' || req.files.option1.mimetype ==='image/jpg')
-        {
-            console.log('[+1~] in if option1');
-            let To1=req.files.option1;
-             To1.mv('tmp/' + req.files.option1.name,  (err) => {
-             o1id= UUID();
-                t =  upload('tmp/' + req.files.option1.name, o1id);
-                console.log('option1 updated here is the new value: ===>');
-                o1 = "https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(o1id) + "?alt=media&token=" + o1id;
-                console.log(o1);
-              return;  
-             });
-        }else{
-            o1= '...';
-            console.log('o1 else man  inside.......>');
-            return;
+        if (req.files.option1 !== undefined) {
+            if (req.files.option1.mimetype === 'image/png' || req.files.option1.mimetype === 'image/jpeg' || req.files.option1.mimetype === 'image/jpg') {
+                console.log('[+1~] in if option1');
+                let To1 = req.files.option1;
+                To1.mv('tmp/' + req.files.option1.name, (err) => {
+                    o1id = UUID();
+                    t = upload('tmp/' + req.files.option1.name, o1id);
+                    console.log('option1 updated here is the new value: ===>');
+                    o1 = "https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(o1id) + "?alt=media&token=" + o1id;
+                    console.log(o1);
+                    return;
+                });
+            } else {
+                o1 = '...';
+                console.log('o1 else man  inside.......>');
+                return;
+            }
+        } else {
+            o1 = '...';
+            console.log('o1 else man .......>');
+
         }
-    }else{
-        o1= '...';
-        console.log('o1 else man .......>');
-        
-    }
 
         console.log('*************************coming here##########');
 
-        if(req.files.option2 !== undefined){
-        if(req.files.option2.mimetype === 'image/png' || req.files.option2.mimetype === 'image/jpeg' || req.files.option2.mimetype ==='image/jpg')
-        {
-            console.log('[+2~] in if option2');
-            let To2=req.files.option2;
-             To2.mv('tmp/' + req.files.option2.name, (err) => {
-             o2id= UUID();
-            t =  upload('tmp/' + req.files.option2.name, o2id);
-            console.log('option2 updated here is the new value: ===>');
-            o2 = "https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(o2id) + "?alt=media&token=" + o2id;
-            console.log(o2);
-            return;
-             });
-        }else{
-            o2= '...';
-            console.log('o2 else man  inside.......>');
-            return;
-        }
-        }else{
-            o2= '...';
+        if (req.files.option2 !== undefined) {
+            if (req.files.option2.mimetype === 'image/png' || req.files.option2.mimetype === 'image/jpeg' || req.files.option2.mimetype === 'image/jpg') {
+                console.log('[+2~] in if option2');
+                let To2 = req.files.option2;
+                To2.mv('tmp/' + req.files.option2.name, (err) => {
+                    o2id = UUID();
+                    t = upload('tmp/' + req.files.option2.name, o2id);
+                    console.log('option2 updated here is the new value: ===>');
+                    o2 = "https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(o2id) + "?alt=media&token=" + o2id;
+                    console.log(o2);
+                    return;
+                });
+            } else {
+                o2 = '...';
+                console.log('o2 else man  inside.......>');
+                return;
+            }
+        } else {
+            o2 = '...';
             console.log('o2 else man .......>');
-            
+
         }
-        if(req.files.option3 !== undefined){
-        if(req.files.option3.mimetype === 'image/png' || req.files.option3.mimetype === 'image/jpeg' || req.files.option3.mimetype ==='image/jpg')
-        {
-            console.log('[+3~] in if option3');
-            let To3=req.files.option3;
-             To3.mv('tmp/' + req.files.option3.name,  (err) => {
-             o3id= UUID();
-            t =  upload('tmp/' + req.files.option3.name, o3id);
-            console.log('option3 updated here is the new value: ===>');
-            o3 = "https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(o3id) + "?alt=media&token=" + o3id;
-            console.log(o3);
-            return;
-             });
-        }else{
-            o3= '...';
-            console.log('o3 else man  inside.......>');
-           return;
-        }
-        }else{
-            o3= '...';
+        if (req.files.option3 !== undefined) {
+            if (req.files.option3.mimetype === 'image/png' || req.files.option3.mimetype === 'image/jpeg' || req.files.option3.mimetype === 'image/jpg') {
+                console.log('[+3~] in if option3');
+                let To3 = req.files.option3;
+                To3.mv('tmp/' + req.files.option3.name, (err) => {
+                    o3id = UUID();
+                    t = upload('tmp/' + req.files.option3.name, o3id);
+                    console.log('option3 updated here is the new value: ===>');
+                    o3 = "https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(o3id) + "?alt=media&token=" + o3id;
+                    console.log(o3);
+                    return;
+                });
+            } else {
+                o3 = '...';
+                console.log('o3 else man  inside.......>');
+                return;
+            }
+        } else {
+            o3 = '...';
             console.log('o3 else man .......>');
-            
+
         }
-        if(req.files.option4 !== undefined){
-        if(req.files.option4.mimetype === 'image/png' || req.files.option4.mimetype === 'image/jpeg' || req.files.option4.mimetype ==='image/jpg')
-        {
-            console.log('[+4~] in if option4');
-            let To4=req.files.option4;
-             To4.mv('tmp/' + req.files.option4.name, (err) => {
-             o4id= UUID();
-            t = upload('tmp/' + req.files.option4.name, o4id);
-            console.log('option4 updated here is the new value: ===>');
-            o4 = "https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(o4id) + "?alt=media&token=" + o4id;
-            console.log(o4);
-            return;
-             });
-        }else{
-            o4= '...';
-            console.log('o4 else man  inside.......>');
-            return;
+        if (req.files.option4 !== undefined) {
+            if (req.files.option4.mimetype === 'image/png' || req.files.option4.mimetype === 'image/jpeg' || req.files.option4.mimetype === 'image/jpg') {
+                console.log('[+4~] in if option4');
+                let To4 = req.files.option4;
+                To4.mv('tmp/' + req.files.option4.name, (err) => {
+                    o4id = UUID();
+                    t = upload('tmp/' + req.files.option4.name, o4id);
+                    console.log('option4 updated here is the new value: ===>');
+                    o4 = "https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(o4id) + "?alt=media&token=" + o4id;
+                    console.log(o4);
+                    return;
+                });
+            } else {
+                o4 = '...';
+                console.log('o4 else man  inside.......>');
+                return;
+            }
+        } else {
+            o4 = '...';
+            console.log('o4 else man .......>');
+
         }
-    }else{
-        o4= '...';
-        console.log('o4 else man .......>');
-        
     }
-    }
-    else{
-        qThumbnail='...';
-        o1='...';
-        o2='...';
-        o3='...';
-        o4='...';
+    else {
+        qThumbnail = '...';
+        o1 = '...';
+        o2 = '...';
+        o3 = '...';
+        o4 = '...';
     }
     // qThumbnail='...';
     // o1='...';
@@ -1905,21 +1905,21 @@ router.post('/uploadQuiz', async (req, res) => {
     let ref = dbs.collection('courses/' + id + '/sections/').doc(sectionId);
 
     // update content
-   setTimeout(() => {
-    ref.update({
-        quiz: firebase.firestore.FieldValue.arrayUnion(...[{
-            id: uuid,
-            question: question,
-            options: options,
-            answer: answer,
-            qThumbnail:qThumbnail,
-            o1:o1,
-            o2:o2,
-            o3:o3,
-            o4:o4,
-        }])
-    })
-   }, 1000);
+    setTimeout(() => {
+        ref.update({
+            quiz: firebase.firestore.FieldValue.arrayUnion(...[{
+                id: uuid,
+                question: question,
+                options: options,
+                answer: answer,
+                qThumbnail: qThumbnail,
+                o1: o1,
+                o2: o2,
+                o3: o3,
+                o4: o4,
+            }])
+        })
+    }, 1000);
 
     n.then((snap) => {
         if (!snap) {
@@ -2022,60 +2022,60 @@ router.get('/deleteQuiz/:id/:doc_id/:sectionId/:title', async (req, res) => {
                 console.log(the_data);
 
 
-                
+
                 // test zone(+)/////////////
                 // delete images trap
                 // qThumbnail
-                let qThumbnail= the_data.map((item) => {
+                let qThumbnail = the_data.map((item) => {
                     return item.qThumbnail;
                 })
-                if(qThumbnail != '...'){
+                if (qThumbnail != '...') {
                     const deleteStatus = await deleteImages({ downloadUrl: qThumbnail });
                     console.log(deleteStatus)  //=> "success"
-    
+
                 }
 
                 // o1
-                let o1= the_data.map((item) => {
+                let o1 = the_data.map((item) => {
                     return item.o1;
                 })
-                if(o1 != '...'){
+                if (o1 != '...') {
                     const deleteStatus = await deleteImages({ downloadUrl: o1 });
                     console.log(deleteStatus)  //=> "success"
-    
+
                 }
 
-                 // o2
-                 let o2= the_data.map((item) => {
+                // o2
+                let o2 = the_data.map((item) => {
                     return item.o2;
                 })
-                if(o2 != '...'){
+                if (o2 != '...') {
                     const deleteStatus = await deleteImages({ downloadUrl: o2 });
                     console.log(deleteStatus)  //=> "success"
-    
+
                 }
 
-                 // o3
-                 let o3= the_data.map((item) => {
+                // o3
+                let o3 = the_data.map((item) => {
                     return item.o3;
                 })
-                if(o3 != '...'){
+                if (o3 != '...') {
                     const deleteStatus = await deleteImages({ downloadUrl: o3 });
                     console.log(deleteStatus)  //=> "success"
-    
-                }
-                
 
-                 // o4
-                 let o4= the_data.map((item) => {
+                }
+
+
+                // o4
+                let o4 = the_data.map((item) => {
                     return item.o4;
                 })
-                if(o4 != '...'){
+                if (o4 != '...') {
                     const deleteStatus = await deleteImages({ downloadUrl: o4 });
                     console.log(deleteStatus)  //=> "success"
-    
+
                 }
-                
+
                 // test zone(end+)//////////
 
 
@@ -2109,7 +2109,7 @@ router.post('/Edit_quiz', async (req, res) => {
     // 
     // test zone(*)
     if (req.files) {
-        if (req.files.quizThumbnail.mimetype === 'image/jpeg' || req.files.quizThumbnail.mimetype === 'image/png'||req.files.quizThumbnail.mimetype === 'image/jpg') {
+        if (req.files.quizThumbnail.mimetype === 'image/jpeg' || req.files.quizThumbnail.mimetype === 'image/png' || req.files.quizThumbnail.mimetype === 'image/jpg') {
 
 
             var file = req.files.quizThumbnail;
@@ -2121,18 +2121,18 @@ router.post('/Edit_quiz', async (req, res) => {
 
             // check part
             let bro = dbs.collection('courses/' + id + '/sections').doc(sectionId);
-            let o= await bro.get();
-            let refer ;
-            if(!o){console.log('no doc!');}
-            else{
+            let o = await bro.get();
+            let refer;
+            if (!o) { console.log('no doc!'); }
+            else {
                 console.log('[++]quizThumbnail');
                 console.log(o.data())
-                refer= o.data().quizThumbnail;
+                refer = o.data().quizThumbnail;
             }
             console.log('The thumbnail url is: ');
             console.log(refer);
             // condition to check wether there is already any thumbnail or not
-            if (refer.length <=10 || !refer == 'https://i.picsum.photos/id/866/536/354.jpg?hmac=tGofDTV7tl2rprappPzKFiZ9vDh5MKj39oa2D--gqhA') {
+            if (refer.length <= 10 || !refer == 'https://i.picsum.photos/id/866/536/354.jpg?hmac=tGofDTV7tl2rprappPzKFiZ9vDh5MKj39oa2D--gqhA') {
 
                 let i = refer;
 
@@ -2212,8 +2212,8 @@ router.post('/AddLec', async (req, res) => {
 
     // picture
     if (req.files) {
-        if (req.files.lectureThumbnail !== undefined && req.files.lectureThumbnail.mimetype === 'image/png' || req.files.lectureThumbnail.mimetype === 'image/jpeg'|| req.files.lectureThumbnail.mimetype === 'image/jpg' || req.files.lectureThumbnail.mimetype === 'image/PNG') {
-            
+        if (req.files.lectureThumbnail !== undefined && req.files.lectureThumbnail.mimetype === 'image/png' || req.files.lectureThumbnail.mimetype === 'image/jpeg' || req.files.lectureThumbnail.mimetype === 'image/jpg' || req.files.lectureThumbnail.mimetype === 'image/PNG') {
+
             setTimeout(function pic() {
                 fileb = req.files.lectureThumbnail;
                 filenameb = req.files.lectureThumbnail.name;
@@ -2228,9 +2228,9 @@ router.post('/AddLec', async (req, res) => {
                 })
                 boib = "https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(loac) + "?alt=media&token=" + loac;
             }, 0)
-        }else{
-            boib= '...'
-            loac='...'
+        } else {
+            boib = '...'
+            loac = '...'
         }
 
     }
@@ -2238,7 +2238,7 @@ router.post('/AddLec', async (req, res) => {
     //  url checker
 
     console.log(req.files);
-    
+
     // video 
     // if (req.files.lectureVideoUrl !== undefined && length <= 12) {
     if (req.files.lectureVideoUrl !== undefined) {
@@ -2255,7 +2255,7 @@ router.post('/AddLec', async (req, res) => {
                 console.log(location);
 
                 filec.mv('tmp/' + filenamec, async (err) => {
-                    let random =  uploadf('tmp/' + filenamec, location);
+                    let random = uploadf('tmp/' + filenamec, location);
                     console.log('video thumbnail is updated here is the link:================>');
                     console.log(boic);
 
@@ -2276,8 +2276,8 @@ router.post('/AddLec', async (req, res) => {
             }, 0)
 
         } else {
-            boic='...'
-            location= '...'
+            boic = '...'
+            location = '...'
             // console.log('all conditional s failed');
             // res.redirect(`/screen/GetSection/${id}/${sec_id}/${title}`);
         }
@@ -2289,7 +2289,7 @@ router.post('/AddLec', async (req, res) => {
     //     location = '...';
     //     boic = '...';
     //     url = req.body.url;
-        
+
     // }
     // else if (req.files.lectureVideoUrl !== undefined && length > 12) {
     //     console.log('triggered URL  with non undefind value of videourl!');
@@ -2299,7 +2299,7 @@ router.post('/AddLec', async (req, res) => {
     //     //    url.length >= 13 then accept this other wise not\
     //     // length not working ...
     // }
-   
+
     // console.log('the length is .....................');
     // console.log(length);
 
@@ -2356,6 +2356,59 @@ router.post('/AddLec', async (req, res) => {
     //  
 })
 
+
+
+// /screen/notification
+router.get('/notification', (req, res) => {
+    res.render('screen/notification');
+})
+
+// /screen/notification
+router.post('/notification', async (req, res) => {
+    let text = req.body.text;
+    let user;
+    // >
+    let users= await dbs.collection('users').get();
+    //  console.log(users);
+    
+    //  users.docs.forEach((a)=>{
+    //      console.log(a.id);
+    //  })
+
+    users.docs.forEach((user)=>{
+        // console.log(user.id);
+        dbs.collection('users').doc(user.id).update({
+            notifications: firebase.firestore.FieldValue.arrayUnion({
+                date:new Date(),
+                notification:text
+            })
+        })
+    })
+    res.redirect('/screen/notification');
+})
+
+
+// viewCourse
+router.get('/viewCourse/:id',async (req,res)=>{
+    // /view/id
+    // console.log(req.params.id)
+    let id = req.params.id;
+    let d =dbs.collection('courses').doc(id);
+    data= await d.get();
+    if(!data){
+        console.log('no doc!')
+    }
+    else{
+     console.log(data.id)
+     
+     data=data
+        res.render('screen/viewCourse',{data:data})
+    }
+
+})
+
+
+
 // signout
 router.get('/signout/:signout', auth, async (req, res) => {
     try {
@@ -2408,7 +2461,7 @@ router.get('/signout/:signout', auth, async (req, res) => {
 //     let the_data;
 
 //     // 
-    
+
 //     // picture
 //     if (req.files) {
 //         if (req.files.lectureThumbnail !== undefined && req.files.lectureThumbnail.mimetype === 'image/png' || req.files.lectureThumbnail.mimetype === 'image/jpeg') {

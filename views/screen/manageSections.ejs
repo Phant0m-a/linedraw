@@ -1,5 +1,49 @@
+<nav class="navbar navbar-expand-lg navbar-dark text-dark bg-light bg-invisible" style="margin-top:-20px;">
+  <a class="navbar-brand text-dark" href="/screen/udmyPanel">Linedraw</a>
+  <button class="navbar-toggler " style='background:rgb(196, 187, 187);' type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon " ></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+     <li class="nav-item active">
+        <a class="nav-link  text-muted" href="/screen/udmyPanel">Home </span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-muted" href="/screen/GetCourses">All Courses</a>
+      </li>
+       <!-- 
+      <li class="nav-item">
+        <a class="nav-link" href="/screen/editCourse">Edit</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Dropdown
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+      </li> -->
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <a class="btn btn-danger float-right"  style="margin-left:10px;" type="button" href="/screen/signout/signout">Signout</a>
+    </form>
+  </div>
+</nav>
+
+
 <div class="container">
     <br>
+   
+    <a href="/screen/Edit_Course/<%=id%>" type='button' class="btn btn-dark">Back to Edit Course</a>
+    <br><br>
     <form action="/screen/manageSections" enctype="multipart/form-data" method="post">
         <input type="hidden" name='id' value="<%=id%>">
         <h3 class='text-dark'>Manage Sections</h3>
@@ -12,7 +56,7 @@
     </form>
     <br>
     <!-- <a href="/screen/deleteFeature/<%=id%>" type='button' class="btn btn-danger">Delete</a> -->
-    <a href="/screen/GetCourses" type='button' class="btn btn-dark">Back to courses</a>
+    
 
     <br>
     <br><br>
@@ -27,11 +71,34 @@
                 
               <br>
                 <!--Edit and delete -->
-                <a href="/screen/deleteSection/<%=id%>/<%=section.id%>"style="margin:5px"  type="button" class="btn btn-danger float-right">Delete</a>
-                
+               
+                <a type="button" class="btn btn-primary float-right" style="margin:5px" data-toggle="modal" data-target="#exampleModal">
+                  Delete
+                </a>
                 <a href="/screen/GetSection/<%=id%>/<%=section.id%>/<%=section.data().title%>" style="margin:5px" type="button" class="btn btn-success float-right">Edit</a>
             </span>
         </li>
+                    <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete Section</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <span class='text-danger'> Are you completely sure you want to Delete this course? 
+        Make sure to delete all the course lectures before continuing!</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a href="/screen/deleteSection/<%=id%>/<%=section.id%>" type="button" class="btn btn-danger">Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
      <%})%>
     </ul>
     <!-- <div class="card-footer">

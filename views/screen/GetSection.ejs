@@ -13,6 +13,9 @@
         <li class="nav-item ">
           <a class="nav-link text-dark" href="/screen/uploadQuiz/<%=id%>/<%=sectionId%>/<%=title%>">Manage Quiz</a>
         </li>
+        <li class="nav-item ">
+          <a class="nav-link text-dark" href="/screen/showLec/<%=id%>/<%=sectionId%>/<%=title%>">Show Lectures</a>
+        </li>
          <!--
         <li class="nav-item">
           <a class="nav-link" href="/screen/editCourse">Edit</a>
@@ -338,61 +341,6 @@
 
     <br>
     <br><br>
-    <div class="card w-80" style='background:rgb(238, 230, 230);'>
-        <ul class="list-group list-group-flush">
-
-            <% sections.forEach((leacture)=>{%>
-                <li class="list-group-item">
-                    <%=leacture.data().title%>
-
-
-                </li>
-                <%})%>
-        </ul>
-        <div class="row row-cols-1 row-cols-md-3">
-            <% te.forEach((lec)=>{%>
-                <%console.log(' un def=====================')%>
-            <%console.log(lec)%>
-            <%console.log('=====================')%>
-        <div class="col mb-4">
-            <div class="card h-100">
-            <img src=' <%=lec.lectureThumbnail%>' height="250px" class="card-img-top" alt="image">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <%=lec.title%>
-                        </h5>
-
-                        <!-- <% if(lec.url.length <= 12){%>
-                <a href='<%=lec.lectureVideoUrl%>' type='button' class='btn btn-primary'>Play lecture</a>
-                <%}else{%>
-                    <% console.log('ok url is on!!!!!!!!!!!!!!!!!!!!!!!!!!!!'+ lec.url)%>
-                <a href='<%=lec.url%>' type='button' class='btn btn-primary'>Play lecture</a>
-                <%}%>-->
-                        <!-- <p class="card-text"><%=lec.desc%></p>  -->
-                        <a href='<%=lec.lectureVideoUrl%>' type='button' class='btn btn-primary'>Play lecture</a>
-
-                    </div>
-                    <div class="card-footer">
-                        <span class="">
-
-
-
-                            <a href="/screen/Delete_Lecture/<%=id%>/<%=sectionId%>/<%=lec.id%>/<%=title%>"
-                                style="margin:5px" type="button" class="btn btn-danger float-right">Delete</a>
-
-                            <a href="/screen/Edit_Lecture/<%=id%>/<%=sectionId%>/<%=lec.id%>/<%=lec.title%>/<%=title%>"
-                                style="margin:5px" type="button" class="btn btn-success float-right">Edit</a>
-                        </span>
-                    </div>
-        </div>
-    </div>
-    <%})%>
-</div>
-<!-- <div class="card-footer">
-      Card footer
-    </div> -->
-</div>
-
-
+   
 
 </div>

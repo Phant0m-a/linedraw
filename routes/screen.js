@@ -2178,6 +2178,20 @@ router.post('/Edit_quiz', async (req, res) => {
 
 })
 
+// showLec
+router.get('/showLec/:id/:secId/:title',async(req,res)=>{
+    // id secid title
+    let id =req.params.id
+    let secid =req.params.secId
+    let title =req.params.title
+    let all;
+
+    let ref = dbs.collection('courses/' + id + '/sections').doc(secid);
+    let data = await ref.get();
+    all=data.data().lectures
+    console.log(data.data().lectures)
+    res.render('screen/showLec',{te:all,sectionId:secid,title:title,id: id});
+});
 
 
 // new module for create leactures
@@ -2406,6 +2420,8 @@ router.get('/viewCourse/:id',async (req,res)=>{
     }
 
 })
+
+
 
 
 

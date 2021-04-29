@@ -7,7 +7,7 @@ const fStorage = require('firebase/storage');
 const firestore = require('firebase/firestore')
 const auth = require('../auth')
 const jwt = require('jsonwebtoken');
-const csv = require('csvtojson');
+// const csv = require('csvtojson');
 const UUID = require("uuid-v4");
 const fs = require('fs');
 
@@ -294,7 +294,7 @@ router.post('/signin', async (req, res) => {
 // udmy app
 
 // udmyPanel
-router.get('/udmyPanel', async (req, res) => {
+router.get('/udmyPanel',auth ,async (req, res) => {
     // 
     dbs.collection('catagories').get().then(async(snapshot) => {
         let courses = snapshot;
@@ -314,110 +314,6 @@ router.get('/udmyPanel', async (req, res) => {
 
 });
 
-
-// add leacture
-router.get('/add_lecture', async (req, res) => {
-    res.render('screen/add_lecture');
-})
-
-//  the lecture man here =============>
-
-// Display lectures
-router.get('/leacture/:type/:t/:title', async (req, res) => {
-    let course_id = req.params.type;
-    let t = req.params.t;
-    let title = req.params.title;
-    console.log(req.params)
-
-    // test for adding leacture
-    // const Ref = dbs.collection('catagories/'+course_id+'/content/').doc(t);
-    // Ref.update({
-    //         leacture: firebase.firestore.FieldValue.arrayUnion(...[{demo:true, id:new Date(),thumbnail:'../',title:'title'}])
-    // });
-    // ....
-
-    await dbs.collection('catagories/' + course_id + '/content/').where('title', '==', title).get().then((snapshot) => {
-        let section = snapshot
-
-        section.docs.forEach((o) => {
-            console.log(o.data().title);
-            let sections = o.data();
-            if (o.id == t) {
-
-                res.render('screen/getLeacture', { sections: section, id: course_id });
-            }
-
-        })
-
-    })
-
-        .catch((err) => {
-            console.log('error at /course: ' + err);
-        })
-
-})
-// new feature*
-// add lectures route start here
-router.post('addLeacture/create', async (req, res) => {
-    console.log(req.body);
-    let col_name = req.body.col_name;
-    let course_name = req.body.course_name;
-    let title = req.body.title;
-    let demo = req.body.demo;
-
-    // get catagory id using title 
-    let course_id;
-    await dbs.collection('catagories').where('title', '==', col_name).get().then(async (snap) => {
-        let data = snap;
-        data.docs.forEach((i) => {
-            console.log(i.id)
-            course_id = i.id;
-        })
-        // get section id using title
-        let sec_id;
-        await dbs.collection('catagories/' + course_id + '/content/').get().where('title', '==', course_name).get().then((snapshot) => {
-            let stuff = snapshot;
-            stuff.docs.forEach((a) => {
-                console.log(a.data())
-                sec_id = a.id;
-
-                // add lectures
-                const Ref = dbs.collection('catagories/' + course_id + '/content/').doc(sec_id);
-                Ref.update({
-                    leacture: firebase.firestore.FieldValue.arrayUnion(...[{ demo: true, id: new Date(), thumbnail: '../', title: title }])
-                });
-            })
-            res.redirect('/screen/udemyPanel');
-        })
-
-    })
-
-
-})
-// new* feature
-// adds a section comes from getCourse
-router.post('/addSection/create', async (req, res) => {
-    console.log(req.body);
-    let col_name = req.body.col_name;
-    let title = req.body.title;
-    let demo = req.body.demo;
-    let course_id;
-    await dbs.collection('catagories').where('title', '==', col_name).get().then((snap) => {
-        let sn = snap;
-        sn.docs.forEach((f) => {
-            console.log(f.id);
-            course_id = f.id
-        })
-
-    })
-
-    await dbs.collection('catagories/' + course_id + '/content/').add({
-        title: title
-    }).then(() => {
-        res.redirect('/screen/udmyPanel');
-    })
-
-})
 
 // arrayMaps
 // const Ref = dbs.collection('catagories').doc(Document);
@@ -441,35 +337,6 @@ router.post('/addSection/create', async (req, res) => {
 // });
 // end
 
-// Edit course to get section information
-router.post('/courseSection', async (req, res) => {
-    let col_name;
-    let course_id = req.body.course;
-    // let title = req.body.sectionTitle;
-    console.log(req.body);
-    const catRef = dbs.collection('catagories').doc(course_id);
-    const doc = await catRef.get();
-    if (!doc.exists) {
-        console.log('No such document!');
-    } else {
-        //   console.log('Document data:', doc.data());
-        col_name = doc.data().title;
-
-    }
-    await dbs.collection('catagories/' + course_id + '/' + 'content/').get().then((snapshot) => {
-        let sections = snapshot
-        // sections.forEach((t)=>{
-        //     console.log(t.data().title);
-        // })
-        res.render('screen/getCourse', { sections: sections, id: course_id, col_name: col_name });
-    })
-
-        .catch((err) => {
-            console.log('error at /course: ' + err);
-        })
-}
-)
-
 
 
 
@@ -489,7 +356,7 @@ router.post('/courseSection', async (req, res) => {
 
 
 // addCatagory
-router.post('/addCatagory', async (req, res) => {
+router.post('/addCatagory',auth, async (req, res) => {
     // res.send('added catagory!')
     let catagory = req.body.catagory;
     console.log(req.body);
@@ -504,58 +371,58 @@ router.post('/addCatagory', async (req, res) => {
     })
 })
 
-// upload image from edit course
-router.post('/uploadImg', async (req, res) => {
-    let course = 'The complete flutter course'
+// upload image from edit course (not being used)
+// router.post('/uploadImg', async (req, res) => {
+//     let course = 'The complete flutter course'
 
 
-    if (req.files) {
-        var file = req.files.filename
-        var filename = file.name;
-        var image = 'tmp/' + filename;
-        console.log(file)
-        file.mv('tmp/' + filename, async (err) => {
+//     if (req.files) {
+//         var file = req.files.filename
+//         var filename = file.name;
+//         var image = 'tmp/' + filename;
+//         console.log(file)
+//         file.mv('tmp/' + filename, async (err) => {
 
-            // let ref =  fireStorage.ref(course+'/'+filename)
+//             // let ref =  fireStorage.ref(course+'/'+filename)
 
-            // let task = ref.put(image);
-            // let task = await bucket.upload(
-            //     'tmp/'+filename, 
-            //     {
-            //         destination:course+'/'+ filename + new Date(),
-            //         metadata: {
-            //             cacheControl: "public, max-age=315360000", 
-            //             contentType: "image/jpeg"
-            //      }
-            // })
-            var hell = '/flutter_' + filename
+//             // let task = ref.put(image);
+//             // let task = await bucket.upload(
+//             //     'tmp/'+filename, 
+//             //     {
+//             //         destination:course+'/'+ filename + new Date(),
+//             //         metadata: {
+//             //             cacheControl: "public, max-age=315360000", 
+//             //             contentType: "image/jpeg"
+//             //      }
+//             // })
+//             var hell = '/flutter_' + filename
 
-            let result = upload('tmp/' + filename, hell)
-            console.log(result);
+//             let result = upload('tmp/' + filename, hell)
+//             console.log(result);
 
 
-            // dbs.collection('categories').doc("0Op3HgbvouB3qaFxw1FP").collection("content").doc("kfEANAIBu2m7eCrPmE0T").update({
-            //     lecture:kadsfljdfdlfs:{
+//             // dbs.collection('categories').doc("0Op3HgbvouB3qaFxw1FP").collection("content").doc("kfEANAIBu2m7eCrPmE0T").update({
+//             //     lecture:kadsfljdfdlfs:{
 
-            //     }
-            // })
-            // task.on('state_changed',  function(){
-            //     task.snapshot.ref.getDownloadURL().then((downloadUrl)=>{
-            //         console.log(downloadUrl);
-            //         dbs.collections('test').doc('test').set({
-            //             'testImg': downloadUrl
-            //         })
-            //     })
-            // })
+//             //     }
+//             // })
+//             // task.on('state_changed',  function(){
+//             //     task.snapshot.ref.getDownloadURL().then((downloadUrl)=>{
+//             //         console.log(downloadUrl);
+//             //         dbs.collections('test').doc('test').set({
+//             //             'testImg': downloadUrl
+//             //         })
+//             //     })
+//             // })
 
-        });
-        res.redirect('/screen/udmyPanel');
-    }
-})
+//         });
+//         res.redirect('/screen/udmyPanel');
+//     }
+// })
 
 
 // getCategories
-router.get('/GetCategories', async (req, res) => {
+router.get('/GetCategories',auth, async (req, res) => {
 
     await dbs.collection("categories")
         .orderBy("date", "desc").get().then((snap) => {
@@ -567,8 +434,9 @@ router.get('/GetCategories', async (req, res) => {
 });
 
 // AddCategory
-router.post('/AddCategory', async (req, res) => {
+router.post('/AddCategory',auth, async (req, res) => {
 
+   if(firebase.auth().currentUser){
     let title = req.body.title;
 
     await dbs.collection('categories').add({
@@ -576,53 +444,81 @@ router.post('/AddCategory', async (req, res) => {
         date: new Date()
     });
     res.redirect('/screen/GetCategories');
+   }else{
+       res.redirect('/screen/signin')
+   }
 });
 
 // DeleteCategory
-router.get('/DeleteCategory/:title', async (req, res) => {
-    console.log(req.params);
+router.get('/DeleteCategory/:title',auth, async (req, res) => {
+    if(firebase.auth().currentUser){
+ console.log(req.params);
     let title = req.params.title;
 
     await dbs.collection('categories').doc(title).delete();
     res.redirect('/screen/GetCategories');
+    }else{
+        res.redirect('/screen/signin')
+    }
+   
 })
 
 
 // EditCategory
-router.get('/EditCategory/:id/:title', async (req, res) => {
-    let id = req.params.id;
+router.get('/EditCategory/:id/:title',auth, async (req, res) => {
+    if(firebase.auth().currentUser){
+let id = req.params.id;
     let title = req.params.title;
     // take id from href and send to Edit form
     res.render('screen/EditCategory', { id: id, title: title });
+    }else{
+        res.redirect('/screen/signin')
+    }
+    
 })
 
-router.post('/EditCategory', async (req, res) => {
-    console.log(req.body);
+router.post('/EditCategory',auth, async (req, res) => {
+    if(firebase.auth().currentUser){
+console.log(req.body);
     let id = req.body.id;
     let title = req.body.title;
 
     await dbs.collection('categories').doc(id).update({ title: title });
     res.redirect('/screen/GetCategories');
+    }else{
+        res.redirect('/screen/signin')
+    }
+    
 })
 
 // GetCourses
-router.get('/GetCourses', async (req, res) => {
-
-    await dbs.collection('courses').orderBy('timestamp', 'desc').get().then((snap) => {
+router.get('/GetCourses',auth, async (req, res) => {
+    if(firebase.auth().currentUser){
+ await dbs.collection('courses').orderBy('timestamp', 'desc').get().then((snap) => {
         let courses = snap;
         res.render('screen/GetCourses', { courses: courses });
     });
 
+    }else{
+        res.redirect('/screen/signin')
+    }
+
+   
 });
 
 // AddCourse
-router.get('/Add_Course', async (req, res) => {
-
-    res.render('screen/Add_Course');
+router.get('/Add_Course',auth, async (req, res) => {
+    if(firebase.auth().currentUser){
+ res.render('screen/Add_Course');
+    }else{
+        res.redirect('/screen/signin')
+    }
+   
 });
 
-router.post('/Add_Course', async (req, res) => {
-    let title = req.body.title;
+router.post('/Add_Course',auth, async (req, res) => {
+    if(firebase.auth().currentUser){
+let title = req.body.title;
     let uuid = UUID()
     await dbs.collection('courses').add({
         timestamp: new Date(),
@@ -651,20 +547,30 @@ router.post('/Add_Course', async (req, res) => {
     }).then(() => {
         res.redirect('/screen/GetCourses');
     });
+    }else{
+        res.redirect('/screen/signin')
+    }
+    
 
 });
 
 // DeleteCourse
-router.get('/DeleteCourse/:id', async (req, res) => {
-    let id = req.params.id;
+router.get('/DeleteCourse/:id',auth, async (req, res) => {
+    if(firebase.auth().currentUser){
+let id = req.params.id;
     await dbs.collection('courses').doc(id).delete().then(() => {
         res.redirect('/screen/GetCourses');
     });
+    }else{
+        res.redirect('/screen/signin')
+    }
+    
 
 });
 
 // /EditCourse
-router.get('/Edit_Course/:id', async (req, res) => {
+router.get('/Edit_Course/:id',auth, async (req, res) => {
+    if(firebase.auth().currentUser){
     let id = req.params.id;
     // either use dbs.collection('courses').doc(id) to get data of this and send to its edit menu.
 
@@ -693,6 +599,10 @@ router.get('/Edit_Course/:id', async (req, res) => {
 
     }
 
+    }else{
+        res.redirect('/screen/signin')
+    }
+
 });
 // async   function f(){
 //     let refer = dbs.collection('courses').doc('LYR0lmjTeX1e1gJxJZTo');
@@ -707,9 +617,9 @@ router.get('/Edit_Course/:id', async (req, res) => {
 //  f();
 
 
-router.post('/Edit_Course', async (req, res) => {
-
-    // let body= req.body;
+router.post('/Edit_Course',auth, async (req, res) => {
+    if(firebase.auth().currentUser){
+ // let body= req.body;
     // console.log('sent data!:'+req.body.id);
     // console.log('whole received body: '+req.body);
     // console.log(body);
@@ -753,7 +663,12 @@ router.post('/Edit_Course', async (req, res) => {
 
     if (req.files) {
         if (req.files.bannerImage !== undefined) {
-            if (req.files.bannerImage.mimetype === 'image/png' || req.files.bannerImage.mimetype === 'image/jpeg' || req.files.bannerImage.mimetype === 'image/jpg') {
+             // checker
+ let str2= req.files.option4.mimetype;
+ let ready2=str2.split("/",1);
+     // ready2=JSON.stringify(ready2)
+     console.log(ready2);
+            if (ready2 == 'image') {
 
                 var file = req.files.bannerImage;
                 var filename = file.name;
@@ -795,7 +710,12 @@ router.post('/Edit_Course', async (req, res) => {
 
     if (req.files) {
         if (req.files.videoThumbnail !== undefined) {
-            if (req.files.videoThumbnail.mimetype === 'image/png' || req.files.videoThumbnail.mimetype === 'image/jpeg') {
+             // checker
+ let str2= req.files.option4.mimetype;
+ let ready2=str2.split("/",1);
+     // ready2=JSON.stringify(ready2)
+     console.log(ready2);
+            if (ready2 == 'image') {
 
                 setTimeout(function b() {
                     var fileb = req.files.videoThumbnail;
@@ -835,7 +755,12 @@ router.post('/Edit_Course', async (req, res) => {
     //   if(req.files.video !== 'null' && req.files.video !== 'undefined'){
     if (req.files) {
         if (req.files.video !== undefined) {
-            if (req.files.video.mimetype == 'video/webm' || req.files.video.mimetype == 'video/webm' || req.files.video.mimetype == 'video/x-matroska') {
+             // checker
+ let str2= req.files.option4.mimetype;
+ let ready2=str2.split("/",1);
+     // ready2=JSON.stringify(ready2)
+     console.log(ready2);
+            if (ready2 == 'video') {
 
 
                 let ftype = req.files.video.mimetype;
@@ -906,11 +831,16 @@ router.post('/Edit_Course', async (req, res) => {
 
     // res.redirect('/screen/GetCourses');
 
+    }else{
+        res.redirect('/screen/signin')
+    }
+   
 
 })
 // manageFeatures
-router.get('/manageFeatures/:id', async (req, res) => {
-    let id = req.params.id;
+router.get('/manageFeatures/:id',auth, async (req, res) => {
+    if(firebase.auth().currentUser){
+ let id = req.params.id;
 
 
     // 
@@ -928,14 +858,28 @@ router.get('/manageFeatures/:id', async (req, res) => {
 
 
 
+    }else{
+        res.redirect('/screen/signin')
+    }
+   
 })
-router.post('/manageFeatures', async (req, res) => {
+
+
+router.post('/manageFeatures',auth, async (req, res) => {
+    if(firebase.auth().currentUser){
+
     let title = req.body.title;
     let id = req.body.id;
     var ty = req.files.iconImage.mimetype;
     console.log(ty);
 
-    if (req.files && req.files !== undefined && ty === 'image/jpeg' || ty === 'image/png') {
+     // checker
+ let str2= req.files.iconImage.mimetype;
+ let ready2=str2.split("/",1);
+     // ready2=JSON.stringify(ready2)
+     console.log(ready2);
+
+    if (req.files && req.files !== undefined && ready2 == 'image') {
         // req.filesiconImage.mimetype == 'jpg' &&
 
         var file = req.files.iconImage;
@@ -970,6 +914,11 @@ router.post('/manageFeatures', async (req, res) => {
         res.redirect('/screen/GetCourses');
         console.log('didnt work');
     }
+
+    }else{
+        res.redirect('/screen/signin')
+    }
+
 })
 
 setTimeout(function sayHi() {
@@ -978,7 +927,9 @@ setTimeout(function sayHi() {
 
 // deleteFeature
 
-router.post('/DeleteFeature', async (req, res) => {
+router.post('/DeleteFeature',auth, async (req, res) => {
+    if(firebase.auth().currentUser){
+
     let id = req.body.id;
     console.log(req.body)
 
@@ -1004,12 +955,17 @@ router.post('/DeleteFeature', async (req, res) => {
 
     res.redirect('/screen/GetCourses');
 
+    }else{
+        res.redirect('/screen/signin')
+    }
+
 })
 
 
 // manageSections
-router.get('/manageSections/:id', async (req, res) => {
-    let id = req.params.id;
+router.get('/manageSections/:id',auth, async (req, res) => {
+    if(firebase.auth().currentUser){
+let id = req.params.id;
 
     dbs.collection('courses').doc(id).collection('sections').orderBy('order', 'asc').get().then((snapshot) => {
         let sections = snapshot;
@@ -1021,9 +977,15 @@ router.get('/manageSections/:id', async (req, res) => {
     })
 
 
+    }else{
+        res.redirect('/screen/signin')
+    }
+
+    
 });
-router.post('/manageSections', async (req, res) => {
-    let sections = req.body.sections;
+router.post('/manageSections',auth, async (req, res) => {
+    if(firebase.auth().currentUser){
+ let sections = req.body.sections;
     let id = req.body.id;
     //   
     console.log(req.body);
@@ -1047,13 +1009,20 @@ router.post('/manageSections', async (req, res) => {
     })
     // 
     //   res.render('screen/manageSections', {id:id})
+    }else{
+        res.redirect('/screen/signin')
+    }
+
+   
 });
 
 // increment or decrement 1
 
 // upate sectionNo
-router.post('/updateSectionNo', async (req, res) => {
-    let id = req.body.id;
+router.post('/updateSectionNo',auth, async (req, res) => {
+
+    if(firebase.auth().currentUser){
+let id = req.body.id;
     let sectionId = req.body.sectionId;
     let order = req.body.order;
     let uid = req.body.title;
@@ -1063,11 +1032,20 @@ router.post('/updateSectionNo', async (req, res) => {
     })
     res.redirect(`/screen/GetSection/${id}/${sectionId
         }/${uid}`)
+    }else{
+        res.redirect('/screen/signin')
+    }
+
+
+    
 })
 
 // GetSection
 
-router.get('/GetSection/:id/:sectionId/:title', async (req, res) => {
+router.get('/GetSection/:id/:sectionId/:title',auth, async (req, res) => {
+
+    if(firebase.auth().currentUser){
+
     console.log(req.params);
     let id = req.params.id;
     let sectionId = req.params.sectionId;
@@ -1088,6 +1066,11 @@ router.get('/GetSection/:id/:sectionId/:title', async (req, res) => {
     }).catch((err) => {
         console.log('error at / : ' + err);
     })
+    }else{
+        res.redirect('/screen/signin')
+    }
+
+
 });
 
 // AddLec 
@@ -1209,7 +1192,9 @@ router.get('/GetSection/:id/:sectionId/:title', async (req, res) => {
 
 
 // deleteSection
-router.get('/deleteSection/:id/:sec_id', (req, res) => {
+router.get('/deleteSection/:id/:sec_id',auth, (req, res) => {
+    if(firebase.auth().currentUser){
+
     let sec_id = req.params.sec_id
     let id = req.params.id
     const Ref = dbs.collection('courses/' + id + '/sections/').doc(sec_id);
@@ -1218,10 +1203,17 @@ router.get('/deleteSection/:id/:sec_id', (req, res) => {
         res.redirect(`/screen/manageSections/${id}`);
     }, 500);
 
+    }else{
+        res.redirect('/screen/signin')
+    }
+
+
+
 })
 // the editing of lecture
-router.get('/Edit_Lecture/:id/:sec_id/:lec_id/:lec_title/:uid', async (req, res) => {
-    let uid = req.params.uid;
+router.get('/Edit_Lecture/:id/:sec_id/:lec_id/:lec_title/:uid',auth, async (req, res) => {
+    if(firebase.auth().currentUser){
+let uid = req.params.uid;
     // console.log(req.params);
     let id = req.params.id;
     let sec_id = req.params.sec_id;
@@ -1230,11 +1222,19 @@ router.get('/Edit_Lecture/:id/:sec_id/:lec_id/:lec_title/:uid', async (req, res)
 
 
     res.render('screen/Edit_Lecture', { id: id, title: lec_title, sec_id: sec_id, lec_id: lec_id, uid: uid })
+    }else{
+        res.redirect('/screen/signin')
+    }
+    
+    
+    
 })
 
 
 
-router.post('/Edit_Lecture', async (req, res) => {
+router.post('/Edit_Lecture',auth, async (req, res) => {
+    if(firebase.auth().currentUser){
+
     // console.log(req.body);
     let uid = req.body.uid;
     let id = req.body.id;
@@ -1488,6 +1488,12 @@ router.post('/Edit_Lecture', async (req, res) => {
             }/${uid}`)
     }, 5000)
 
+    }else{
+        res.redirect('/screen/signin')
+    }
+
+
+
 })
 
 
@@ -1500,8 +1506,9 @@ router.post('/Edit_Lecture', async (req, res) => {
 
 
 // Delete_Lecture/
-router.get('/Delete_Lecture/:id/:sec_id/:title/:uid', async (req, res) => {
-    console.log(req.params);
+router.get('/Delete_Lecture/:id/:sec_id/:title/:uid',auth, async (req, res) => {
+    if(firebase.auth().currentUser){
+console.log(req.params);
     let id = req.params.id;
     let sec_id = req.params.sec_id;
     let title = req.params.title;
@@ -1613,10 +1620,16 @@ router.get('/Delete_Lecture/:id/:sec_id/:title/:uid', async (req, res) => {
 
     //   /GetSection/:id/:sectionId/:title
 
+    }else{
+        res.redirect('/screen/signin')
+    }
+    
 })
 
 // Get Demo Videos 
-router.get('/DemoVideos/:id', async (req, res) => {
+router.get('/DemoVideos/:id',auth, async (req, res) => {
+    if(firebase.auth().currentUser){
+
     let id = req.params.id;
     // console.log(id);
 
@@ -1639,9 +1652,16 @@ router.get('/DemoVideos/:id', async (req, res) => {
     Demo = data.data().demoVideos;
     res.render('screen/DemoVideos', { te: Demo, id: id });
 
+    }else{
+        res.redirect('/screen/signin')
+    }
+
+
 })
 // Delete DemoVideos
-router.get('/Delete_DemoVideos/:id/:lec_id', async (req, res) => {
+router.get('/Delete_DemoVideos/:id/:lec_id',auth, async (req, res) => {
+
+    if(firebase.auth().currentUser){
 
     let id = req.params.id;
     let lec_id = req.params.lec_id;
@@ -1728,12 +1748,20 @@ router.get('/Delete_DemoVideos/:id/:lec_id', async (req, res) => {
     // 
 
 
+    }else{
+        res.redirect('/screen/signin')
+    }
+
+
+
 
 
 })
 let hello
 // uploadQuiz
-router.post('/uploadQuiz', async (req, res) => {
+router.post('/uploadQuiz',auth, async (req, res) => {
+    if(firebase.auth().currentUser){
+
     console.log(req.body);
     let id = req.body.id;
     let sectionId = req.body.sectionId;
@@ -1772,7 +1800,12 @@ router.post('/uploadQuiz', async (req, res) => {
     if (req.files) {
         console.log('[+] in if conditional');
         if (req.files.questionThumbnail !== undefined) {
-            if (req.files.questionThumbnail.mimetype === 'image/png' || req.files.questionThumbnail.mimetype === 'image/jpeg' || req.files.questionThumbnail.mimetype === 'image/PNG' || req.files.questionThumbnail.mimetype === 'image/jpg') {
+            // checker
+            let str2= req.files.questionThumbnail.mimetype;
+            let ready2=str2.split("/",1);
+                // ready2=JSON.stringify(ready2)
+                console.log(ready2);
+            if (ready2 == 'image') {
                 console.log('[+0~] in if question');
                 let Tq = req.files.questionThumbnail;
                 Tq.mv('tmp/' + req.files.questionThumbnail.name, (err) => {
@@ -1786,17 +1819,26 @@ router.post('/uploadQuiz', async (req, res) => {
             } else {
                 qThumbnail = '...';
                 console.log('qThunmbnail else man  inside.......>');
-                return;
+               
             }
+            console.log('up');
+            
+           
         }
         else {
             qThumbnail = '...';
             console.log('qThumbnail else man .......>');
-
+         
         }
 
+        console.log('down2 two');
         if (req.files.option1 !== undefined) {
-            if (req.files.option1.mimetype === 'image/png' || req.files.option1.mimetype === 'image/jpeg' || req.files.option1.mimetype === 'image/jpg') {
+            // checker
+            let str2= req.files.option1.mimetype;
+            let ready2=str2.split("/",1);
+                // ready2=JSON.stringify(ready2)
+                console.log(ready2);
+            if (ready2 == 'image') {
                 console.log('[+1~] in if option1');
                 let To1 = req.files.option1;
                 To1.mv('tmp/' + req.files.option1.name, (err) => {
@@ -1810,7 +1852,7 @@ router.post('/uploadQuiz', async (req, res) => {
             } else {
                 o1 = '...';
                 console.log('o1 else man  inside.......>');
-                return;
+                
             }
         } else {
             o1 = '...';
@@ -1821,7 +1863,12 @@ router.post('/uploadQuiz', async (req, res) => {
         console.log('*************************coming here##########');
 
         if (req.files.option2 !== undefined) {
-            if (req.files.option2.mimetype === 'image/png' || req.files.option2.mimetype === 'image/jpeg' || req.files.option2.mimetype === 'image/jpg') {
+            // checker
+            let str2= req.files.option2.mimetype;
+            let ready2=str2.split("/",1);
+                // ready2=JSON.stringify(ready2)
+                console.log(ready2);
+            if (ready2 == 'image') {
                 console.log('[+2~] in if option2');
                 let To2 = req.files.option2;
                 To2.mv('tmp/' + req.files.option2.name, (err) => {
@@ -1835,7 +1882,7 @@ router.post('/uploadQuiz', async (req, res) => {
             } else {
                 o2 = '...';
                 console.log('o2 else man  inside.......>');
-                return;
+                
             }
         } else {
             o2 = '...';
@@ -1843,7 +1890,12 @@ router.post('/uploadQuiz', async (req, res) => {
 
         }
         if (req.files.option3 !== undefined) {
-            if (req.files.option3.mimetype === 'image/png' || req.files.option3.mimetype === 'image/jpeg' || req.files.option3.mimetype === 'image/jpg') {
+            // checker
+            let str2= req.files.option3.mimetype;
+            let ready2=str2.split("/",1);
+                // ready2=JSON.stringify(ready2)
+                console.log(ready2);
+            if (ready2 == 'image') {
                 console.log('[+3~] in if option3');
                 let To3 = req.files.option3;
                 To3.mv('tmp/' + req.files.option3.name, (err) => {
@@ -1857,7 +1909,7 @@ router.post('/uploadQuiz', async (req, res) => {
             } else {
                 o3 = '...';
                 console.log('o3 else man  inside.......>');
-                return;
+                
             }
         } else {
             o3 = '...';
@@ -1865,7 +1917,12 @@ router.post('/uploadQuiz', async (req, res) => {
 
         }
         if (req.files.option4 !== undefined) {
-            if (req.files.option4.mimetype === 'image/png' || req.files.option4.mimetype === 'image/jpeg' || req.files.option4.mimetype === 'image/jpg') {
+            // checker
+            let str2= req.files.option4.mimetype;
+            let ready2=str2.split("/",1);
+                // ready2=JSON.stringify(ready2)
+                console.log(ready2);
+            if (ready2 == 'image') {
                 console.log('[+4~] in if option4');
                 let To4 = req.files.option4;
                 To4.mv('tmp/' + req.files.option4.name, (err) => {
@@ -1879,7 +1936,7 @@ router.post('/uploadQuiz', async (req, res) => {
             } else {
                 o4 = '...';
                 console.log('o4 else man  inside.......>');
-                return;
+                
             }
         } else {
             o4 = '...';
@@ -1937,11 +1994,18 @@ router.post('/uploadQuiz', async (req, res) => {
         res.redirect(`/screen/GetSection/${id}/${sectionId}/${title}`);
     }, 1000)
 
+    }else{
+        res.redirect('/screen/signin')
+    }
+
     // 
 })
 
 // display quiz
-router.get('/uploadQuiz/:id/:sectionId/:title', async (req, res) => {
+router.get('/uploadQuiz/:id/:sectionId/:title',auth, async (req, res) => {
+
+    if(firebase.auth().currentUser){
+
     let title = req.params.title;
     let id = req.params.id;
     let sectionId = req.params.sectionId;
@@ -1975,11 +2039,18 @@ router.get('/uploadQuiz/:id/:sectionId/:title', async (req, res) => {
     }
 
 
+    }else{
+        res.redirect('/screen/signin')
+    }
+
+
 })
 
 
 // deleteQuiz
-router.get('/deleteQuiz/:id/:doc_id/:sectionId/:title', async (req, res) => {
+router.get('/deleteQuiz/:id/:doc_id/:sectionId/:title',auth, async (req, res) => {
+    if(firebase.auth().currentUser){
+
     console.log('in delete quiz==>');
     console.log(req.params);
     let title = req.body.title;
@@ -2019,6 +2090,7 @@ router.get('/deleteQuiz/:id/:doc_id/:sectionId/:title', async (req, res) => {
                 // filter getter
                 let the_data = save.filter(item => item.id == doc_id);
 
+                console.log('the data contains==>');
                 console.log(the_data);
 
 
@@ -2027,9 +2099,11 @@ router.get('/deleteQuiz/:id/:doc_id/:sectionId/:title', async (req, res) => {
                 // delete images trap
                 // qThumbnail
                 let qThumbnail = the_data.map((item) => {
+                    console.log('this is item thumbnail');
+                    console.log(item.qThumbnail)
                     return item.qThumbnail;
                 })
-                if (qThumbnail != '...') {
+                if (qThumbnail.length >= 10) {
                     const deleteStatus = await deleteImages({ downloadUrl: qThumbnail });
                     console.log(deleteStatus)  //=> "success"
 
@@ -2039,7 +2113,7 @@ router.get('/deleteQuiz/:id/:doc_id/:sectionId/:title', async (req, res) => {
                 let o1 = the_data.map((item) => {
                     return item.o1;
                 })
-                if (o1 != '...') {
+                if (o1.length >= 10) {
                     const deleteStatus = await deleteImages({ downloadUrl: o1 });
                     console.log(deleteStatus)  //=> "success"
 
@@ -2049,7 +2123,7 @@ router.get('/deleteQuiz/:id/:doc_id/:sectionId/:title', async (req, res) => {
                 let o2 = the_data.map((item) => {
                     return item.o2;
                 })
-                if (o2 != '...') {
+                if (o2.length >= 10) {
                     const deleteStatus = await deleteImages({ downloadUrl: o2 });
                     console.log(deleteStatus)  //=> "success"
 
@@ -2059,7 +2133,7 @@ router.get('/deleteQuiz/:id/:doc_id/:sectionId/:title', async (req, res) => {
                 let o3 = the_data.map((item) => {
                     return item.o3;
                 })
-                if (o3 != '...') {
+                if (o3.length >= 10) {
                     const deleteStatus = await deleteImages({ downloadUrl: o3 });
                     console.log(deleteStatus)  //=> "success"
 
@@ -2070,7 +2144,7 @@ router.get('/deleteQuiz/:id/:doc_id/:sectionId/:title', async (req, res) => {
                 let o4 = the_data.map((item) => {
                     return item.o4;
                 })
-                if (o4 != '...') {
+                if (o4.length >= 10) {
                     const deleteStatus = await deleteImages({ downloadUrl: o4 });
                     console.log(deleteStatus)  //=> "success"
 
@@ -2092,12 +2166,21 @@ router.get('/deleteQuiz/:id/:doc_id/:sectionId/:title', async (req, res) => {
     setTimeout(() => {
         res.redirect(`/screen/uploadQuiz/${id}/${sectionId}/${store}`);
     }, 1500)
+    }else{
+        res.redirect('/screen/signin')
+    }
+
+
+
 })
 
 
 
 // Edit_quiz
-router.post('/Edit_quiz', async (req, res) => {
+router.post('/Edit_quiz',auth, async (req, res) => {
+
+    if(firebase.auth().currentUser){
+
     let id = req.body.id;
     let title = req.body.title;
     let sectionId = req.body.sectionId;
@@ -2109,7 +2192,10 @@ router.post('/Edit_quiz', async (req, res) => {
     // 
     // test zone(*)
     if (req.files) {
-        if (req.files.quizThumbnail.mimetype === 'image/jpeg' || req.files.quizThumbnail.mimetype === 'image/png' || req.files.quizThumbnail.mimetype === 'image/jpg') {
+        let str2= req.files.quizThumbnail.mimetype;
+        let ready2=str2.split("/",1);
+            // ready2=JSON.stringify(ready2)
+        if (ready2 == 'image') {
 
 
             var file = req.files.quizThumbnail;
@@ -2176,10 +2262,17 @@ router.post('/Edit_quiz', async (req, res) => {
     }
 
 
+    }else{
+        res.redirect('/screen/signin')
+    }
+
+
 })
 
 // showLec
-router.get('/showLec/:id/:secId/:title',async(req,res)=>{
+router.get('/showLec/:id/:secId/:title',auth,async(req,res)=>{
+    if(firebase.auth().currentUser){
+
     // id secid title
     let id =req.params.id
     let secid =req.params.secId
@@ -2191,11 +2284,17 @@ router.get('/showLec/:id/:secId/:title',async(req,res)=>{
     all=data.data().lectures
     console.log(data.data().lectures)
     res.render('screen/showLec',{te:all,sectionId:secid,title:title,id: id});
+    }else{
+        res.redirect('/screen/signin')
+    }
+    
+    
 });
 
-
 // new module for create leactures
-router.post('/AddLec', async (req, res) => {
+router.post('/AddLec',auth, async (req, res) => {
+    if(firebase.auth().currentUser){
+
     let title = req.body.title;
     let id = req.body.id;
     let leacture = req.body.leacture;
@@ -2204,7 +2303,7 @@ router.post('/AddLec', async (req, res) => {
 
     // the url
     // let url = req.body.url;
-
+    console.log(req.files)
     let u = UUID();
     // if demo is false then put in lecs else
 
@@ -2223,15 +2322,20 @@ router.post('/AddLec', async (req, res) => {
     let the_data;
     // let glength = req.body.url;
     // let length = glength.length;
-
+    
     // picture
     if (req.files) {
-        if (req.files.lectureThumbnail !== undefined && req.files.lectureThumbnail.mimetype === 'image/png' || req.files.lectureThumbnail.mimetype === 'image/jpeg' || req.files.lectureThumbnail.mimetype === 'image/jpg' || req.files.lectureThumbnail.mimetype === 'image/PNG') {
+        let star= req.files.lectureThumbnail.mimetype;
+    let ready=star.split("/",1);
+    // ready= JSON.stringify(ready);
+    console.log(ready);
+    console.log(ready)
+        if (req.files.lectureThumbnail !== undefined && ready == 'image') {
 
             setTimeout(function pic() {
                 fileb = req.files.lectureThumbnail;
                 filenameb = req.files.lectureThumbnail.name;
-                console.log(fileb)
+                // console.log(fileb)
                 loac = UUID();
                 console.log(loac);
                 fileb.mv('tmp/' + filenameb, async (err) => {
@@ -2252,18 +2356,23 @@ router.post('/AddLec', async (req, res) => {
     //  url checker
 
     console.log(req.files);
+    
 
     // video 
     // if (req.files.lectureVideoUrl !== undefined && length <= 12) {
     if (req.files.lectureVideoUrl !== undefined) {
+        let str2= req.files.lectureVideoUrl.mimetype;
+    let ready2=str2.split("/",1);
+        // ready2=JSON.stringify(ready2);
+        console.log(ready);
         console.log('outside oct stream');
-        if (req.files.lectureVideoUrl.mimetype == 'video/webm' || req.files.lectureVideoUrl.mimetype == 'video/webm' || req.files.lectureVideoUrl.mimetype == 'video/x-matroska') {
+        if (ready2 == 'video') {
             console.log('[+] in octstream // lecture video url...');
             setTimeout(async function b() {
 
                 filec = req.files.lectureVideoUrl;
                 filenamec = req.files.lectureVideoUrl.name;
-                console.log(filec)
+                // console.log(filec)
                 location = UUID();
                 url = '...';
                 console.log(location);
@@ -2367,18 +2476,33 @@ router.post('/AddLec', async (req, res) => {
         }
 
     }, 1000)
-    //  
+
+    }else{
+        res.redirect('/screen/signin')
+    }
+    
+    
+        //  
 })
 
 
 
 // /screen/notification
-router.get('/notification', (req, res) => {
-    res.render('screen/notification');
+router.get('/notification',auth, (req, res) => {
+    if(firebase.auth().currentUser){
+res.render('screen/notification');
+    }else{
+        res.redirect('/screen/signin')
+    }
+
+
+    
 })
 
 // /screen/notification
-router.post('/notification', async (req, res) => {
+router.post('/notification',auth, async (req, res) => {
+    if(firebase.auth().currentUser){
+  
     let text = req.body.text;
     let user;
     // >
@@ -2399,11 +2523,18 @@ router.post('/notification', async (req, res) => {
         })
     })
     res.redirect('/screen/notification');
+    }else{
+        res.redirect('/screen/signin')
+    }
+    
+  
 })
 
 
 // viewCourse
-router.get('/viewCourse/:id',async (req,res)=>{
+router.get('/viewCourse/:id',auth,async (req,res)=>{
+    if(firebase.auth().currentUser){
+
     // /view/id
     // console.log(req.params.id)
     let id = req.params.id;
@@ -2419,6 +2550,66 @@ router.get('/viewCourse/:id',async (req,res)=>{
         res.render('screen/viewCourse',{data:data})
     }
 
+    }else{
+        res.redirect('/screen/signin')
+    }
+   
+   
+})
+
+// privacyPolicy
+router.get('/privacyPolicy',auth, async(req,res)=>{
+    if(firebase.auth().currentUser){
+ let ref= dbs.collection('app').doc('termsOfUse');
+    ref= await ref.get();
+    let termsOfUse= ref.data().terms;
+    let ref2= dbs.collection('app').doc('privacyPolicy');
+    ref2= await ref2.get();
+    let privacyPolicy= ref2.data().privacy;
+
+    res.render('screen/privacyPolicy',{termsOfUse:termsOfUse,privacyPolicy:privacyPolicy});
+    }else{
+        res.redirect('/screen/signin')
+    }
+    
+    
+   
+})
+
+
+
+router.post('/privacyPolicy',auth,async (req,res)=>{
+    if(firebase.auth().currentUser){
+ let privacyPolicy= req.body.privacyPolicy;
+   
+
+   dbs.collection('app').doc('privacyPolicy').update({
+       privacy:privacyPolicy,
+    updatedAt:new Date()
+    }).then(()=>{
+        res.redirect('/screen/privacyPolicy');
+    })
+    }else{
+        res.redirect('/screen/signin')
+    }
+   
+   
+   
+})
+router.post('/termsOfUse',auth,async (req,res)=>{
+    if(firebase.auth().currentUser){
+ let termsOfUse = req.body.termsOfUse;
+
+    dbs.collection('app').doc('termsOfUse').update({
+         terms:termsOfUse,
+         updatedAt:new Date()
+    }).then(()=>{
+        res.redirect('/screen/privacyPolicy');
+    })
+    }else{
+        res.redirect('/screen/signin')
+    }
+   
 })
 
 

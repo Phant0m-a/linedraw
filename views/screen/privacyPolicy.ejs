@@ -1,0 +1,34 @@
+<div class="jumbotron">
+    <h2>Privacy Policy & Terms of Use</h2> 
+    <br> <a href="/screen/udmyPanel" type='button' class="btn btn-dark">Back Home</a>
+
+
+   <form action="/screen/privacyPolicy" method="post">
+    
+   <br>
+    <br>
+    <div class="form-group">
+        <label for="">Edit Privacy Policy</label>
+        <textarea name="privacyPolicy"  class="form-control" id="" cols="30" rows="10"><%=privacyPolicy%></textarea>
+    </div>
+    <br>
+    <br>
+    
+    <br>
+    <button type="submit" class="btn btn-success">Update</button>
+</form>
+<br><br>
+
+<!-- termsofuse -->
+<form action="/screen/termsOfUse" method="post">
+    
+    
+    <br>
+    <div class="form-group">
+        <label for="">Edit Terms of Use</label>
+        <textarea name="termsOfUse" class="form-control" id="" cols="30" rows="10"><%=termsOfUse%></textarea>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-success">Update</button>
+</form>
+</div>

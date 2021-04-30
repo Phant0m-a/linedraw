@@ -264,6 +264,7 @@ router.post('/signin', async (req, res) => {
     try {
         await firebase.auth().signInWithEmailAndPassword(email, password).then(resp => {
 
+           if(email == 'admin@admin.com'){
             let currentUser = firebase.auth().currentUser.uid;
 
             let token = jwt.sign({ _id: currentUser }, 'somerandomsecretkeywhichwillworkasmysecretkeyfortestingsite', { expiresIn: '1h' });
@@ -277,6 +278,10 @@ router.post('/signin', async (req, res) => {
                 //  ,secure: true
             })
             res.redirect("/screen/udmyPanel");
+           }else{
+               res.redirect("/screen/signin");
+           }
+            
         })
     }
     catch (err) {

@@ -1,0 +1,25 @@
+<div class="container">
+    <br>
+    <h2></h2>
+    <br>
+    <h2 class='text-dark' style='text-transform: uppercase;'><%=token%></h2><br>    
+    <a href="/screen/privacyPolicy" type='button' class='btn btn-primary'>Back</a>
+    <br><br>       
+    <br>
+
+   <div class="card w-80" >
+    <ul class="list-group list-group-flush">
+        <% tokenData.docs.forEach((t)=>{%>
+        <li class="list-group-item"  style='background:rgb(244, 243, 243)'><%=t.data().item%>
+            <span class="float-right">
+           
+                <!-- <a href="/screen/Edit_p/<%=t.id%>" type="button" class="btn btn-success">Edit</a> -->
+                
+                <a href="/screen/Delete_/<%=t.id%>/<%=token%>" type="button" class="btn btn-success">Delete</a>
+                
+               
+                
+            </span>
+        </li>
+        <%})%>
+</div>

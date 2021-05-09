@@ -544,11 +544,11 @@ let title = req.body.title;
         totalRatingCount: 0,
         category: '',
         features: [],
-        courseEnabled: true,
-        courseStatus: 'on',
-        Days: 1,
+        courseEnabled: false,
+        courseStatus: 'off',
+        Days: 30,
         Months: 0,
-        expiresIn: 1
+        expiresIn: 'not working for now'
     }).then(() => {
         res.redirect('/screen/GetCourses');
     });
@@ -643,7 +643,7 @@ router.post('/Edit_Course',auth, async (req, res) => {
     let oldPrice = oldPPrice.toString();
     var days = req.body.Days;
     var months = req.body.Months;
-    var te = 'unseffornow';
+    var te = 'not working for now';
     console.log(te)
     var expiresIn = te;
     // console.log(id+' :: '+title+' :: '+category+' :: '+price+' :: '+rating+' :: '+description+' :: '+tag);
@@ -1558,7 +1558,13 @@ console.log(req.params);
             let vidurl = the_data.map((item) => {
                 return item.lectureVideoUrl;
             })
+            let demo = the_data.map((item) => {
+                return item.demo;
+            })
+            // // demo video
+            // if(demo === true){
 
+            // }
             let deleteStatus;
             let deletevid;
             if (url != undefined || url != null) {
@@ -1731,7 +1737,7 @@ router.get('/Delete_DemoVideos/:id/:lec_id',auth, async (req, res) => {
                     dbs.collection('courses').doc(id).update({
                         demoVideos: firebase.firestore.FieldValue.arrayRemove(...the_data)
                     });
-                }, 100);
+                }, 2000);
 
             })
 
@@ -2285,10 +2291,17 @@ router.get('/showLec/:id/:secId/:title',auth,async(req,res)=>{
     let all;
 
     let ref = dbs.collection('courses/' + id + '/sections').doc(secid);
+    let d_ref = dbs.collection('courses').doc(id);
+    let demo_data= await d_ref.get();
+    let demoVideos= demo_data.data().demoVideos;
+    
     let data = await ref.get();
     all=data.data().lectures
-    console.log(data.data().lectures)
-    res.render('screen/showLec',{te:all,sectionId:secid,title:title,id: id});
+    console.log('##################')
+    console.log(demoVideos)
+    console.log('##################')
+
+    res.render('screen/showLec',{te:all,sectionId:secid,title:title,id: id,demo:demoVideos});
     }else{
         res.redirect('/screen/signin')
     }
@@ -2369,7 +2382,7 @@ router.post('/AddLec',auth, async (req, res) => {
         let str2= req.files.lectureVideoUrl.mimetype;
     let ready2=str2.split("/",1);
         // ready2=JSON.stringify(ready2);
-        console.log(ready);
+        // console.log(ready);
         console.log('outside oct stream');
         if (ready2 == 'video') {
             console.log('[+] in octstream // lecture video url...');
@@ -2453,9 +2466,13 @@ router.post('/AddLec',auth, async (req, res) => {
 
                 lectures: firebase.firestore.FieldValue.arrayUnion(...[{
                     id: u,
-                    lectureThumbnail: boib, picKey: loac,
-                    vidKey: location, lectureVideoUrl: boic,
-                    title: leacture, url: '...'
+                    lectureThumbnail: boib, 
+                    // picKey: loac,
+                    // vidKey: location, 
+                    lectureVideoUrl: boic,
+                    title: leacture, 
+                    url: '...',
+                    demo:Demo
                     // title: leacture, url: req.body.url
                 }])
             });
@@ -2464,17 +2481,48 @@ router.post('/AddLec',auth, async (req, res) => {
             res.redirect(`/screen/GetSection/${id}/${sec_id}/${title}`);
         } else {
             console.log('[~] In Demo True .....');
+            // add lecture link in demo
             let a = dbs.collection('courses').doc(id);
+            // a.update({
+            //     demoVideos: firebase.firestore.FieldValue.arrayUnion(...[{
+            //         id: u,
+            //         thumbnailUrl: boib,
+            //         videoUrl: boic,
+            //         title: leacture,
+            //         url: '...',
+            //         demo:Demo
+            //         // url: req.body.url
+            //     }])
+            // });
             a.update({
                 demoVideos: firebase.firestore.FieldValue.arrayUnion(...[{
                     id: u,
                     thumbnailUrl: boib,
                     videoUrl: boic,
                     title: leacture,
-                    url: '...'
+                    url: '...',
+                    demo:Demo,
+                    sec_id:sec_id
                     // url: req.body.url
                 }])
             });
+            //add lecture copy in main lecture
+            // const Ref = dbs.collection('courses/' + id + '/sections/').doc(sec_id);
+            // Ref.update({
+
+            //     lectures: firebase.firestore.FieldValue.arrayUnion(...[{
+            //         id: u,
+            //         lectureThumbnail: boib,
+            //         // picKey: loac,
+            //         // vidKey: location, 
+            //         lectureVideoUrl: boic,
+            //         title: leacture, 
+            //         url: '...',
+            //         demo:Demo
+            //         // title: leacture, url: req.body.url
+            //     }])
+            // });
+            // end--
             console.log(req.body);
 
             res.redirect(`/screen/GetSection/${id}/${sec_id}/${title}`);
@@ -2586,11 +2634,12 @@ router.get('/privacyPolicy',auth, async(req,res)=>{
 router.post('/privacyPolicy',auth,async (req,res)=>{
     if(firebase.auth().currentUser){
  let privacyPolicy= req.body.privacyPolicy;
-   
+//  let number = req.body.number; 
 
-   dbs.collection('app').doc('privacyPolicy').update({
-       privacy:privacyPolicy,
-    updatedAt:new Date()
+   dbs.collection('privacy').add({
+       item:privacyPolicy,
+    //    number:number
+    timestamp:new Date()
     }).then(()=>{
         res.redirect('/screen/privacyPolicy');
     })
@@ -2604,10 +2653,11 @@ router.post('/privacyPolicy',auth,async (req,res)=>{
 router.post('/termsOfUse',auth,async (req,res)=>{
     if(firebase.auth().currentUser){
  let termsOfUse = req.body.termsOfUse;
-
-    dbs.collection('app').doc('termsOfUse').update({
-         terms:termsOfUse,
-         updatedAt:new Date()
+//  let number = req.body.number;
+    dbs.collection('terms').add({
+         item:termsOfUse,
+        //  number:number
+        timestamp:new Date()
     }).then(()=>{
         res.redirect('/screen/privacyPolicy');
     })
@@ -2617,6 +2667,44 @@ router.post('/termsOfUse',auth,async (req,res)=>{
    
 })
 
+
+// token to view privacy and terms
+router.get('/token/:token',auth, async(req,res)=>{
+    if(firebase.auth().currentUser){
+  let token= req.params.token;
+    if(token == 'privacy' || token == 'terms'){
+        
+    dbs.collection(token).orderBy('timestamp', 'asc').get().then((snap)=>{
+        let tokenData= snap;
+        
+        res.render('screen/privacyandTerms', {token:token, tokenData:tokenData});
+    })
+    }
+    }else{
+       res.redirect('/screen/signin')
+    }
+   
+  
+})
+
+
+// Delete privacy or terms
+router.get('/Delete_/:id/:token',auth, async(req,res)=>{
+ if(firebase.auth().currentUser){
+ let id = req.params.id;
+ let token = req.params.token;
+
+ if(token == 'privacy' || token == 'terms'){
+    let ref = await dbs.collection(token).doc(id).delete().then(()=>{
+        res.redirect(`/screen/token/${token}`);
+    });
+    
+ }
+ }else{
+    res.redirect('/screen/signin')
+ }
+
+})
 
 
 

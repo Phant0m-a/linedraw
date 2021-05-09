@@ -1,3 +1,47 @@
+<nav class="navbar navbar-expand-lg navbar-dark text-dark bg-light bg-invisible" style="margin-top:-20px;">
+    <a class="navbar-brand text-dark" href="/screen/udmyPanel">Linedraw</a>
+    <button class="navbar-toggler " style='background:rgb(196, 187, 187);' type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon " ></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+         <li class="nav-item active">
+          <a class="nav-link text-muted" href="/screen/token/privacy">View Privacy Policy</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-muted" href="/screen/token/terms">View Terms of Use</a>
+        </li>
+        <li class="nav-item">
+       
+        <!--
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Dropdown
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+        </li> -->
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+     
+        <!-- <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> -->
+        <!-- <a class="btn btn-danger float-right"  style="margin-left:10px;" type="button" href="/screen/signout/signout">Signout</a> -->
+      </form>
+    </div>
+  </nav>
+
+
+
 <div class="jumbotron">
     <h2>Privacy Policy & Terms of Use</h2> 
     <br> <a href="/screen/udmyPanel" type='button' class="btn btn-dark">Back Home</a>
@@ -9,12 +53,14 @@
     <br>
     <div class="form-group">
         <label for="">Edit Privacy Policy</label>
-        <textarea name="privacyPolicy"  class="form-control" id="" cols="30" rows="10"><%=privacyPolicy%></textarea>
+        <!-- <textarea name="privacyPolicy"  class="form-control" id="" cols="30" rows="10"><%=privacyPolicy%></textarea> -->
+        <!-- <input name="number" type='number'  class="form-control" placeholder="Index number" required> -->
+        <input name="privacyPolicy" type='text'  class="form-control" placeholder="Enter Privacy Policy" required>
     </div>
-    <br>
-    <br>
     
-    <br>
+    
+    
+    
     <button type="submit" class="btn btn-success">Update</button>
 </form>
 <br><br>
@@ -26,9 +72,11 @@
     <br>
     <div class="form-group">
         <label for="">Edit Terms of Use</label>
-        <textarea name="termsOfUse" class="form-control" id="" cols="30" rows="10"><%=termsOfUse%></textarea>
+        <!-- <textarea name="termsOfUse" class="form-control" id="" cols="30" rows="10"><%=termsOfUse%></textarea> -->
+        <!-- <input name="number" type='number'  class="form-control" placeholder="Index number" required> -->
+        <input name="termsOfUse" type='text' class="form-control" id="" placeholder='Enter Terms of Use' required>
     </div>
-    <br>
+    
     <button type="submit" class="btn btn-success">Update</button>
 </form>
 </div>

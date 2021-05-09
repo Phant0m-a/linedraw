@@ -7,6 +7,41 @@
     <div class="card w-80" style='background:rgb(238, 230, 230);'>
        
         <div class="row row-cols-1 row-cols-md-3">
+            <% demo.forEach((lec)=>{%>
+              
+      <%  if(lec.sec_id == sectionId){%>
+            <div class="col mb-4">
+                <div class="card h-100">
+                <img src=' <%=lec.thumbnailUrl%>' height="250px" class="card-img-top" alt="image">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <%=lec.title%>
+                            </h5>
+    
+                            <!-- <% if(lec.url.length <= 12){%>
+                    <a href='<%=lec.lectureVideoUrl%>' type='button' class='btn btn-primary'>Play lecture</a>
+                    <%}else{%>
+                        <% console.log('ok url is on!!!!!!!!!!!!!!!!!!!!!!!!!!!!'+ lec.url)%>
+                    <a href='<%=lec.url%>' type='button' class='btn btn-primary'>Play lecture</a>
+                    <%}%>-->
+                            <!-- <p class="card-text"><%=lec.desc%></p>  -->
+                            <a href='<%=lec.videoUrl%>' type='button' class='btn btn-primary'>Play lecture</a>
+    
+                        </div>
+                        <div class="card-footer">
+                         
+                        </div>
+            </div>
+        </div>
+        
+        <%}%>
+    <%})%>
+</div>
+
+<!-- not demo vids -->
+    <div class="card w-80" style='background:rgb(238, 230, 230);'>
+       
+        <div class="row row-cols-1 row-cols-md-3">
             <% te.forEach((lec)=>{%>
               
         <div class="col mb-4">
@@ -30,13 +65,20 @@
                     <div class="card-footer">
                         <span class="">
 
+                            <%if(!lec.demo === true) {%>
+                                <%console.log(lec.demo)%>
+                                    <!-- delete_lecture  -->
+                                <a href="/screen/Delete_Lecture/<%=id%>/<%=sectionId%>/<%=lec.id%>/<%=title%>"
+                                    style="margin:5px" type="button" class="btn btn-danger float-right">Delete</a>
+                                
+                                    <!-- edit_lecture -->
+                                <a href="/screen/Edit_Lecture/<%=id%>/<%=sectionId%>/<%=lec.id%>/<%=lec.title%>/<%=title%>"
+                                        style="margin:5px" type="button" class="btn btn-success float-right">Edit</a>
+                                <%console.log('=============================================')%>
+                            <%}%>
 
-
-                            <a href="/screen/Delete_Lecture/<%=id%>/<%=sectionId%>/<%=lec.id%>/<%=title%>"
-                                style="margin:5px" type="button" class="btn btn-danger float-right">Delete</a>
-
-                            <a href="/screen/Edit_Lecture/<%=id%>/<%=sectionId%>/<%=lec.id%>/<%=lec.title%>/<%=title%>"
-                                style="margin:5px" type="button" class="btn btn-success float-right">Edit</a>
+                          
+                          
                         </span>
                     </div>
         </div>

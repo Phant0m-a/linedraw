@@ -130,7 +130,7 @@
                         placeholder="Enter price">
                 </div>
                 <div class="form-group">
-                    <label for="">Discount Price</label>
+                    <label for="">Old Price</label>
                     <input type="text" class="form-control" name="oldPrice" value='<%=data.oldPrice%>'
                         placeholder="Enter price">
                 </div>
@@ -152,15 +152,15 @@
         </p>
         <div class="collapse" id="collapseExample">
             <div class="card card-body">
-                <p class='text-info'>* Write expiry date in Days or months</p>
+                <p class='text-info'>* Write expirey date in Days or months</p>
                 <div class="form-group">
                     <label for="">Days</label>
-                    <input type="number" class="form-control" name="Days" value='<%=data.Days%>'
+                    <input type="number" class="form-control" min="1" name="Days" value='<%=data.Days%>'
                         placeholder="Enter Days">
                 </div>
                 <div class="form-group">
                     <label for="">Months</label>
-                    <input type="number" class="form-control" name="Months" value='<%=data.Months%>'
+                    <input type="number" class="form-control" min='0' name="Months" value='<%=data.Months%>'
                         placeholder="Enter Months">
                 </div>
 

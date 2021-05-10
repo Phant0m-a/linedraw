@@ -107,6 +107,7 @@ var firebaseConfig = {
     messagingSenderId: "543506506647",
     appId: "1:543506506647:web:ebb37daff6d78a32739ad2"
 };
+
 // Storage
 const { Storage } = require('@google-cloud/storage');
 const { log } = require('console');

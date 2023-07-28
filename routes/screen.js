@@ -89,6 +89,7 @@ const deleteImages = async ({ downloadUrl }) => {
         .catch((error) => "error: " + error)
 }
 
+//mine config
 // var firebaseConfig = {
 //     apiKey: "AIzaSyBHd50N3vrsVyjUYUa-753UnpZQesUHHWU",
 //     authDomain: "node-web-app-9a6e2.firebaseapp.com",
@@ -99,13 +100,26 @@ const deleteImages = async ({ downloadUrl }) => {
 //     appId: "1:667358112659:web:adc2bb76a044eb6c425666",
 //     measurementId: "G-4SXFPNDF2N"
 //   };
-var firebaseConfig = {
-    apiKey: "AIzaSyBOSuJI9Vkce2BBcrLva4L60qhEhMRwBpk",
-    authDomain: "share-project-58415.firebaseapp.com",
-    projectId: "share-project-58415",
-    storageBucket: "share-project-58415.appspot.com",
-    messagingSenderId: "543506506647",
-    appId: "1:543506506647:web:ebb37daff6d78a32739ad2"
+
+//not mine
+//var firebaseConfig = {
+ //   apiKey: "AIzaSyBOSuJI9Vkce2BBcrLva4L60qhEhMRwBpk",
+  //  authDomain: "share-project-58415.firebaseapp.com",
+    //projectId: "share-project-58415",
+    //storageBucket: "share-project-58415.appspot.com",
+    //messagingSenderId: "543506506647",
+    //appId: "1:543506506647:web:ebb37daff6d78a32739ad2"
+//};
+//mine config 
+const firebaseConfig = {
+  apiKey: "AIzaSyBHd50N3vrsVyjUYUa-753UnpZQesUHHWU",
+  authDomain: "node-web-app-9a6e2.firebaseapp.com",
+  databaseURL: "https://node-web-app-9a6e2-default-rtdb.firebaseio.com",
+  projectId: "node-web-app-9a6e2",
+  storageBucket: "node-web-app-9a6e2.appspot.com",
+  messagingSenderId: "667358112659",
+  appId: "1:667358112659:web:35b94753d2bbb57d425666",
+  measurementId: "G-475VCSE6PD"
 };
 // Storage
 const { Storage } = require('@google-cloud/storage');
